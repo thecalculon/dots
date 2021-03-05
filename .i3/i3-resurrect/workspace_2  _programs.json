@@ -1,0 +1,8 @@
+[
+  {
+    "command": [
+      "/opt/google/chrome/chrome"
+    ],
+    "working_directory": "/home/vikash"
+  }
+]

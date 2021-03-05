@@ -1,0 +1,17 @@
+[
+  {
+    "command": [
+      "/usr/bin/kitty"
+    ],
+    "working_directory": "/home/vikash"
+  },
+  {
+    "command": [
+      "zathura",
+      "--synctex-forward",
+      "137:1:/home/vikash/Documents/my_papers/research/main.tex",
+      "/home/vikash/Documents/my_papers/research/main.pdf"
+    ],
+    "working_directory": "/home/vikash"
+  }
+]

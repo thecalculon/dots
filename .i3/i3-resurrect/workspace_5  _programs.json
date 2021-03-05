@@ -1,0 +1,10 @@
+[
+  {
+    "command": [
+      "/usr/lib/zotero/zotero-bin",
+      "-app",
+      "/usr/lib/zotero/application.ini"
+    ],
+    "working_directory": "/home/vikash"
+  }
+]

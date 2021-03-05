@@ -1,0 +1,73 @@
+{
+  "border": "normal",
+  "current_border_width": -1,
+  "floating": "auto_off",
+  "fullscreen_mode": 0,
+  "geometry": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "layout": "splith",
+  "marks": [],
+  "name": "2: \uf268 ",
+  "orientation": "horizontal",
+  "percent": 0.19999999999999998,
+  "scratchpad_state": "none",
+  "sticky": false,
+  "type": "workspace",
+  "workspace_layout": "default",
+  "nodes": [
+    {
+      "border": "normal",
+      "current_border_width": -1,
+      "floating": "auto_off",
+      "fullscreen_mode": 0,
+      "geometry": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "layout": "stacked",
+      "marks": [],
+      "name": null,
+      "orientation": "vertical",
+      "percent": 1.0,
+      "scratchpad_state": "none",
+      "sticky": false,
+      "type": "con",
+      "workspace_layout": "default",
+      "nodes": [
+        {
+          "border": "pixel",
+          "current_border_width": 0,
+          "floating": "auto_off",
+          "fullscreen_mode": 0,
+          "geometry": {
+            "x": 0,
+            "y": 18,
+            "width": 1366,
+            "height": 750
+          },
+          "layout": "splith",
+          "marks": [],
+          "name": "GitHub - JonnyHaystack/i3-resurrect: Simple solution to saving and restoring i3 workspaces - Google Chrome",
+          "orientation": "none",
+          "percent": 1.0,
+          "scratchpad_state": "none",
+          "sticky": false,
+          "type": "con",
+          "workspace_layout": "default",
+          "swallows": [
+            {
+              "class": "^Google\\-chrome$",
+              "instance": "^google\\-chrome$"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
