@@ -1,0 +1,32 @@
+axes.formatter.limits : -5, 5
+figure.dpi            : 200
+figure.figsize        : 5.0, 3.5
+font.family           : serif
+font.serif            : Computer Modern Roman
+font.sans-serif       : Computer Modern Sans serif
+font.size             : 15
+#font.weight           : bold
+image.cmap            : viridis
+legend.frameon        : False
+legend.handlelength   : 0.8
+legend.handletextpad  : 0.5
+legend.labelspacing   : 0.2
+legend.columnspacing   : 0.8
+legend.markerscale    : 1.0
+lines.markersize      : 3
+savefig.bbox          : tight
+savefig.dpi           : 400
+savefig.format        : pdf
+text.usetex           : True
+text.latex.preamble   : \usepackage{bm,amsmath,mathrsfs,amsfonts}
+xtick.direction       : in
+xtick.minor.visible   : True
+ytick.direction       : in
+ytick.minor.visible   : True
+xtick.major.size    : 5
+xtick.minor.size    : 3
+xtick.major.width   : 1     
+xtick.labelsize     : 16.0      
+ytick.major.size    : 5        
+ytick.minor.size    : 3
+ytick.major.width   : 1     
