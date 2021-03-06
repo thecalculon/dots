@@ -1,5 +1,5 @@
 (package-initialize)
-
+(server-start)
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (add-to-list 'custom-theme-load-path "/home/vikash/.emacs.d/themes")
@@ -113,6 +113,9 @@
 (define-key global-map [C-right] 'forward-sentence)
 (define-key global-map [C-left] 'backward-sentence)
 
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master t)
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
              (use-package lsp-latex)
@@ -120,12 +123,19 @@
              (use-package latex-extra)
              (use-package ac-math)
              (use-package latex-math-preview)
+	     (setq TeX-PDF-mode t)
              (flyspell-mode)
              (flycheck-mode)
              (outline-minor-mode t)
              (abbrev-mode)
              (auto-fill-mode)
-             ))
+	     (add-to-list 'TeX-view-program-list
+			  '("Zathura"
+			    ("zathura %o"
+			     (mode-io-correlate " --synctex-forward %n:0:%b -x \"emacsclient --socket-name=%sn --no-wait +%{line} %{input}\""))
+			    "zathura"))
+	     ))
+
 (quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
 
 (setq fortran-continuation-string "&")
