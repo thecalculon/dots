@@ -129,12 +129,24 @@
              (outline-minor-mode t)
              (abbrev-mode)
              (auto-fill-mode)
-	     (add-to-list 'TeX-view-program-list
-			  '("Zathura"
-			    ("zathura %o"
-			     (mode-io-correlate " --synctex-forward %n:0:%b -x \"emacsclient --socket-name=%sn --no-wait +%{line} %{input}\""))
-			    "zathura"))
 	     ))
+;; Add this to .emacs.d/init.el:
+(with-eval-after-load "tex"
+  ;; enable synctex support for latex-mode
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  ;; add a new view program
+  (add-to-list 'TeX-view-program-list
+        '(;; arbitrary name for this view program
+          "Zathura"
+          (;; zathura command (may need an absolute path)
+           "zathura"
+           ;; %o expands to the name of the output file
+           " %o"
+           ;; insert page number if TeX-source-correlate-mode
+           ;; is enabled
+           (mode-io-correlate " --synctex-forward %n:0:%b"))))
+  ;; use the view command named "Zathura" for pdf output
+  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
 
 (quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
 
