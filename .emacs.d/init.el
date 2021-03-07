@@ -106,7 +106,8 @@
              :init
             (add-hook 'LaTeX-mode-hook 'company-auctex-init))
 
-(setq tab-width 4)
+;; this is for tab stop 
+(setq-default tab-width 4)
 (setq tab-always-indent t)
 (evil-mode 1)
 (evil-mc-mode 1)
