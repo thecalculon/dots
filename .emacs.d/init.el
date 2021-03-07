@@ -22,6 +22,7 @@
 (use-package auto-compile
   :config (auto-compile-on-load-mode))
 (setq load-prefer-newer t)
+(fset 'yes-or-no-p 'y-or-n-p)
 ; want emacs to start scratch instead of manual
 (setq inhibit-startup-screen t)
 ;; set the path for the backup files and stuffs
@@ -85,14 +86,44 @@
 (set-face-attribute 'default t :font "Fira Code Medium-13" )
 ; (set-default-font "Fira Code Medium-13")
 
+(use-package evil-commentary)
+  (evil-commentary-mode t)
+
+(add-hook 'prog-mode-hook 'highlight-numbers-mode)
+
+
 
 (setq column-number-mode 1)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+
+(use-package company
+             :ensure t
+             :init 
+             (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package company-auctex
+             :ensure t
+             :init
+            (add-hook 'LaTeX-mode-hook 'company-auctex-init))
 
 (setq tab-width 4)
 (setq tab-always-indent t)
 (evil-mode 1)
 (evil-mc-mode 1)
+
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode 1)
+  (setq ivy-count-format "%d/%d ")
+
+  :bind (("C-s" . swiper)
+         ("C-c h f" . counsel-describe-function)
+         ("C-c h v" . counsel-describe-variable)
+         ("M-i" . counsel-imenu)
+         :map ivy-minibuffer-map
+         ("RET" . ivy-alt-done)
+         ("C-j" . ivy-done)))
 (ido-mode 1)
 										; these are all the default keys I have defined to do the dirty stuffs
 (global-set-key (kbd "\eo") 'other-window)
@@ -116,6 +147,43 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master t)
+;; lets try lsp
+(use-package lsp-mode
+  :ensure t
+  :demand t
+  :config
+  (setq-default lsp-highlight-symbol-at-point nil)
+  )
+
+;; (use-package lsp-imenu
+  ;; :after lsp-mode
+  ;; :hook (lsp-after-open . lsp-enable-imenu))
+
+
+(use-package lsp-ui
+  :ensure t
+  :config
+  (setq lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-ignore-duplicate t
+        ;; TODO: wtf is going on with the sideline?
+        lsp-ui-sideline-enable nil)
+  (set-face-attribute 'lsp-ui-doc-background  nil :background "#f9f2d9")
+  (add-hook 'lsp-ui-doc-frame-hook
+          (lambda (frame _w)
+            (set-face-attribute 'default frame :font "Overpass Mono 11")))
+  (set-face-attribute 'lsp-ui-sideline-global nil
+                      :inherit 'shadow
+                      :background "#f9f2d9")
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package company-lsp
+  :ensure t
+  :config
+  (setq company-lsp-enable-snippet t
+		company-lsp-cache-candidates t)
+  (push 'company-lsp company-backends)
+  )
+
 (add-hook 'LaTeX-mode-hook
           '(lambda ()
              (use-package lsp-latex)
@@ -123,14 +191,15 @@
              (use-package latex-extra)
              (use-package ac-math)
              (use-package latex-math-preview)
-	     (setq TeX-PDF-mode t)
+             (setq TeX-PDF-mode t)
+             (company-mode)
              (flyspell-mode)
              (flycheck-mode)
              (outline-minor-mode t)
              (abbrev-mode)
              (auto-fill-mode)
 	     ))
-;; Add this to .emacs.d/init.el:
+
 (with-eval-after-load "tex"
   ;; enable synctex support for latex-mode
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
@@ -176,15 +245,13 @@
       (cons '("\\.F$" . fortran-mode) auto-mode-alist))
 
 
-
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ac-math rainbow-delimiters multiple-cursors auto-compile yasnippet use-package tree-sitter-langs lsp-latex latex-math-preview latex-extra highlight-numbers git-gutter fortpy fira-code-mode fiplr evil-mc evil-god-state dad-joke bibretrieve biblio ayu-theme auto-complete-c-headers academic-phrases)))
+   '(evil-commentary lsp-intellij yasnippet-classic-snippets company-math company-bibtex helm-bibtex ac-math rainbow-delimiters multiple-cursors auto-compile yasnippet use-package tree-sitter-langs lsp-latex latex-math-preview latex-extra highlight-numbers git-gutter fortpy fira-code-mode fiplr evil-mc evil-god-state dad-joke bibretrieve biblio ayu-theme auto-complete-c-headers academic-phrases)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
