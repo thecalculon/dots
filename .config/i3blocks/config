@@ -12,7 +12,7 @@ separator_block_width=0
 background=#2e3440
 
 [separator]
-color=#4c566a
+color=#2e3440
 background=#2e3440
 border=#2e3440
 border_left=0
@@ -25,7 +25,7 @@ command=~/.config/i3blocks/weather/new_weather.py
 markup=Pango
 interval=3600
 color=#eceff4
-background=#4c566a
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
@@ -33,26 +33,6 @@ border_top=2
 border_bottom=2
 
 
-
-[separator]
-color=#81a1c1
-background=#4c566a
-border=#2e3440
-border_left=0
-border_right=0
-border_top=2
-border_bottom=2
-
-[SOUND_BURST]
-command=~/.config/i3blocks/sound/sound_burst.sh
-interval=once
-color=#2e3440
-background=#81a1c1
-border=#2e3440
-border_left=0
-border_right=0
-border_top=2
-border_bottom=2
 
 
 [SOUND]
@@ -60,18 +40,18 @@ full_text= 🔇:  0%
 command=~/.config/i3blocks/sound/sound_info.sh
 interval=1
 signal=1
-color=#2e3440
-background=#81a1c1
+color=#ffffff
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
 border_top=2
 border_bottom=2
 
-
 [separator]
-color=#88c0d0
-background=#81a1c1
+full_text=" "
+color=#4c566a
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
@@ -81,26 +61,25 @@ border_bottom=2
 [BATTERY]
 command=~/.config/i3blocks/battery/battery_info.sh
 interval=3
-color=#0088ff
-background=#88c0d0
-border=#81a1c1
+color=#4c566a
+background=#2e3440
+border=#2e3440
 border_left=0
 border_right=0
 border_top=1
 border_bottom=1
 
-
-
-############
 [separator]
+full_text=" "
 color=#2e3440
-background=#88c0d0
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
 border_top=2
 border_bottom=2
-############
+#
+
 
 [cpu_usage]
 command=~/.config/i3blocks/cpu_usage/cpu_usage
@@ -108,22 +87,23 @@ interval=2
 label=<span color="#8be9fd"> </span>
 
 [separator]
-color=#81a1c1
-background=#4c566a
+full_text=" "
+color=#2e3440
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
 border_top=2
 border_bottom=2
-
+#
 
 [cpu-temperature]
 command=~/.config/i3blocks/temperature/temperature
 interval=2
 #SENSOR_CHIP="jc42-i2c-0-1a"
-label=<span color="#8be9fd"> </span>
-color=#2e3440
-background=#81a1c1
+label=<span color="#ffb86c"> </span>
+color=#ffffff
+background=#2e3440
 border=#2e3440
 border_left=0
 border_right=0
@@ -133,6 +113,7 @@ border_bottom=2
 
 
 [separator]
+full_text=
 color=#4c566a
 background=#2e3440
 border=#2e3440
@@ -183,6 +164,7 @@ border_bottom=2
 
 
 [separator]
+full_text=
 color=#81a1c1
 background=#4c566a
 border=#2e3440
@@ -195,7 +177,7 @@ border_bottom=2
 command=date '+%m-%d %H:%M'
 interval=1
 label=<span color="#8be9fd"> </span>
-color=#2e3440
+color=#000000
 background=#81a1c1
 border=#2e3440
 border_left=0
