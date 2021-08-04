@@ -47,21 +47,27 @@ First set the transparancy and stuff
   ;;       in Emacs and init.el will be generated automatically!
 
   ;; You will most likely need to adjust this font size for your system!
-  (defvar default-font-size 120)
-  (defvar default-variable-font-size 120)
+  (defvar default-font-size 130)
+  (defvar default-variable-font-size 130)
 
   ;; Make frame transparency overridable
   (defvar frame-transparency '(90 . 90))
 
 #+end_src
 
-Load the doom theme as all is talking 
+Load the doom theme as all is talking about the theme 
+
 #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
 
-(use-package spacegray-theme :defer t)
-(use-package doom-themes :defer t)
-(load-theme 'doom-palenight t)
-(doom-themes-visual-bell-config)
+  (use-package spacegray-theme :defer t)
+  (use-package doom-themes :defer t)
+  (load-theme 'doom-material t)
+  (doom-themes-visual-bell-config)
+
+  ;; (load-theme 'gruvbox-dark-soft t)
+  ;; (doom-themes-visual-bell-config)
+
+
 #+end_src
 
 ** Modeline
@@ -77,22 +83,32 @@ Load the doom theme as all is talking
 (setq doom-modeline-height 3)
 (use-package minions
   :hook (doom-modeline-mode . minions-mode))
+(setq display-time-24hr-format t)
 #+end_src
 ** Font Config
    #+begin_src emacs-lisp
-     (set-face-attribute 'default nil :font "Fira Code Medium" :height default-font-size)
+
+     (set-face-attribute 'default nil :font "IBM Plex Mono SemiBold" :height 135)
      ;; Set the fixed pitch face
-     (set-face-attribute 'fixed-pitch nil :font "Fira Code Medium" :height default-font-size)
-     ;; Set the variable pitch face
-     (set-face-attribute 'variable-pitch nil :font "Cantarell" :height default-font-size :weight 'regular)
+     (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono SemiBold" :height 135)
+ 
+          ;; (set-face-attribute 'default nil :font "Source Code Pro Semibold" :height default-font-size)
+          ;; Set the fixed pitch face
+          ;; (set-face-attribute 'fixed-pitch nil :font "Source Code Pro Semibold" :height default-font-size)
 
-      (use-package fira-code-mode
-      :config (global-fira-code-mode))
+     ;          (set-face-attribute 'default nil :font "Fira Code Medium" :height default-font-size)
+               ;; Set the fixed pitch face
+     ;          (set-face-attribute 'fixed-pitch nil :font "Fira Code Medium" :height default-font-size)
+               ;; Set the variable pitch face
+               (set-face-attribute 'variable-pitch nil :font "Cantarell" :height default-font-size :weight 'regular)
 
-      ;; (use-package rainbow-delimiters
-      ;; :hook (prog-mode . rainbow-delimiters-mode))
+          ;      (use-package fira-code-mode
+          ;      :config (global-fira-code-mode))
 
-      (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+                ;; (use-package rainbow-delimiters
+                ;; :hook (prog-mode . rainbow-delimiters-mode))
+
+                (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
    #+end_src
    
@@ -144,6 +160,7 @@ Load the doom theme as all is talking
    
    (tool-bar-mode -1)
    (menu-bar-mode -1)
+   (electric-pair-mode)
    (display-time-mode 1)
    
    (setq blink-matching-paren nil)
@@ -158,15 +175,17 @@ Load the doom theme as all is talking
 * Completions
 ** Company config
    #+begin_src emacs-lisp
-   (use-package company
-	     :ensure t
-	     :init 
-	     (add-hook 'after-init-hook 'global-company-mode))
+;I guess will use the yas mode everywhere
+     (yas-global-mode 1)
+           (use-package company
+                     :ensure t
+                     :init 
+                     (add-hook 'after-init-hook 'global-company-mode))
 
-  (use-package company-auctex
-	     :ensure t
-	     :init
-	    (add-hook 'LaTeX-mode-hook 'company-auctex-init))
+          (use-package company-auctex
+                     :ensure t
+                     :init
+                    (add-hook 'LaTeX-mode-hook 'company-auctex-init))
 
 
    #+end_src
@@ -244,18 +263,22 @@ Load the doom theme as all is talking
   #+end_src
 * Org-mode Configs
 #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . t)
-    (python . t)
-    (ipython . t)
-    (shell . t)
-    (latex . t)))
+  (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((emacs-lisp . t)
+      (python . t)
+      (ipython . t)
+      (shell . t)
+      (latex . t)
+      (ditaa . t)
+      (dot . t)
+      (gnuplot . t)))
 
-(push '("conf-unix" . conf-unix) org-src-lang-modes)
-(setq org-confirm-babel-evaluate nil)
-;; Syntax highlight in #+BEGIN_SRC blocks
-(setq org-src-fontify-natively t)
+  (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+  (setq org-confirm-babel-evaluate nil)
+  ;; Syntax highlight in #+BEGIN_SRC blocks
+  (setq org-src-fontify-natively t)
 #+end_src
 
 #+RESULTS:
@@ -318,81 +341,128 @@ Load the doom theme as all is talking
 #+end_src
 * Latex Configurations
   #+begin_src emacs-lisp
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq-default TeX-master t)
-  ;; lets try lsp
-  (use-package lsp-mode
-  :ensure t
-  :demand t
-  :config
-  (setq-default lsp-highlight-symbol-at-point nil)
-  )
+              (setq TeX-auto-save t)
+              (setq TeX-parse-self t)
+              (setq-default TeX-master t)
+              ;; lets try lsp
+              (use-package lsp-mode
+              :ensure t
+              :demand t
+              :config
+              (setq-default lsp-highlight-symbol-at-point nil)
+              )
 
-  ;; (use-package lsp-imenu
-  ;; :after lsp-mode
-  ;; :hook (lsp-after-open . lsp-enable-imenu))
+              ;; (use-package lsp-imenu
+              ;; :after lsp-mode
+              ;; :hook (lsp-after-open . lsp-enable-imenu))
 
 
-  (use-package lsp-ui
-  :ensure t
-  :config
-  (setq lsp-ui-sideline-show-hover nil
-  lsp-ui-sideline-ignore-duplicate t
-  ;; TODO: wtf is going on with the sideline?
-  lsp-ui-sideline-enable nil)
-  (set-face-attribute 'lsp-ui-doc-background  nil :background "#f9f2d9")
-  (add-hook 'lsp-ui-doc-frame-hook
-  (lambda (frame _w)
-  (set-face-attribute 'default frame :font "Overpass Mono 11")))
-  (set-face-attribute 'lsp-ui-sideline-global nil
-  :inherit 'shadow
-  :background "#f9f2d9")
-  :hook (lsp-mode . lsp-ui-mode))
+              (use-package lsp-ui
+              :ensure t
+              :config
+              (setq lsp-ui-sideline-show-hover nil
+              lsp-ui-sideline-ignore-duplicate t
+              ;; TODO: wtf is going on with the sideline?
+              lsp-ui-sideline-enable nil)
+              (set-face-attribute 'lsp-ui-doc-background  nil :background "#f9f2d9")
+              (add-hook 'lsp-ui-doc-frame-hook
+              (lambda (frame _w)
+              (set-face-attribute 'default frame :font "Overpass Mono 11")))
+              (set-face-attribute 'lsp-ui-sideline-global nil
+              :inherit 'shadow
+              :background "#f9f2d9")
+              :hook (lsp-mode . lsp-ui-mode))
 
-  (use-package company-lsp
-  :ensure t
-  :config
-  (setq company-lsp-enable-snippet t
-  company-lsp-cache-candidates t)
-  (push 'company-lsp company-backends)
-  )
+              (use-package company-lsp
+              :ensure t
+              :config
+              (setq company-lsp-enable-snippet t
+              company-lsp-cache-candidates t)
+              (push 'company-lsp company-backends)
+              )
 
-(add-hook 'LaTeX-mode-hook
-          '(lambda ()
-             (use-package lsp-latex)
-             (use-package latex-math-preview )
-             (use-package latex-extra)
-             (use-package ac-math)
-             (use-package latex-math-preview)
-             (setq TeX-PDF-mode t)
-             (company-mode)
-             (flyspell-mode)
-             (flycheck-mode)
-             (outline-minor-mode t)
-             (abbrev-mode)
-             (auto-fill-mode)
-	     ))
+            (add-hook 'LaTeX-mode-hook
+                      '(lambda ()
+                         (use-package lsp-latex)
+                         (use-package latex-math-preview )
+                         (use-package latex-extra)
+                         (use-package ac-math)
+                         (use-package latex-math-preview)
+                         (setq TeX-PDF-mode t)
+                         (company-mode)
+                         (flyspell-mode)
+                         (flycheck-mode)
+                         (outline-minor-mode t)
+                         (abbrev-mode)
+                         (auto-fill-mode)
+                         ))
 
-(with-eval-after-load "tex"
-  ;; enable synctex support for latex-mode
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  ;; add a new view program
-  (add-to-list 'TeX-view-program-list
-        '(;; arbitrary name for this view program
-          "Zathura"
-          (;; zathura command (may need an absolute path)
-           "zathura"
-           ;; %o expands to the name of the output file
-           " %o"
-           ;; insert page number if TeX-source-correlate-mode
-           ;; is enabled
-           (mode-io-correlate " --synctex-forward %n:0:%b"))))
-  ;; use the view command named "Zathura" for pdf output
-  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
+        (use-package reftex
+          ;; :defer 3
+          :commands turn-on-reftex
+          :hook ((latex-mode LaTeX-mode) . turn-on-reftex)
+          :config
+          (setq reftex-plug-into-AUCTeX t))
 
-(quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
+            (with-eval-after-load "tex"
+              ;; enable synctex support for latex-mode
+              (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+              ;; add a new view program
+              (add-to-list 'TeX-view-program-list
+                    '(;; arbitrary name for this view program
+                      "Zathura"
+                      (;; zathura command (may need an absolute path)
+                       "zathura"
+                       ;; %o expands to the name of the output file
+                       " %o"
+                       ;; insert page number if TeX-source-correlate-mode
+                       ;; is enabled
+                       (mode-io-correlate " --synctex-forward %n:0:%b"))))
+              ;; use the view command named "Zathura" for pdf output
+              (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
 
+            (quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
+
+    (use-package cdlatex
+      :ensure t
+      ;; :defer 2
+      ;; :commands turn-on-cdlatex
+      :hook (LaTeX-mode . turn-on-cdlatex)
+      :config
+      (progn
+        (setq cdlatex-command-alist
+              '(("vc" "Insert \\vect{}" "\\vect{?}"
+                 cdlatex-position-cursor nil nil t)
+                ("smat" "Insert smallmatrix env"
+                 "\\left( \\begin{smallmatrix} ? \\end{smallmatrix} \\right)"
+                 cdlatex-position-cursor nil nil t)
+                ("bmat" "Insert bmatrix env"
+                 "\\begin{bmatrix} ? \\end{bmatrix}"
+                 cdlatex-position-cursor nil nil t)
+                ("pmat" "Insert pmatrix env"
+                 "\\begin{pmatrix} ? \\end{pmatrix}"
+                 cdlatex-position-cursor nil nil t)
+                ("equ*" "Insert equation* env"
+                 "\\begin{equation*}\n?\n\\end{equation*}"
+                 cdlatex-position-cursor nil t nil)
+                ("sn*" "Insert section* env"
+                 "\\section*{?}"
+                 cdlatex-position-cursor nil t nil)
+                ("ss*" "Insert subsection* env"
+                 "\\subsection*{?}"
+                 cdlatex-position-cursor nil t nil)
+                ("sss*" "Insert subsubsection* env"
+                 "\\subsubsection*{?}"
+                 cdlatex-position-cursor nil t nil)))
+
+        (setq cdlatex-math-symbol-alist '((?F ("\\Phi"))
+                                          (?o ("\\omega" "\\mho" "\\mathcal{O}"))
+                                          (?6 ("\\partial"))
+                                          (?v ("\\vee" "\\forall"))))
+        (setq cdlatex-math-modify-alist '((?b "\\mathbb" "\\textbf" t nil nil)
+                                          (?B "\\mathbf" "\\textbf" t nil nil)))
+        (setq cdlatex-paired-parens "$[{("))
+      )
 
   #+end_src
 * Fortran Config 
@@ -568,3 +638,283 @@ Load the doom theme as all is talking
   (org-font-setup))
   #+end_src
   
+  
+* Emacs for reading and sending mail
+#+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
+    (require 'org-mime)
+
+    (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
+    (require 'mu4e)
+
+    (setq mu4e-maildir (expand-file-name "~/.Maildir"))
+
+    ; get mail
+    (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/mu4e/.mbsyncrc -a"
+      ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
+      mu4e-view-prefer-html t
+      mu4e-update-interval 1200
+      mu4e-headers-auto-update t
+      mu4e-compose-signature-auto-include nil
+      mu4e-compose-format-flowed t)
+
+    ;; to view selected message in the browser, no signin, just html mail
+    (add-to-list 'mu4e-view-actions
+      '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
+    ;; enable inline images
+    (setq mu4e-view-show-images t)
+    ;; use imagemagick, if available
+    (when (fboundp 'imagemagick-register-types)
+      (imagemagick-register-types))
+
+    ;; every new email composition gets its own frame!
+    (setq mu4e-compose-in-new-frame t)
+
+    ;; don't save message to Sent Messages, IMAP takes care of this
+    (setq mu4e-sent-messages-behavior 'delete)
+
+    (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+
+    ;; <tab> to navigate to links, <RET> to open them in browser
+    (add-hook 'mu4e-view-mode-hook
+      (lambda()
+    ;; try to emulate some of the eww key-bindings
+    (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
+    (local-set-key (kbd "<tab>") 'shr-next-link)
+    (local-set-key (kbd "<backtab>") 'shr-previous-link)))
+
+    ;; from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx
+    (add-hook 'mu4e-headers-mode-hook
+          (defun my/mu4e-change-headers ()
+            (interactive)
+            (setq mu4e-headers-fields
+                  `((:human-date . 25) ;; alternatively, use :date
+                    (:flags . 6)
+                    (:from . 22)
+                    (:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
+                    (:size . 7)))))
+
+    ;; if you use date instead of human-date in the above, use this setting
+    ;; give me ISO(ish) format date-time stamps in the header list
+    ;(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+
+    ;; spell check
+
+  (setq mail-user-agent 'mu4e-user-agent)
+  (use-package org-msg
+    :config
+    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil tex:dvipng")
+    (setq org-msg-startup "hidestars indent inlineimages")
+    (setq org-msg-greeting-fmt "\n%s,\n\n")
+    (setq org-msg-greeting-fmt-mailto t)
+    (setq org-msg-signature "
+              #+begin_signature
+              -- *Vikash Pandey* \\\\
+                  Research Scholar \\\\
+                  TIFR-Hyderabad \\\\
+              #+end_signature")
+    (org-msg-mode))
+
+    ;; (add-hook 'mu4e-compose-mode-hook
+    ;;     (defun my-do-compose-stuff ()
+    ;;        "My settings for message composition."
+    ;;        (visual-line-mode)
+    ;;        (org-mu4e-compose-org-mode)
+    ;;            (use-hard-newlines -1)
+    ;;        (flyspell-mode)))
+
+    (setq org-mime-export-options '(:section-numbers nil
+                                    :with-author nil
+                                    :with-toc nil))
+    (require 'smtpmail)
+
+    ;;rename files when moving
+    ;;NEEDED FOR MBSYNC
+    (setq mu4e-change-filenames-when-moving t)
+
+    ;;set up queue for offline email
+    ;;use mu mkdir  ~/Maildir/acc/queue to set up first
+    (setq smtpmail-queue-mail nil)  ;; start in normal mode
+
+    ;;from the info manual
+    (setq mu4e-attachment-dir  "~/Downloads")
+
+    (setq message-kill-buffer-on-exit t)
+    (setq mu4e-compose-dont-reply-to-self t)
+
+    (require 'org-mu4e)
+
+    ;; convert org mode to HTML automatically
+    (setq org-mu4e-convert-to-html t)
+
+    ;;from vxlabs config
+    ;; show full addresses in view message (instead of just names)
+    ;; toggle per name with M-RET
+    (setq mu4e-view-show-addresses 't)
+
+    ;; don't ask when quitting
+    (setq mu4e-confirm-quit nil)
+
+    ;; mu4e-context
+    (setq mu4e-context-policy 'pick-first)
+    (setq mu4e-compose-context-policy 'always-ask)
+    (setq mu4e-contexts
+      (list
+       (make-mu4e-context
+        :name "work" ;;for acc1-gmail
+        :enter-func (lambda () (mu4e-message "Entering context work"))
+        :leave-func (lambda () (mu4e-message "Leaving context work"))
+        :match-func (lambda (msg)
+                      (when msg
+                    (mu4e-message-contact-field-matches
+                     msg '(:from :to :cc :bcc) "vikashpandey.phy@gmail.com")))
+        :vars '((user-mail-address . "vikashpandey.phy@gmail.com")
+                (user-full-name . "Vikash Pandey")
+                (mu4e-sent-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].Sent Mail")
+                (mu4e-drafts-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].drafts")
+                (mu4e-trash-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].Trash")
+                (mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 25, org-mode 9, mu4e 1.0\n"))
+                (mu4e-compose-format-flowed . t)
+                (smtpmail-queue-dir . "~/.Maildir/vikashpandey.phy-gmail/queue/cur")
+                (message-send-mail-function . smtpmail-send-it)
+                (smtpmail-smtp-user . "vikashpandey.phy")
+                (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+                (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+                (smtpmail-default-smtp-server . "smtp.gmail.com")
+                (smtpmail-smtp-server . "smtp.gmail.com")
+                (smtpmail-smtp-service . 587)
+                (smtpmail-debug-info . t)
+                (smtpmail-debug-verbose . t)
+                (mu4e-maildir-shortcuts . ( ("/vikashpandey.phy-gmail/INBOX"            . ?i)
+                                            ("/vikashpandey.phy-gmail/[vikashpandey.phy].Sent Mail" . ?s)
+                                            ("/vikashpandey.phy-gmail/[vikashpandey.phy].Trash"       . ?t)
+                                            ("/vikashpandey.phy-gmail/[vikashpandey.phy].All Mail"  . ?a)
+                                            ("/vikashpandey.phy-gmail/[vikashpandey.phy].Starred"   . ?r)
+                                            ("/vikashpandey.phy-gmail/[vikashpandey.phy].drafts"    . ?d)
+                                            ))))
+       (make-mu4e-context
+        :name "personal" ;;for acc2-gmail
+        :enter-func (lambda () (mu4e-message "Entering context personal"))
+        :leave-func (lambda () (mu4e-message "Leaving context personal"))
+        :match-func (lambda (msg)
+                      (when msg
+                    (mu4e-message-contact-field-matches
+                     msg '(:from :to :cc :bcc) "vikashp@tifrh.res.in")))
+        :vars '((user-mail-address . "vikashp@tifrh.res.in")
+                (user-full-name . "Vikash Pandey")
+                (mu4e-sent-folder . "/vikashp-gmail/[vikashp].Sent Mail")
+                (mu4e-drafts-folder . "/vikashp-gmail/[vikashp].drafts")
+                (mu4e-trash-folder . "/vikashp-gmail/[vikashp].Trash")
+                (mu4e-compose-signature . (concat "Vikash Pandey\n" "Emacs is awesome!\n"))
+                (mu4e-compose-format-flowed . t)
+                (smtpmail-queue-dir . "~/.Maildir/vikashp-gmail/queue/cur")
+                (message-send-mail-function . smtpmail-send-it)
+                (smtpmail-smtp-user . "vikashp@tifrh.res.in")
+                (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+                (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+                (smtpmail-default-smtp-server . "smtp.gmail.com")
+                (smtpmail-smtp-server . "smtp.gmail.com")
+                (smtpmail-smtp-service . 587)
+                (smtpmail-debug-info . t)
+                (smtpmail-debug-verbose . t)
+                (mu4e-maildir-shortcuts . ( ("/vikashp-gmail/INBOX"            . ?i)
+                                            ("/vikashp-gmail/[vikashp].Sent Mail" . ?s)
+                                            ("/vikashp-gmail/[vikashp].Trash"     . ?t)
+                                            ("/vikashp-gmail/[vikashp].All Mail"  . ?a)
+                                            ("/vikashp-gmail/[vikashp].Starred"   . ?r)
+                                            ("/vikashp-gmail/[vikashp].drafts"    . ?d)
+                                            ))))))
+
+#+end_src
+* Elfeed for journal articles and comics
+#+begin_src emacs-lisp
+;; need to figure out how to push relevant article to some file 
+(require 'elfeed)
+;; (require 'elfeed-org)
+;; (elfeed-org)
+;; (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+(setq elfeed-feeds
+      '(("https://www.archlinux.org/feeds/news/" archlinux)
+      ("http://www.smbc-comics.com/rss.php" smbc comic)
+      ("https://www.xkcd.com/rss.xml" xkcd comic)
+;;       ; ("http://emacsrocks.com/atom.xml" emacsrocks emacs)
+      ("https://phys.org/rss-feed/breaking/space-news/space-exploration/" space-sci)
+       ("http://export.arxiv.org/api/query?search_query=physics.ed-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" phy-ed)
+       ("http://export.arxiv.org/api/query?search_query=cond-mat.stat-mech&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" cond-mat)
+       ("http://export.arxiv.org/api/query?search_query=physics.hist-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" hist-ph)
+       ("http://export.arxiv.org/api/query?search_query=physics.flu-dyn&start=0&max_results=30&sortBy=submittedDate&sortOrder=descending" fluid-dyn)
+       ;; ("https://arxiv.org/list/physics.ao-ph/recent" arxiv atmosphere and oceanic)
+;      ("http://export.arxiv.org/rss/physics.hist-ph" arxiv hist and philosophy physics)
+      ; ("http://export.arxiv.org/rss/physics.ed-ph" arxiv physics education)
+      ; ("http://export.arxiv.org/rss/cond-mat.stat-mech" arxiv condensed matter)
+       ))
+
+(defun concatenate-authors (authors-list)
+  "Given AUTHORS-LIST, list of plists; return string of all authors
+concatenated."
+  (mapconcat
+   (lambda (author) (plist-get author :name))
+   authors-list ", "))
+
+
+(defun my-search-print-fn (entry)
+  "Print ENTRY to the buffer."
+  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+	 (title (or (elfeed-meta entry :title)
+		    (elfeed-entry-title entry) ""))
+	 (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+	 (feed (elfeed-entry-feed entry))
+	 (feed-title
+	  (when feed
+	    (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+	 (entry-authors (concatenate-authors
+			 (elfeed-meta entry :authors)))
+	 (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+	 (tags-str (mapconcat
+		    (lambda (s) (propertize s 'face
+					    'elfeed-search-tag-face))
+		    tags ","))
+	 (title-width (- (window-width) 10
+			 elfeed-search-trailing-width))
+	 (title-column (elfeed-format-column
+			title (elfeed-clamp
+			       elfeed-search-title-min-width
+			       title-width
+			       elfeed-search-title-max-width)
+			:left))
+	 (authors-width 135)
+	 (authors-column (elfeed-format-column
+			entry-authors (elfeed-clamp
+			       elfeed-search-title-min-width
+			       authors-width
+			       131)
+			:left)))
+
+    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+
+    (insert (propertize title-column
+			'face title-faces 'kbd-help title) " ")
+
+    (insert (propertize authors-column
+			'face 'elfeed-search-date-face
+			'kbd-help entry-authors) " ")
+
+    ;; (when feed-title
+    ;;   (insert (propertize entry-authors
+    ;; 'face 'elfeed-search-feed-face) " "))
+
+;    (when entry-authors
+ ;     (insert (propertize feed-title
+;			  'face 'elfeed-search-feed-face) " "))
+
+    ;; (when tags
+    ;;   (insert "(" tags-str ")"))
+
+    )
+  )
+(setq elfeed-search-print-entry-function #'my-search-print-fn)
+
+(require 'elfeed-score)
+(elfeed-score-enable)
+(define-key elfeed-search-mode-map "=" elfeed-score-map) ; need to see if this works
+#+end_src
