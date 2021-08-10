@@ -61,7 +61,7 @@ Load the doom theme as all is talking about the theme
 
   (use-package spacegray-theme :defer t)
   (use-package doom-themes :defer t)
-  (load-theme 'doom-material t)
+  (load-theme 'doom-ayu-mirage t)
   (doom-themes-visual-bell-config)
 
   ;; (load-theme 'gruvbox-dark-soft t)
@@ -339,89 +339,95 @@ Load the doom theme as all is talking about the theme
 (use-package visual-fill-column
   :hook (org-mode . org-mode-visual-fill))
 #+end_src
+
+* Lsp configurations
+
+#+begin_src emacs-lisp
+      (use-package which-key)
+
+      (defun efs/lsp-mode-setup ()
+	(setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+	(lsp-headerline-breadcrumb-mode))
+
+      (use-package lsp-mode
+	:commands (lsp lsp-deferred)
+	:hook (lsp-mode . efs/lsp-mode-setup)
+	:init
+	(setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+	:config
+	(lsp-enable-which-key-integration t))
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+
+  (use-package company
+      :after lsp-mode
+      :hook (lsp-mode . company-mode)
+      :bind (:map company-active-map
+	     ("<tab>" . company-complete-selection))
+	    (:map lsp-mode-map
+	     ("<tab>" . company-indent-or-complete-common))
+      :custom
+      (company-minimum-prefix-length 1)
+      (company-idle-delay 0.0))
+
+    (use-package lsp-treemacs
+	:after lsp)
+
+#+end_src
+
+
+
+
 * Latex Configurations
   #+begin_src emacs-lisp
-              (setq TeX-auto-save t)
-              (setq TeX-parse-self t)
-              (setq-default TeX-master t)
-              ;; lets try lsp
-              (use-package lsp-mode
-              :ensure t
-              :demand t
-              :config
-              (setq-default lsp-highlight-symbol-at-point nil)
-              )
-
-              ;; (use-package lsp-imenu
-              ;; :after lsp-mode
-              ;; :hook (lsp-after-open . lsp-enable-imenu))
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master t)
+    ;; lets try lsp
 
 
-              (use-package lsp-ui
-              :ensure t
-              :config
-              (setq lsp-ui-sideline-show-hover nil
-              lsp-ui-sideline-ignore-duplicate t
-              ;; TODO: wtf is going on with the sideline?
-              lsp-ui-sideline-enable nil)
-              (set-face-attribute 'lsp-ui-doc-background  nil :background "#f9f2d9")
-              (add-hook 'lsp-ui-doc-frame-hook
-              (lambda (frame _w)
-              (set-face-attribute 'default frame :font "Overpass Mono 11")))
-              (set-face-attribute 'lsp-ui-sideline-global nil
-              :inherit 'shadow
-              :background "#f9f2d9")
-              :hook (lsp-mode . lsp-ui-mode))
+    (add-hook 'LaTeX-mode-hook
+              '(lambda ()
+                 (use-package latex-math-preview )
+                 (use-package latex-extra)
+                 (use-package ac-math)
+                 (use-package latex-math-preview)
+                 (setq TeX-PDF-mode t)
+                 (company-mode)
+                 (flyspell-mode)
+                 (flycheck-mode)
+                 (outline-minor-mode t)
+                 (abbrev-mode)
+                 (auto-fill-mode)
+                 ))
 
-              (use-package company-lsp
-              :ensure t
-              :config
-              (setq company-lsp-enable-snippet t
-              company-lsp-cache-candidates t)
-              (push 'company-lsp company-backends)
-              )
+    (use-package reftex
+      ;; :defer 3
+      :commands turn-on-reftex
+      :hook ((latex-mode LaTeX-mode) . turn-on-reftex)
+      :config
+      (setq reftex-plug-into-AUCTeX t))
 
-            (add-hook 'LaTeX-mode-hook
-                      '(lambda ()
-                         (use-package lsp-latex)
-                         (use-package latex-math-preview )
-                         (use-package latex-extra)
-                         (use-package ac-math)
-                         (use-package latex-math-preview)
-                         (setq TeX-PDF-mode t)
-                         (company-mode)
-                         (flyspell-mode)
-                         (flycheck-mode)
-                         (outline-minor-mode t)
-                         (abbrev-mode)
-                         (auto-fill-mode)
-                         ))
+    (with-eval-after-load "tex"
+      ;; enable synctex support for latex-mode
+      (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+      ;; add a new view program
+      (add-to-list 'TeX-view-program-list
+                   '(;; arbitrary name for this view program
+                     "Zathura"
+                     (;; zathura command (may need an absolute path)
+                      "zathura"
+                      ;; %o expands to the name of the output file
+                      " %o"
+                      ;; insert page number if TeX-source-correlate-mode
+                      ;; is enabled
+                      (mode-io-correlate " --synctex-forward %n:0:%b"))))
+      ;; use the view command named "Zathura" for pdf output
+      (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
 
-        (use-package reftex
-          ;; :defer 3
-          :commands turn-on-reftex
-          :hook ((latex-mode LaTeX-mode) . turn-on-reftex)
-          :config
-          (setq reftex-plug-into-AUCTeX t))
-
-            (with-eval-after-load "tex"
-              ;; enable synctex support for latex-mode
-              (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-              ;; add a new view program
-              (add-to-list 'TeX-view-program-list
-                    '(;; arbitrary name for this view program
-                      "Zathura"
-                      (;; zathura command (may need an absolute path)
-                       "zathura"
-                       ;; %o expands to the name of the output file
-                       " %o"
-                       ;; insert page number if TeX-source-correlate-mode
-                       ;; is enabled
-                       (mode-io-correlate " --synctex-forward %n:0:%b"))))
-              ;; use the view command named "Zathura" for pdf output
-              (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
-
-            (quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
+    (quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
 
     (use-package cdlatex
       :ensure t
@@ -465,35 +471,49 @@ Load the doom theme as all is talking about the theme
       )
 
   #+end_src
+
+
 * Fortran Config 
   #+begin_src emacs-lisp
-  (setq fortran-continuation-string "&")
-  (setq fortran-do-indent 4)
-  (setq fortran-if-indent 4)
-  (setq fortran-structure-indent 4)
+      (setq fortran-continuation-string "&")
+      (setq fortran-do-indent 4)
+      (setq fortran-if-indent 4)
+      (setq fortran-structure-indent 4)
 
-  ;; Fortran 90 settings
-  (setq f90-do-indent 4)
-  (setq f90-if-indent 4)
-  (setq f90-type-indent 2)
-  (setq f90-program-indent 2)
-  (setq f90-continuation-indent 4)
-  (setq f90-smart-end 'blink)
+      ;; Fortran 90 settings
+      (setq f90-do-indent 4)
+      (setq f90-if-indent 4)
+      (setq f90-type-indent 2)
+      (setq f90-program-indent 2)
+      (setq f90-continuation-indent 4)
+      (setq f90-smart-end 'blink)
 
-;; Set Fortran and Fortran 90 mode for appropriate extensions
-(setq auto-mode-alist
-      (cons '("\\.F90$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.pf$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.f95$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.F$" . fortran-mode) auto-mode-alist))
+    ;; Set Fortran and Fortran 90 mode for appropriate extensions
+    (setq auto-mode-alist
+	  (cons '("\\.F90$" . f90-mode) auto-mode-alist))
+    (setq auto-mode-alist
+	  (cons '("\\.pf$" . f90-mode) auto-mode-alist))
+    (setq auto-mode-alist
+	  (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
+    (setq auto-mode-alist
+	  (cons '("\\.f95$" . f90-mode) auto-mode-alist))
+    (setq auto-mode-alist
+	  (cons '("\\.F$" . fortran-mode) auto-mode-alist))
 
+    (add-hook 'fortran-mode-hook 'lsp)
+    ;; (add-to-list 'lsp-language-id-configuration '(fortran-mode . "fortran"))
 
   #+end_src
+* Python
+
+
+#+begin_src emacs-lisp
+
+  (add-hook 'python-mode-hook 'lsp)
+  ;; (add-to-list 'lsp-language-id-configuration '(python-mode . "python"))
+
+#+end_src
+
 * Git Config
   #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
       (use-package magit
