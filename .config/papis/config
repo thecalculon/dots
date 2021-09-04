@@ -1,0 +1,115 @@
+
+
+
+[settings]
+use-cache = False
+file-browser = ranger
+# Ask for confirmation when doing papis add
+add-confirm = False
+# papis add --edit
+add-edit = False
+# papis add --open
+add-open = False
+match-format = {doc[tags]}{doc.subfolder}{doc[title]}{doc[author]}{doc[year]}
+header-format = <red>{doc.html_escape[title]}</red>
+  <span color='#ff00ff'>  {doc.html_escape[author]}</span>
+  <yellow>   ({doc.html_escape[year]})</yellow>
+
+
+[tui]
+editmode = nvim
+options_list.selected_margin_style = bg:ansigreen fg:ansired
+options_list.unselected_margin_style =
+
+[papers] 
+dir = ~/Documents/papers 
+
+[arxiv-cm]
+dir = ~/Documents/papers/arxiv-cond-matt
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[arxiv-fl]
+dir = ~/Documents/papers/arxiv-fluid
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[bubbles-paper]
+dir = ~/Documents/papers/bubbles-paper
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[books]
+dir = ~/Documents/papers/books
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[inertial-particles]
+dir = ~/Documents/papers/inertial-particles
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+
+[prl-rmp]
+dir = ~/Documents/papers/prl-rmp
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+
+[others]
+dir = ~/Documents/papers/others
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+
+[turbulence]
+dir = ~/Documents/papers/turbulence
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[phdthesis]
+dir = ~/Documents/papers/phdthesis
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+
+[hist-phy-ed]
+dir = ~/Documents/papers/hist-phy-ed
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[lectures]
+dir = ~/Documents/papers/lectures
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+[my-papers]
+dir = ~/Documents/papers/my-papers
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+

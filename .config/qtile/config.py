@@ -12,7 +12,7 @@ from typing import List
 mod = "mod4"
 MYFONT = "Hack Nerd Font"
 myTerm = "kitty"
-myBrowser = "google-chrome-stable"
+myBrowser = "qutebrowser"
 myConfig = "~/.config/qtile/config.py"
 myFileManager = "pcmanfm"
 myPDFReader = "zathura"
@@ -27,6 +27,18 @@ MAGENTA = '#c594c5'
 CYAN = '#5fb3b3'
 WHITE = '#ffffff'
 
+def hide_show_bar(qtile):
+    bar = qtile.currentScreen.top
+    if bar.size == 0:
+        bar.size = 30
+        bar.window.unhide()
+    else:
+        bar.size = 0
+        bar.window.hide()
+    qtile.currentGroup.layoutAll()
+
+
+Key("M-S-d", lazy.function(hide_show_bar))
 
 keys = [
 	# Qtile Controls
@@ -62,11 +74,13 @@ keys = [
 	Key("A-k", lazy.spawn("brightnessctl set 10%+")),
 
 	# Applications launcher
-	Key("M-d", lazy.spawn("dmenu_run")),
+	Key("M-d", lazy.spawn("/home/vikash/.config/rofi/bin/launcher_misc")),
+	Key("M-w", lazy.spawn("rofi -show window")),
 	Key("M-A-i", lazy.spawn(myBrowser)),
 	Key("M-e", lazy.spawn(myFileManager)),
 	Key("M-A-p", lazy.spawn(myPDFReader)),
 	Key("M-<Return>", lazy.spawn(myTerm)),
+	Key("M-b", lazy.spawn("papis --set picktool rofi open")),
 	Key("M-A-t", lazy.spawn(myTextEditor)),
 ]
 # GROUPS
@@ -75,7 +89,7 @@ groups = (
     Group('2:  ', layout='max'),
     Group('3:  ', layout='monadtall'),
     Group('4:  ', layout='floating'),
-    Group('5:  ', layout='floating'),
+    Group('5:  ', layout='treetab'),
     Group('6:  ', layout='floating'),
     Group('7:  ', layout='floating'),
     Group('8:  ', layout='floating'),
@@ -94,20 +108,21 @@ layout_theme = {"border_focus": GREEN,
 }
 
 layouts = [
-	#layout.Bsp(**layout_theme),
-	layout.Columns(**layout_theme),
+	# layout.Bsp(**layout_theme),
+	#layout.Columns(**layout_theme),
 	#layout.Matrix(**layout_theme),
 	#layout.MonadWide(**layout_theme),
 	#layout.RatioTile(**layout_theme),
 	#layout.Slice(**layout_theme),
-	#layout.Stack(num_stacks=2),
-	#layout.Stack(stacks=2, **layout_theme),
+	layout.Stack(num_stacks=1),
+	#layout.Stack(stacks=1, **layout_theme),
 	#layout.Tile(shift_windows=True, **layout_theme),
 	#layout.VerticalTile(**layout_theme),
 	#layout.Zoomy(**layout_theme),
 	layout.Floating(**layout_theme),
 	layout.Max(**layout_theme),
-	layout.MonadTall(**layout_theme)
+	layout.MonadTall(**layout_theme),
+        layout.TreeTab(**layout_theme)
 ]
 
 colours = [["#141414", "#141414"], # Background
@@ -136,7 +151,7 @@ widgets = [
             foreground=WHITE,
             background=BLACK,
 		filename = "~/.config/qtile/py.png",
-		mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("dmenu_run")},
+		mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("/home/vikash/.config/rofi/bin/launcher_misc")},
 		scale = True,
 	),
 	widget.Sep(
@@ -351,9 +366,9 @@ focus_on_window_activation = "smart"
 follow_mouse_focus = True
 reconfigure_screens = True
 
-@hook.subscribe.startup_once
+@hook.subscribe.startup
 def autostart():
-	home = os.path.expanduser('~/.config/qtile/autostart.sh')
+	home = os.path.expanduser('/home/vikash/.config/qtile/autostart.sh')
 	subprocess.call([home])
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this

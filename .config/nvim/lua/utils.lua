@@ -38,7 +38,7 @@ vim.wo.signcolumn = 'number'
 
 -- set font in gui
 if vim.o.guifont then
-  vim.o.guifont = 'Fira Code'
+  vim.o.guifont = 'IBM Plex Mono SemiBold'
 end
 
 -- split a new buffer to the right

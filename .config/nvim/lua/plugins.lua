@@ -77,12 +77,9 @@ vf = require('vfuncs')
 vf.plug.begin(vf.stdpath('data') .. '/plugged')
 --new theme moving from gruvbox
 vim.cmd("Plug 'ayu-theme/ayu-vim'")
+--vim.cmd("Plug  'kaicataldo/material.vim', { 'branch': 'main' }")
 vim.cmd("Plug 'dag/vim-fish'")
 -- vscode plugins in vim
-vim.cmd("Plug 'neoclide/coc.nvim', {'branch': 'release'}")
--- semantic highlighting
-vim.cmd("Plug 'nvim-treesitter/nvim-treesitter'")
--- smooth scrolling
 vim.cmd("Plug 'psliwka/vim-smoothie'") 
 -- statusline
 --vim.cmd("Plug 'hoob3rt/lualine.nvim'")
@@ -90,11 +87,34 @@ vim.cmd("Plug 'psliwka/vim-smoothie'")
 vim.cmd("Plug 'machakann/vim-sandwich'")
 vim.cmd("Plug 'tpope/vim-commentary'")
 vim.cmd("Plug 'tpope/vim-surround'")
-vim.cmd("Plug 'junegunn/vim-easy-align'")
+
+vim.cmd("Plug 'neovim/nvim-lspconfig'")
+
+vim.cmd("Plug 'hrsh7th/nvim-compe'")
+
+vim.cmd("Plug 'lervag/vimtex'")
+vim.cmd("Plug 'windwp/nvim-autopairs'")
+vim.cmd("Plug 'ray-x/lsp_signature.nvim'")
+vim.cmd("Plug 'nvim-lua/popup.nvim'")
+vim.cmd("Plug 'nvim-lua/plenary.nvim'")
+vim.cmd("Plug 'nvim-telescope/telescope.nvim'")
+vim.cmd("Plug 'nvim-telescope/telescope-fzy-native.nvim'")
+
+
 
 vf.plug['end']()
 
 -- import plugs settings
-require('plugs.treesitter')
-require('plugs.ayu')
-require('plugs.coc')
+
+vim.cmd("set termguicolors") 
+-- vim.cmd("let ayucolor='light'")
+vim.cmd("let ayucolor='mirage'")
+-- vim.cmd("let ayucolor='dark'" )
+vim.cmd("colorscheme ayu")
+require('config.lsp')
+require('config.vimtex')
+require('config.compe')
+require('config.telescope')
+require('config.autopairs')
+
+-- require('plugs.material')
