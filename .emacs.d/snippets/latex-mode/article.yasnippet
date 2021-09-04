@@ -5,15 +5,11 @@
 # group: skeleton
 # name: \documentclass{article} ...
 # --
-\documentclass[11pt]{article}
+\documentclass[a4,12pt]{article}
+\usepackage[top=0.8in,bottom=0.8in,left=0.8in,right=0.8in]{geometry}
 
-\usepackage{graphicx,amsmath,amssymb,subfigure,url,xspace}
-\newcommand{\eg}{e.g.,\xspace}
-\newcommand{\bigeg}{E.g.,\xspace}
-\newcommand{\etal}{\textit{et~al.\xspace}}
-\newcommand{\etc}{etc.\@\xspace}
-\newcommand{\ie}{i.e.,\xspace}
-\newcommand{\bigie}{I.e.,\xspace}
+\input{/home/vikash/.local/include/latex_headers.tex} % Include article preamble.
+\input{/home/vikash/.local/include/latex_abbrev.tex} % Include article preamble.
 
 \title{${1:title}}
 \author{${2:Author Name}}
@@ -26,3 +22,10 @@
 \bibliography{${4:literature.bib}}
 
 \end{document}
+
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% TeX-command-extra-options: "-output-directory=./tmp"
+%%% End: 
