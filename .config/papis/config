@@ -24,6 +24,14 @@ options_list.unselected_margin_style =
 [papers] 
 dir = ~/Documents/papers 
 
+[scihub]
+dir = ~/Documents/papers/scihub
+add-folder-name = {doc[author]}{doc[year]}
+database-backend = whoosh 
+# rename files added by author and title
+add-file-name = {doc[title]}
+
+
 [arxiv-cm]
 dir = ~/Documents/papers/arxiv-cond-matt
 add-folder-name = {doc[author]}{doc[year]}

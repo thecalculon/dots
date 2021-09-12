@@ -10,6 +10,7 @@ run() {
 lock &
 nm-applet &                              # network manager applet 
 nitrogen --restore &                    # wallpaper
-picom  &                                 # compositor
+flameshot &                    # wallpaper
+picom --experimental-backends & 
 
 

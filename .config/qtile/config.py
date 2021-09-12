@@ -74,7 +74,7 @@ keys = [
 	Key("A-k", lazy.spawn("brightnessctl set 10%+")),
 
 	# Applications launcher
-	Key("M-d", lazy.spawn("/home/vikash/.config/rofi/bin/launcher_misc")),
+	Key("M-d", lazy.spawn("/home/vikash/.config/rofi/bin/launcher_ribbon")),
 	Key("M-w", lazy.spawn("rofi -show window")),
 	Key("M-A-i", lazy.spawn(myBrowser)),
 	Key("M-e", lazy.spawn(myFileManager)),

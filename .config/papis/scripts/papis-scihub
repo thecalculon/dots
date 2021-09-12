@@ -158,9 +158,9 @@ if [[ ! $? = 0 ]]; then
   log "Something happened"
   exit 1
 fi
-
+dashfr="--from"
 set -x
 papis ${PAPIS_VERBOSE} -l scihub \
   add ${pdf_output} \
-  --from doi ${doi} $@
+   $dashfr doi ${doi} $@
 set +x
