@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: pystart
+# key: pys_
+# --
+#+begin_src python :session $0
+
+import numpy as np
+import matplotlib.pyplot as plt
+import snipy as snp
+plt.style.use('~/.matplotlib/matplotlibrc')
+
+#+end_src

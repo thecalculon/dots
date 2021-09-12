@@ -12,25 +12,28 @@
 ** First thing first; set up the all the packages and add the load paths
 
 #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
-(package-initialize)
-(server-start)
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
-(unless (assoc-default "org" package-archives)
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
-(add-to-list 'load-path "/usr/share/emacs/site-lisp")
-(add-to-list 'custom-theme-load-path "/home/vikash/.emacs.d/themes")
+  (package-initialize)
+  (server-start)
+  (unless (assoc-default "melpa" package-archives)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
+  (unless (assoc-default "org" package-archives)
+    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp")
+  (add-to-list 'custom-theme-load-path "/home/vikash/.emacs.d/themes")
+
 #+end_src
 
 ** Name and info
 #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
 
-(setq user-full-name "Vikash"
-      user-mail-address "vikashpandey.phy@gmail.com")
+  (setq user-full-name "Vikash"
+        user-mail-address "vikashpandey.phy@gmail.com")
+
 #+end_src
 
 ** Tramp for remote config
@@ -72,126 +75,134 @@ Load the doom theme as all is talking about the theme
 ** Modeline
  
 #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
-;; You must run (all-the-icons-install-fonts) one time after
-;; installing this package!
-(use-package all-the-icons)
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1))
-  ;;:custom ((doom-modeline-height 15))
-(setq doom-modeline-height 3)
-(use-package minions
-  :hook (doom-modeline-mode . minions-mode))
-(setq display-time-24hr-format t)
+  ;; You must run (all-the-icons-install-fonts) one time after
+  ;; installing this package!
+  (use-package all-the-icons)
+
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1))
+    ;;:custom ((doom-modeline-height 15))
+  (setq doom-modeline-height 3)
+  (use-package minions
+    :hook (doom-modeline-mode . minions-mode))
+  (setq display-time-24hr-format t)
+
 #+end_src
 ** Font Config
-   #+begin_src emacs-lisp
-     (set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
-     ;; Set the fixed pitch face
-     (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+ #+begin_src emacs-lisp
+
+   (set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+   ;; Set the fixed pitch face
+   (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
 
 
-     ;; (set-face-attribute 'default nil :font "Source Code Pro Semibold" :height default-font-size)
-     ;; Set the fixed pitch face
-     ;; (set-face-attribute 'fixed-pitch nil :font "Source Code Pro Semibold" :height default-font-size)
+   ;; (set-face-attribute 'default nil :font "Source Code Pro Semibold" :height default-font-size)
+   ;; Set the fixed pitch face
+   ;; (set-face-attribute 'fixed-pitch nil :font "Source Code Pro Semibold" :height default-font-size)
 
-                                             ;          (set-face-attribute 'default nil :font "Fira Code Medium" :height default-font-size)
-     ;; Set the fixed pitch face
-                                             ;          (set-face-attribute 'fixed-pitch nil :font "Fira Code Medium" :height default-font-size)
-     ;; Set the variable pitch face
+                                           ;          (set-face-attribute 'default nil :font "Fira Code Medium" :height default-font-size)
+   ;; Set the fixed pitch face
+                                           ;          (set-face-attribute 'fixed-pitch nil :font "Fira Code Medium" :height default-font-size)
+   ;; Set the variable pitch face
 
-     ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 145)
-     (set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
+   ;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 145)
+   (set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
 
-                                             ;      (use-package fira-code-mode
-                                             ;      :config (global-fira-code-mode))
+                                           ;      (use-package fira-code-mode
+                                           ;      :config (global-fira-code-mode))
 
-     ;; (use-package rainbow-delimiters
-     ;; :hook (prog-mode . rainbow-delimiters-mode))
+   ;; (use-package rainbow-delimiters
+   ;; :hook (prog-mode . rainbow-delimiters-mode))
 
-     (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+   (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
-   #+end_src
+#+end_src
    
 ** Set up the evil-mode
    #+begin_src emacs-lisp
-   (use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+        (use-package evil
+       :init
+       (setq evil-want-integration t)
+       (setq evil-want-keybinding nil)
+       (setq evil-want-C-u-scroll t)
+       (setq evil-want-C-i-jump nil)
+       :config
+       (evil-mode 1)
+       (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+       (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+       ;; Use visual line motions even outside of visual-line-mode buffers
+       (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+       (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+       (evil-set-initial-state 'messages-buffer-mode 'normal)
+       (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-commentary
-:after evil
-:config 
-  (evil-commentary-mode t))
+     (use-package evil-collection
+       :after evil
+       :config
+       (evil-collection-init))
+
+     (use-package evil-commentary
+     :after evil
+     :config 
+       (evil-commentary-mode t))
 
 
    #+end_src
    
 ** I need to organize these 
    #+begin_src emacs-lisp
-   (setq load-prefer-newer t)
-   (fset 'yes-or-no-p 'y-or-n-p)
-   ; want emacs to start scratch instead of manual
-   (setq inhibit-startup-screen t)
-   ;; set the path for the backup files and stuffs
-   (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-   (setq delete-old-versions -1)
-   (setq version-control t)
-   (setq vc-make-backup-files t)
-   (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-   
-   (tool-bar-mode -1)
-   (menu-bar-mode -1)
-   (electric-pair-mode)
-   (display-time-mode 1)
-   
-   (setq blink-matching-paren nil)
-   (show-paren-mode t)
-   (setq show-paren-delay 0)
-   (setq show-paren-style 'parenthesis)
-   (abbrev-mode t)
-   (setq ring-bell-function 'ignore)
-   (setq visible-bell t)
+
+     (setq load-prefer-newer t)
+     (fset 'yes-or-no-p 'y-or-n-p)
+     ; want emacs to start scratch instead of manual
+     (setq inhibit-startup-screen t)
+     ;; set the path for the backup files and stuffs
+     (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+     (setq delete-old-versions -1)
+     (setq version-control t)
+     (setq vc-make-backup-files t)
+     (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+
+     (tool-bar-mode -1)
+     (menu-bar-mode -1)
+     (electric-pair-mode)
+     (display-time-mode 1)
+
+     (setq blink-matching-paren nil)
+     (show-paren-mode t)
+     (setq show-paren-delay 0)
+     (setq show-paren-style 'parenthesis)
+     (abbrev-mode t)
+     (setq ring-bell-function 'ignore)
+     (setq visible-bell t)
+
    #+end_src
 
 * Completions
 ** Company config
    #+begin_src emacs-lisp
-;I guess will use the yas mode everywhere
-     (yas-global-mode 1)
-           (use-package company
-                     :ensure t
-                     :init 
-                     (add-hook 'after-init-hook 'global-company-mode))
 
-          (use-package company-auctex
-                     :ensure t
-                     :init
-                    (add-hook 'LaTeX-mode-hook 'company-auctex-init))
+     ;I guess will use the yas mode everywhere
+          (yas-global-mode 1)
+                (use-package company
+                          :ensure t
+                          :init 
+                          (add-hook 'after-init-hook 'global-company-mode))
+
+               (use-package company-auctex
+                          :ensure t
+                          :init
+                         (add-hook 'LaTeX-mode-hook 'company-auctex-init))
 
 
    #+end_src
 ** Ivy for suggestions
   #+begin_src emacs-lisp
+
       (use-package ivy
       :diminish
       :bind (("C-s" . swiper)
@@ -226,9 +237,16 @@ Load the doom theme as all is talking about the theme
 * My keybindings
 
 #+begin_src emacs-lisp  :tangle /home/vikash/.emacs.d/init.el
+
+  (global-set-key (kbd "<f6>") 'elfeed)
+  (global-set-key (kbd "<f7>") 'mu4e)
+  (defun mp-add-elfeed-keys ()
+    (local-set-key (kbd "C-a") 'elfeed-update))
+
+  (add-hook 'elfeed-search-mode-hook 'mp-add-elfeed-keys)
+
   (global-set-key (kbd "\eo") 'other-window)
   (global-set-key (kbd "RET") 'newline-and-indent)
-  (global-set-key (kbd "C-x C-i") 'string-insert-rectangle)
   (define-key global-map "\ef" 'counsel-find-file) 
   (global-set-key (read-kbd-macro "\eb") 'ivy-switch-buffer)
   (define-key global-map "\eg" 'goto-line)
@@ -259,30 +277,32 @@ Load the doom theme as all is talking about the theme
   (global-set-key (kbd "C-c J") 'counsel-file-jump)
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (global-set-key (kbd "C-c w") 'counsel-wmctrl)
+
 #+end_src
 
 * Up arrows bad
   Need to figure out what dw/is-termux variable
   #+begin_src emacs-lisp
-  (defun dw/dont-arrow-me-bro ()
-  (interactive)
-  (message "Arrow keys are bad, you know?"))
-  
-  ; (unless dw/is-termux
-    ;; Disable arrow keys in normal and visual modes
-    (define-key evil-normal-state-map (kbd "<left>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<right>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<down>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<up>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<left>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<right>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<down>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<up>") 'dw/dont-arrow-me-bro)
-;)
 
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal)
-;)
+      (defun dw/dont-arrow-me-bro ()
+      (interactive)
+      (message "Arrow keys are bad, you know?"))
+  
+      ; (unless dw/is-termux
+        ;; Disable arrow keys in normal and visual modes
+        (define-key evil-normal-state-map (kbd "<left>") 'dw/dont-arrow-me-bro)
+        (define-key evil-normal-state-map (kbd "<right>") 'dw/dont-arrow-me-bro)
+        (define-key evil-normal-state-map (kbd "<down>") 'dw/dont-arrow-me-bro)
+        (define-key evil-normal-state-map (kbd "<up>") 'dw/dont-arrow-me-bro)
+        (evil-global-set-key 'motion (kbd "<left>") 'dw/dont-arrow-me-bro)
+        (evil-global-set-key 'motion (kbd "<right>") 'dw/dont-arrow-me-bro)
+        (evil-global-set-key 'motion (kbd "<down>") 'dw/dont-arrow-me-bro)
+        (evil-global-set-key 'motion (kbd "<up>") 'dw/dont-arrow-me-bro)
+    ;)
+
+        (evil-set-initial-state 'messages-buffer-mode 'normal)
+        (evil-set-initial-state 'dashboard-mode 'normal)
+    ;)
 
   #+end_src
 * Org-mode Configs
@@ -307,6 +327,7 @@ Load the doom theme as all is talking about the theme
   (setq org-confirm-babel-evaluate nil)
   ;; Syntax highlight in #+BEGIN_SRC blocks
   (setq org-src-fontify-natively t)
+
 #+end_src
 
 #+RESULTS:
@@ -560,132 +581,133 @@ Load the doom theme as all is talking about the theme
   #+end_src
 * Org organize days
   #+begin_src emacs-lisp :tangle /home/vikash/.emacs.d/init.el
-  (defun org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (visual-line-mode 1))
+      (defun org-mode-setup ()
+      (org-indent-mode)
+      (variable-pitch-mode 1)
+      (visual-line-mode 1))
 
-(use-package org
-  :hook (org-mode . org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾")
+    (use-package org
+      :hook (org-mode . org-mode-setup)
+      :config
+      (setq org-ellipsis " ▾")
 
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
+      (setq org-agenda-start-with-log-mode t)
+      (setq org-log-done 'time)
+      (setq org-log-into-drawer t)
 
-  (setq org-agenda-files
-        '("~/Documents/OrgFiles/Tasks.org"
-          "~/Documents/OrgFiles/Habits.org"
-          "~/Documents/OrgFiles/Birthdays.org"))
+      (setq org-agenda-files
+            '("~/Documents/OrgFiles/Tasks.org"
+              "~/Documents/OrgFiles/Habits.org"
+              "~/Documents/OrgFiles/Birthdays.org"))
 
-  (require 'org-habit)
-  (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-graph-column 60)
+      (require 'org-habit)
+      (add-to-list 'org-modules 'org-habit)
+      (setq org-habit-graph-column 60)
 
-  (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+      (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-  (setq org-refile-targets
-    '(("Archive.org" :maxlevel . 1)
-      ("Tasks.org" :maxlevel . 1)))
+      (setq org-refile-targets
+        '(("Archive.org" :maxlevel . 1)
+          ("Tasks.org" :maxlevel . 1)))
 
-  ;; Save Org buffers after refiling!
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+      ;; Save Org buffers after refiling!
+      (advice-add 'org-refile :after 'org-save-all-org-buffers)
 
-  (setq org-tag-alist
-    '((:startgroup)
-       ; Put mutually exclusive tags here
-       (:endgroup)
-       ("@errand" . ?E)
-       ("@home" . ?H)
-       ("@work" . ?W)
-       ("agenda" . ?a)
-       ("planning" . ?p)
-       ("publish" . ?P)
-       ("batch" . ?b)
-       ("note" . ?n)
-       ("idea" . ?i)))
+      (setq org-tag-alist
+        '((:startgroup)
+           ; Put mutually exclusive tags here
+           (:endgroup)
+           ("@errand" . ?E)
+           ("@home" . ?H)
+           ("@work" . ?W)
+           ("agenda" . ?a)
+           ("planning" . ?p)
+           ("publish" . ?P)
+           ("batch" . ?b)
+           ("note" . ?n)
+           ("idea" . ?i)))
 
-  ;; Configure custom agenda views
-  (setq org-agenda-custom-commands
-   '(("d" "Dashboard"
-     ((agenda "" ((org-deadline-warning-days 7)))
-      (todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))
-      (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+      ;; Configure custom agenda views
+      (setq org-agenda-custom-commands
+       '(("d" "Dashboard"
+         ((agenda "" ((org-deadline-warning-days 7)))
+          (todo "NEXT"
+            ((org-agenda-overriding-header "Next Tasks")))
+          (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-    ("n" "Next Tasks"
-     ((todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))))
+        ("n" "Next Tasks"
+         ((todo "NEXT"
+            ((org-agenda-overriding-header "Next Tasks")))))
 
-    ("W" "Work Tasks" tags-todo "+work-email")
+        ("W" "Work Tasks" tags-todo "+work-email")
 
-    ;; Low-effort next actions
-    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-     ((org-agenda-overriding-header "Low Effort Tasks")
-      (org-agenda-max-todos 20)
-      (org-agenda-files org-agenda-files)))
+        ;; Low-effort next actions
+        ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+         ((org-agenda-overriding-header "Low Effort Tasks")
+          (org-agenda-max-todos 20)
+          (org-agenda-files org-agenda-files)))
 
-    ("w" "Workflow Status"
-     ((todo "WAIT"
-            ((org-agenda-overriding-header "Waiting on External")
-             (org-agenda-files org-agenda-files)))
-      (todo "REVIEW"
-            ((org-agenda-overriding-header "In Review")
-             (org-agenda-files org-agenda-files)))
-      (todo "PLAN"
-            ((org-agenda-overriding-header "In Planning")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "BACKLOG"
-            ((org-agenda-overriding-header "Project Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "READY"
-            ((org-agenda-overriding-header "Ready for Work")
-             (org-agenda-files org-agenda-files)))
-      (todo "ACTIVE"
-            ((org-agenda-overriding-header "Active Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "COMPLETED"
-            ((org-agenda-overriding-header "Completed Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "CANC"
-            ((org-agenda-overriding-header "Cancelled Projects")
-             (org-agenda-files org-agenda-files)))))))
+        ("w" "Workflow Status"
+         ((todo "WAIT"
+                ((org-agenda-overriding-header "Waiting on External")
+                 (org-agenda-files org-agenda-files)))
+          (todo "REVIEW"
+                ((org-agenda-overriding-header "In Review")
+                 (org-agenda-files org-agenda-files)))
+          (todo "PLAN"
+                ((org-agenda-overriding-header "In Planning")
+                 (org-agenda-todo-list-sublevels nil)
+                 (org-agenda-files org-agenda-files)))
+          (todo "BACKLOG"
+                ((org-agenda-overriding-header "Project Backlog")
+                 (org-agenda-todo-list-sublevels nil)
+                 (org-agenda-files org-agenda-files)))
+          (todo "READY"
+                ((org-agenda-overriding-header "Ready for Work")
+                 (org-agenda-files org-agenda-files)))
+          (todo "ACTIVE"
+                ((org-agenda-overriding-header "Active Projects")
+                 (org-agenda-files org-agenda-files)))
+          (todo "COMPLETED"
+                ((org-agenda-overriding-header "Completed Projects")
+                 (org-agenda-files org-agenda-files)))
+          (todo "CANC"
+                ((org-agenda-overriding-header "Cancelled Projects")
+                 (org-agenda-files org-agenda-files)))))))
 
-  (setq org-capture-templates
-    `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+      (setq org-capture-templates
+        `(("t" "Tasks / Projects")
+          ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Tasks.org" "Inbox")
+               "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-      ("j" "Journal Entries")
-      ("jj" "Journal" entry
-           (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
-           :empty-lines 1)
-      ("jm" "Meeting" entry
-           (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
-           :empty-lines 1)
+          ("j" "Journal Entries")
+          ("jj" "Journal" entry
+               (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+               "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+               ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+               :clock-in :clock-resume
+               :empty-lines 1)
+          ("jm" "Meeting" entry
+               (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+               "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+               :clock-in :clock-resume
+               :empty-lines 1)
 
-      ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+          ("w" "Workflows")
+          ("we" "Checking Email" entry (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+               "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
-      ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/Documents/OrgFiles/Metrics.org" "Weight")
-       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+          ("m" "Metrics Capture")
+          ("mw" "Weight" table-line (file+headline "~/Documents/OrgFiles/Metrics.org" "Weight")
+           "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
-  (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+      (define-key global-map (kbd "C-c j")
+        (lambda () (interactive) (org-capture nil "jj")))
 
-  (org-font-setup))
+      (org-font-setup))
+
   #+end_src
   
   
@@ -878,93 +900,95 @@ Load the doom theme as all is talking about the theme
 #+end_src
 * Elfeed for journal articles and comics
 #+begin_src emacs-lisp
-;; need to figure out how to push relevant article to some file 
-(require 'elfeed)
-;; (require 'elfeed-org)
-;; (elfeed-org)
-;; (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
-(setq elfeed-feeds
-      '(("https://www.archlinux.org/feeds/news/" archlinux)
-      ("http://www.smbc-comics.com/rss.php" smbc comic)
-      ("https://www.xkcd.com/rss.xml" xkcd comic)
-;;       ; ("http://emacsrocks.com/atom.xml" emacsrocks emacs)
-      ("https://phys.org/rss-feed/breaking/space-news/space-exploration/" space-sci)
-       ("http://export.arxiv.org/api/query?search_query=physics.ed-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" phy-ed)
-       ("http://export.arxiv.org/api/query?search_query=cond-mat.stat-mech&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" cond-mat)
-       ("http://export.arxiv.org/api/query?search_query=physics.hist-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" hist-ph)
-       ("http://export.arxiv.org/api/query?search_query=physics.flu-dyn&start=0&max_results=30&sortBy=submittedDate&sortOrder=descending" fluid-dyn)
-       ;; ("https://arxiv.org/list/physics.ao-ph/recent" arxiv atmosphere and oceanic)
-;      ("http://export.arxiv.org/rss/physics.hist-ph" arxiv hist and philosophy physics)
-      ; ("http://export.arxiv.org/rss/physics.ed-ph" arxiv physics education)
-      ; ("http://export.arxiv.org/rss/cond-mat.stat-mech" arxiv condensed matter)
-       ))
 
-(defun concatenate-authors (authors-list)
-  "Given AUTHORS-LIST, list of plists; return string of all authors
-concatenated."
-  (mapconcat
-   (lambda (author) (plist-get author :name))
-   authors-list ", "))
+  ;; need to figure out how to push relevant article to some file 
+  (require 'elfeed)
+  ;; (require 'elfeed-org)
+  ;; (elfeed-org)
+  ;; (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+  (setq elfeed-feeds
+        '(("https://www.archlinux.org/feeds/news/" archlinux)
+        ("http://www.smbc-comics.com/rss.php" smbc comic)
+        ("https://www.xkcd.com/rss.xml" xkcd comic)
+  ;;       ; ("http://emacsrocks.com/atom.xml" emacsrocks emacs)
+        ("https://phys.org/rss-feed/breaking/space-news/space-exploration/" space-sci)
+         ("http://export.arxiv.org/api/query?search_query=physics.ed-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" phy-ed)
+         ("http://export.arxiv.org/api/query?search_query=cond-mat.stat-mech&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" cond-mat)
+         ("http://export.arxiv.org/api/query?search_query=physics.hist-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" hist-ph)
+         ("http://export.arxiv.org/api/query?search_query=physics.flu-dyn&start=0&max_results=30&sortBy=submittedDate&sortOrder=descending" fluid-dyn)
+         ;; ("https://arxiv.org/list/physics.ao-ph/recent" arxiv atmosphere and oceanic)
+  ;      ("http://export.arxiv.org/rss/physics.hist-ph" arxiv hist and philosophy physics)
+        ; ("http://export.arxiv.org/rss/physics.ed-ph" arxiv physics education)
+        ; ("http://export.arxiv.org/rss/cond-mat.stat-mech" arxiv condensed matter)
+         ))
+
+  (defun concatenate-authors (authors-list)
+    "Given AUTHORS-LIST, list of plists; return string of all authors
+  concatenated."
+    (mapconcat
+     (lambda (author) (plist-get author :name))
+     authors-list ", "))
 
 
-(defun my-search-print-fn (entry)
-  "Print ENTRY to the buffer."
-  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-	 (title (or (elfeed-meta entry :title)
-		    (elfeed-entry-title entry) ""))
-	 (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-	 (feed (elfeed-entry-feed entry))
-	 (feed-title
-	  (when feed
-	    (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-	 (entry-authors (concatenate-authors
-			 (elfeed-meta entry :authors)))
-	 (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-	 (tags-str (mapconcat
-		    (lambda (s) (propertize s 'face
-					    'elfeed-search-tag-face))
-		    tags ","))
-	 (title-width (- (window-width) 10
-			 elfeed-search-trailing-width))
-	 (title-column (elfeed-format-column
-			title (elfeed-clamp
-			       elfeed-search-title-min-width
-			       title-width
-			       100)
-			:left))
-	 (authors-width 50)
-	 (authors-column (elfeed-format-column
-			entry-authors (elfeed-clamp
-			       elfeed-search-title-min-width
-			       authors-width
-			       50)
-			:left)))
+  (defun my-search-print-fn (entry)
+    "Print ENTRY to the buffer."
+    (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
+           (title (or (elfeed-meta entry :title)
+                      (elfeed-entry-title entry) ""))
+           (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+           (feed (elfeed-entry-feed entry))
+           (feed-title
+            (when feed
+              (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+           (entry-authors (concatenate-authors
+                           (elfeed-meta entry :authors)))
+           (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+           (tags-str (mapconcat
+                      (lambda (s) (propertize s 'face
+                                              'elfeed-search-tag-face))
+                      tags ","))
+           (title-width (- (window-width) 10
+                           elfeed-search-trailing-width))
+           (title-column (elfeed-format-column
+                          title (elfeed-clamp
+                                 elfeed-search-title-min-width
+                                 title-width
+                                 100)
+                          :left))
+           (authors-width 50)
+           (authors-column (elfeed-format-column
+                          entry-authors (elfeed-clamp
+                                 elfeed-search-title-min-width
+                                 authors-width
+                                 50)
+                          :left)))
 
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
+      (insert (propertize date 'face 'elfeed-search-date-face) " ")
 
-    (insert (propertize title-column
-			'face title-faces 'kbd-help title) " ")
+      (insert (propertize title-column
+                          'face title-faces 'kbd-help title) " ")
 
-    (insert (propertize authors-column
-			'face 'elfeed-search-date-face
-			'kbd-help entry-authors) " ")
+      (insert (propertize authors-column
+                          'face 'elfeed-search-date-face
+                          'kbd-help entry-authors) " ")
 
-    ;; (when feed-title
-    ;;   (insert (propertize entry-authors
-    ;; 'face 'elfeed-search-feed-face) " "))
+      ;; (when feed-title
+      ;;   (insert (propertize entry-authors
+      ;; 'face 'elfeed-search-feed-face) " "))
 
-;    (when entry-authors
- ;     (insert (propertize feed-title
-;			  'face 'elfeed-search-feed-face) " "))
+  ;    (when entry-authors
+   ;     (insert (propertize feed-title
+  ;			  'face 'elfeed-search-feed-face) " "))
 
-    ;; (when tags
-    ;;   (insert "(" tags-str ")"))
+      ;; (when tags
+      ;;   (insert "(" tags-str ")"))
 
+      )
     )
-  )
-(setq elfeed-search-print-entry-function #'my-search-print-fn)
+  (setq elfeed-search-print-entry-function #'my-search-print-fn)
 
-(require 'elfeed-score)
-(elfeed-score-enable)
-(define-key elfeed-search-mode-map "=" elfeed-score-map) ; need to see if this works
+  (require 'elfeed-score)
+  (elfeed-score-enable)
+  (define-key elfeed-search-mode-map "=" elfeed-score-map) ; need to see if this works
+
 #+end_src
