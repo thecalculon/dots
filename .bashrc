@@ -4,9 +4,11 @@
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 alias ls='ls --color=auto'
 
+if [ -f ~/.bash_local]; then
+    ~/.bash_local
+fi
 # emacs
 alias e='f1(){ 
 export PATH=~/opt/miniconda3/bin:$PATH;
@@ -46,12 +48,21 @@ alias vk4="ssh -Y vikashp@10.10.11.17"
 alias nk4="ssh -Y navdeepr@10.10.11.17"
 alias tk4="ssh -Y tapass@10.10.11.17"
 
+alias vdgx="ssh -Y vikashp@10.10.11.47"
+
 export LANG=en_US.UTF-8
 export LC_MESSAGES="C"
 
+#history
 
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+export HISTCONTROL=ignoredups
+export HISTSIZE=1000
+export HISTFILESIZE=1000
+shopt -s histappend
 
-
+#history -w
+# history -c
 # fancy ps1
 function colorgrid( )
 {
