@@ -90,6 +90,7 @@ vim.cmd("Plug 'tpope/vim-surround'")
 
 vim.cmd("Plug 'neovim/nvim-lspconfig'")
 
+vim.cmd("Plug 'michaeljsmith/vim-indent-object'")
 vim.cmd("Plug 'hrsh7th/nvim-compe'")
 
 vim.cmd("Plug 'lervag/vimtex'")
