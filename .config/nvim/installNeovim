@@ -1,0 +1,14 @@
+#!/bin/bash
+mkdir -p $HOME/opt/bin
+wget https://github.com/neovim/neovim/releases/download/$1/nvim.appimage -O $HOME/opt/bin/nvim.appimage
+chmod u+x $HOME/opt/bin/nvim.appimage
+cd $HOME/opt/bin
+rm -rf $1
+./nvim.appimage --appimage-extract
+mv squashfs-root $1
+rm -rf nvim.appimage
+if [ $1 == 'stable' ]; then
+    export PATH=$HOME/opt/anaconda3/bin/:$PATH
+    pip install --user pynvim
+fi
+
