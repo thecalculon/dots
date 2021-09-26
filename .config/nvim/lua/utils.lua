@@ -87,6 +87,19 @@ vim.cmd('syntax on')
 -- enable filetype detection
 vim.cmd('filetype plugin indent on')
 
+vim.cmd('let fortran_free_source=1')
+vim.cmd('let fortran_do_enddo=1')
+vim.cmd('let fortran_have_tabs=1')
+vim.cmd('let fortran_more_precise=1')
+
+--Fortran Folding
+
+vim.cmd('let fortran_fold=1')
+vim.cmd('let fortran_fold_conditionals=1')
+vim.cmd('let fortran_fold_multilinecomments=1')
+
+--"au FileType fortran set foldmethod=syntax"
+
 
 --set history=10000    " After nocompatible
 --o.undofile = true
