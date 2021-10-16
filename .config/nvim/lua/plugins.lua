@@ -88,6 +88,9 @@ vim.cmd("Plug 'machakann/vim-sandwich'")
 vim.cmd("Plug 'tpope/vim-commentary'")
 vim.cmd("Plug 'tpope/vim-surround'")
 
+vim.cmd("Plug 'honza/vim-snippets'")
+vim.cmd("Plug 'sirVer/ultisnips'")
+
 vim.cmd("Plug 'neovim/nvim-lspconfig'")
 
 vim.cmd("Plug 'michaeljsmith/vim-indent-object'")
@@ -117,5 +120,6 @@ require('config.vimtex')
 require('config.compe')
 require('config.telescope')
 require('config.autopairs')
+require('config.ultisnips')
 
 -- require('plugs.material')

@@ -21,8 +21,8 @@ c.url.default_page = 'file:///home/vikash/.config/qutebrowser/firstpage/index.ht
 c.editor.command = ["urxvt", "-title", "scratchpad", "-geometry", "86x24+40+60", "-e", "nvim", "-f", "{}"]
 c.new_instance_open_target = "tab-bg"
 c.input.insert_mode.auto_load = False
-c.colors.webpage.darkmode.enabled = True
-c.colors.webpage.darkmode.algorithm = 'lightness-hsl'
+c.colors.webpage.darkmode.enabled = False
+# c.colors.webpage.darkmode.algorithm = 'lightness-hsl'
 c.colors.webpage.preferred_color_scheme = 'light'
 c.prompt.filebrowser = False
 c.completion.height = "30%"
@@ -121,7 +121,7 @@ config.bind("<y><o>", "yank inline [[{url}][{title}]]")
 config.bind('xb', 'config-cycle statusbar.show always never')
 config.bind('xt', 'config-cycle tabs.show always never')
 config.bind('xx', 'config-cycle statusbar.show always never;; config-cycle tabs.show always never')
-config.bind('xg', 'config-cycle c.colors.webpage.darkmode.enabled False;; config-cycle c.colors.webpage.darkmode.enabled True')
+# config.bind('xg', 'config-cycle c.colors.webpage.darkmode.enabled False;; config-cycle c.colors.webpage.darkmode.enabled True')
 
 
 config.bind('<z><l>', 'spawn --userscript qute-pass')
@@ -133,7 +133,6 @@ config.bind('<f><p>', 'spawn --userscript password_fill')
 # Bindings for cycling through CSS stylesheets from Solarized Everything CSS:
 # https://github.com/alphapapa/solarized-everything-css
 
-c.content.user_stylesheets="/home/vikash/.config/qutebrowser/solarized-everything-css/css/gruvbox/gruvbox-all-sites.css"
 
 config.bind(',ap', 'config-cycle content.user_stylesheets /home/vikash/.config/qutebrowser/solarized-everything-css/css/apprentice/apprentice-all-sites.css ""')
 config.bind(',dr', 'config-cycle content.user_stylesheets /home/vikash/.config/qutebrowser/solarized-everything-css/css/darculized/darculized-all-sites.css ""')

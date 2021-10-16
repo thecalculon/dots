@@ -6,9 +6,7 @@
 [[ $- != *i* ]] && return
 alias ls='ls --color=auto'
 
-if [ -f ~/.bash_local]; then
-    ~/.bash_local
-fi
+export TERM=xterm
 # emacs
 alias e='f1(){ 
 export PATH=~/opt/miniconda3/bin:$PATH;
@@ -35,7 +33,7 @@ alias pbib="papis export --format bibtex"
 
 # git and vpn
 alias config="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-alias vpn="yes Y|netExtender 210.212.72.213:4433 --user=vikashp  --domain=LocalDomain"
+alias vpn="netExtender 210.212.72.213:4433 --user=vikashp --domain=LocalDomain"
 
 
 # login accounts
@@ -53,6 +51,11 @@ alias vdgx="ssh -Y vikashp@10.10.11.47"
 export LANG=en_US.UTF-8
 export LC_MESSAGES="C"
 
+alias gpl="git pull"
+alias gps="git push"
+alias ga="git add"
+alias gc="git commit -m"
+alias gcd="git commit -m 'minor'"
 #history
 
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
@@ -106,8 +109,12 @@ if [ "$HOSTNAME" = "kemper" ]; then
     r2="\[\033[01;38;5;214m\]r"
      __user_and_host="$k$e$m$p$e2$r2"
 else
-    __user_and_host="\[\033[01;16m\]\h"
+    __user_and_host="\033[01;38;5;217m\]\h"
 fi   
 
 export PS1="$__first_color[$__user_and_host \W]$__last_color "
 
+alias dw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLAY=:5 dwm"
+alias aw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLAY=:5 awesome -a"
+
+export PATH=$HOME/opt/bin/stable/usr/bin:$PATH
