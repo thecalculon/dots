@@ -109,10 +109,12 @@ if [ "$HOSTNAME" = "kemper" ]; then
     r2="\[\033[01;38;5;214m\]r"
      __user_and_host="$k$e$m$p$e2$r2"
 else
-    __user_and_host="\033[01;38;5;217m\]\h"
+    __user_and_host="\033[01;38;5;208m\]\h"
 fi   
 
-export PS1="$__first_color[$__user_and_host \W]$__last_color "
+# export PS1="$__first_color[$__user_and_host \W]$__last_color "
+# export PS1="[$__user_and_host \W] "
+PS1='[\h:\W]\$ '
 
 alias dw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLAY=:5 dwm"
 alias aw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLAY=:5 awesome -a"
