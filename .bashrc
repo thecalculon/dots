@@ -17,7 +17,18 @@ unset -f f1; };
 f1'
 
 alias ec='f(){ emacsclient $@ &  unset -f f; }; f'
+alias kerb='f(){ export KRB5_CONFIG=~/.config/pdckrb/krb5.conf;
+                kinit -f vikashp@NADA.KTH.SE <~/.config/pdckrb/passwd; 
+                unset -f f;}; f'
+alias bes='f(){ 
+ssh -o GSSAPIDelegateCredentials=yes -o GSSAPIAuthentication=yes vikashp@beskow.pdc.kth.se; unset -f f; }; f'
+alias dar='f(){ 
+ssh -vvv -o GSSAPIDelegateCredentials=yes -o GSSAPIAuthentication=yes vikashp@dardel.pdc.kth.se; unset -f f; }; f'
+
 # alias ec="/usr/bin/emacsclient -n -c "
+alias teg='f(){ 
+ssh -o GSSAPIDelegateCredentials=yes -o GSSAPIAuthentication=yes vikashp@tegner-login-2.pdc.kth.se; unset -f f; }; f'
+#
 # emacs
 alias vim="nvim "
 
@@ -33,7 +44,7 @@ alias pbib="papis export --format bibtex"
 
 # git and vpn
 alias config="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-alias vpn="netExtender 210.212.72.213:4433 --user=vikashp --domain=LocalDomain"
+alias vpn="netExtender vpn.tifrh.res.in:4433 --user=vikashp --domain=LocalDomain"
 
 
 # login accounts
