@@ -1,0 +1,24 @@
+[credential "https://git.overleaf.com"]
+    username = vikash.pandey@su.se
+
+[credential "https://github.com"]
+    username = thecalculon
+
+[credential "https://gitlab.com"]
+    username = __calculon__
+
+[user]
+	email = vikashp@tifrh
+	name = vikash
+[color]
+    ui = auto
+[core]
+	editor = vim
+	excludesfile = '$HOME/dotfiles/git/gitignore'
+[merge]
+    tool = vimdiff
+[alias]
+    count = rev-list --count HEAD
+
+[credential]
+	helper = cache --timeout=300000
