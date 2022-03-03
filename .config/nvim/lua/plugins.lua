@@ -76,7 +76,8 @@
 vf = require('vfuncs')
 vf.plug.begin(vf.stdpath('data') .. '/plugged')
 --new theme moving from gruvbox
-vim.cmd("Plug 'ayu-theme/ayu-vim'")
+-- vim.cmd("Plug 'ayu-theme/ayu-vim'")
+vim.cmd("Plug 'morhetz/gruvbox'")
 --vim.cmd("Plug  'kaicataldo/material.vim', { 'branch': 'main' }")
 vim.cmd("Plug 'dag/vim-fish'")
 -- vscode plugins in vim
@@ -112,9 +113,9 @@ vf.plug['end']()
 
 vim.cmd("set termguicolors") 
 -- vim.cmd("let ayucolor='light'")
-vim.cmd("let ayucolor='mirage'")
+-- vim.cmd("let ayucolor='mirage'")
 -- vim.cmd("let ayucolor='dark'" )
-vim.cmd("colorscheme ayu")
+vim.cmd("colorscheme gruvbox")
 require('config.lsp')
 require('config.vimtex')
 require('config.compe')
