@@ -75,9 +75,10 @@ keys = [
 
 	# Applications launcher
 	Key("M-d", lazy.spawn("/home/vikash/.config/rofi/bin/launcher_ribbon")),
+	Key("M-A-d", lazy.spawn("dmenu_run -b -l 10 -fn 'Source Code Pro SemiBold'")),
 	Key("M-w", lazy.spawn("rofi -show window")),
-	Key("M-A-i", lazy.spawn(myBrowser)),
-	Key("M-e", lazy.spawn(myFileManager)),
+	Key("M-e", lazy.spawn(myBrowser)),
+	Key("M-A-i", lazy.spawn(myFileManager)),
 	Key("M-A-p", lazy.spawn(myPDFReader)),
 	Key("M-<Return>", lazy.spawn(myTerm)),
 	Key("M-b", lazy.spawn("papis --set picktool rofi open")),
@@ -86,10 +87,10 @@ keys = [
 # GROUPS
 groups = (
     Group('1:  ', layout='monadtall'),
-    Group('2:  ', layout='max'),
+    Group('2:  ', layout='monadtall'),
     Group('3:  ', layout='monadtall'),
     Group('4:  ', layout='floating'),
-    Group('5:  ', layout='treetab'),
+    Group('5:  ', layout='floating'),
     Group('6:  ', layout='floating'),
     Group('7:  ', layout='floating'),
     Group('8:  ', layout='floating'),
@@ -366,6 +367,23 @@ focus_on_window_activation = "smart"
 follow_mouse_focus = True
 reconfigure_screens = True
 
+floating_layout = layout.Floating(float_rules=[
+    # Run the utility of `xprop` to see the wm class and name of an X client.
+    # default_float_rules include: utility, notification, toolbar, splash, dialog,
+    # file_progress, confirm, download and error.
+    *layout.Floating.default_float_rules,
+    Match(wm_class='Pcmanfm'), # file manager
+    Match(wm_class='Xephyr'), # xephyr
+    Match(wm_class='gnuplot'), # gnuplot 
+    Match(wm_class='matplotlib'), # gnuplot 
+    Match(wm_class='gnuplot_qt'), # file manager
+    Match(wm_class='eog'), # file manager
+    Match(wm_class='pinentry-gtk-2'), # GPG key password entry
+])
+
+auto_fullscreen = True
+focus_on_window_activation = "smart"
+
 @hook.subscribe.startup
 def autostart():
 	home = os.path.expanduser('/home/vikash/.config/qtile/autostart.sh')
@@ -379,4 +397,5 @@ def autostart():
 #
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
+
 wmname = "LG3D"

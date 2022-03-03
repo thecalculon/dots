@@ -4,7 +4,7 @@
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-alias ls='ls --color=auto'
+alias ls='ls --hyperlink=auto --color=auto'
 
 export TERM=xterm
 # emacs
@@ -58,6 +58,8 @@ alias nk4="ssh -Y navdeepr@10.10.11.17"
 alias tk4="ssh -Y tapass@10.10.11.17"
 
 alias vdgx="ssh -Y vikashp@10.10.11.47"
+alias vn65="ssh -Y vikash@norlx65.nordita.org"
+alias vn185="ssh -Y vikash@nordita185dl.nordita.su.se"
 
 export LANG=en_US.UTF-8
 export LC_MESSAGES="C"
@@ -131,3 +133,7 @@ alias dw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLA
 alias aw="Xephyr -screen 800x600 -resizeable -no-host-grab :5 & sleep 1 ; DISPLAY=:5 awesome -a"
 
 export PATH=$HOME/opt/bin/stable/usr/bin:$PATH
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
+# END_KITTY_SHELL_INTEGRATION
