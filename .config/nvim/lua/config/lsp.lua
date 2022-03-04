@@ -46,7 +46,7 @@ lsp["pylsp"].setup({
 lsp["fortls"].setup({
     autostart = autostart,
     cmd = {
-        "fortls",
+        "/home/vikash/.local/bin/fortls",
         "--incremental_sync",
         "--use_signature_help",
         "--lowercase_intrinsics",
