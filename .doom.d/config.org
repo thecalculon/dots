@@ -1,0 +1,459 @@
+#+PROPERTY: header-args:emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+* Themes and fonts
+** Name and info
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+  (setq user-full-name "Vikash"
+        user-mail-address "vikashpandey.phy@gmail.com")
+
+#+end_src
+
+** Tramp for remote config
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+(setq tramp-default-method "ssh")
+;; You will most likely need to adjust this font size for your system!
+(defvar default-font-size 130)
+(defvar default-variable-font-size 130)
+
+;; Make frame transparency overridable
+(defvar frame-transparency '(90 . 90))
+
+(load-theme 'doom-gruvbox-light t)
+
+(setq doom-modeline-height 3)
+(setq display-time-24hr-format t)
+(set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+(set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
+
+
+   #+end_src
+
+* Some key bindings
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+  (global-set-key (kbd "<f6>") 'elfeed)
+  (global-set-key (kbd "<f7>") 'org-agenda)
+  (defun mp-add-elfeed-keys ()
+    (local-set-key (kbd "C-a") 'elfeed-update))
+
+  (add-hook 'elfeed-search-mode-hook 'mp-add-elfeed-keys)
+
+#+end_src
+
+* BEACON
+Never lose your cursor. When you scroll, your cursor will shine!  This is a global minor-mode. Turn it on everywhere with:
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+(beacon-mode 1)
+
+#+end_src
+
+* Some configs
+
+** Buffers
+Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
+
+| COMMAND         | DESCRIPTION          | KEYBINDING |
+|-----------------+----------------------+------------|
+| ibuffer         | Launch ibuffer       | SPC b i    |
+| kill-buffer     | Kill current buffer  | SPC b k    |
+| next-buffer     | Goto next buffer     | SPC b n    |
+| previous-buffer | Goto previous buffer | SPC b p    |
+| save-buffer     | Save current buffer  | SPC b s    |
+
+
+** Global Auto Revert
+A buffer can get out of sync with respect to its visited file on disk if that file is changed by another program. To keep it up to date, you can enable Auto Revert mode by typing M-x auto-revert-mode, or you can set it to be turned on globally with 'global-auto-revert-mode'.  I have also turned on Global Auto Revert on non-file buffers, which is especially useful for 'dired' buffers.
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+#+end_src
+
+
+
+
+* CLIPPY
+Gives us a popup box with "Clippy, the paper clip". You can make him say various things by calling 'clippy-say' function.  But the more useful functions of clippy are the two describe functions provided: 'clippy-describe-function' and 'clippy-describe-variable'.  Hit the appropriate keybinding while the point is over a function/variable to call it.  A popup with helpful clippy will appear, telling you about the function/variable (using describe-function and describe-variable respectively).
+
+| COMMAND                  | DESCRIPTION                           | KEYBINDING |
+|--------------------------+---------------------------------------+------------|
+| clippy-describe-function | /Clippy describes function under point/ | SPC c h f  |
+| clippy-describe-variable | /Clippy describes variable under point/ | SPC c h v  |
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(map! :leader
+      (:prefix ("c h" . "Help info from Clippy")
+       :desc "Clippy describes function under point" "f" #'clippy-describe-function
+       :desc "Clippy describes variable under point" "v" #'clippy-describe-variable))
+
+#+end_src
+
+#+RESULTS:
+: clippy-describe-variable
+
+
+
+* DASHBOARD
+Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
+
+** Configuring Dashboard
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(use-package dashboard
+  :init      ;; tweak dashboard config before loading it
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "\nKEYBINDINGS:\
+\nFind file               (SPC .)     \
+Open buffer list    (SPC b i)\
+\nFind recent files       (SPC f r)   \
+Open the eshell     (SPC e s)\
+\nOpen dired file manager (SPC d d)   \
+List of keybindings (SPC h b b)")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "~/.config/doom/doom-emacs-dash.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 5)
+                          (registers . 5)))
+  :config
+  (dashboard-setup-startup-hook)
+  (dashboard-modify-heading-icons '((recents . "file-text")
+                                    (bookmarks . "book"))))
+#+end_src
+
+** Dashboard in Emacsclient
+This setting ensures that emacsclient always opens on *dashboard* rather than *scratch*.
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(setq doom-fallback-buffer-name "*dashboard*")
+#+end_src
+
+
+
+* Elfeed
+For papers . need to know how this works
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(use-package! elfeed-goodies)
+;; (elfeed-goodies/setup)
+;; (setq elfeed-goodies/entry-pane-size 0.5)
+(add-hook 'elfeed-show-mode-hook 'visual-line-mode)
+(evil-define-key 'normal elfeed-show-mode-map
+  (kbd "J") 'elfeed-goodies/split-show-next
+  (kbd "K") 'elfeed-goodies/split-show-prev)
+(evil-define-key 'normal elfeed-search-mode-map
+  (kbd "J") 'elfeed-goodies/split-show-next
+  (kbd "K") 'elfeed-goodies/split-show-prev)
+  ;; (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+
+  (setq elfeed-feeds
+        '(("https://www.archlinux.org/feeds/news/" archlinux)
+        ("http://www.smbc-comics.com/rss.php" smbc comic)
+        ("https://www.xkcd.com/rss.xml" xkcd comic)
+  ;;       ; ("http://emacsrocks.com/atom.xml" emacsrocks emacs)
+        ("https://phys.org/rss-feed/breaking/space-news/space-exploration/" space-sci)
+
+  ("http://feeds.aps.org/rss/tocsec/PRL-NonlinearDynamicsFluidDynamicsClassicalOpticsetc.xml" PRL)
+
+  ("http://feeds.aps.org/rss/tocsec/PRL-SoftMatterBiologicalandInterdisciplinaryPhysics.xml" PRL)
+
+  ("https://www.pnas.org/action/showFeed?tagCode=biophys-phys&type=searchTopic&taxonomyCode=topic" PNAS)
+  ("https://www.pnas.org/action/showFeed?tagCode=phys&type=searchTopic&taxonomyCode=topic" PNAS)
+  ("http://export.arxiv.org/api/query?search_query=physics.ed-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" phy-ed)
+
+         ("http://export.arxiv.org/api/query?search_query=cond-mat.stat-mech&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" cond-mat)
+         ("http://export.arxiv.org/api/query?search_query=physics.hist-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" hist-ph)
+         ("http://export.arxiv.org/api/query?search_query=physics.flu-dyn&start=0&max_results=30&sortBy=submittedDate&sortOrder=descending" fluid-dyn)
+         ;; ("https://arxiv.org/list/physics.ao-ph/recent" arxiv atmosphere and oceanic)
+  ;      ("http://export.arxiv.org/rss/physics.hist-ph" arxiv hist and philosophy physics)
+        ; ("http://export.arxiv.org/rss/physics.ed-ph" arxiv physics education)
+        ; ("http://export.arxiv.org/rss/cond-mat.stat-mech" arxiv condensed matter)
+         ))
+
+
+#+end_src
+
+** Font Config
+
+ #+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+   (set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+   ;; Set the fixed pitch face
+   (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+
+   (set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
+
+   (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+
+#+end_src
+
+* IVY
+Ivy is a generic completion mechanism for Emacs.
+
+** IVY-POSFRAME
+Ivy-posframe is an ivy extension, which lets ivy use posframe to show its candidate menu.  Some of the settings below involve:
++ ivy-posframe-display-functions-alist -- sets the display position for specific programs
++ ivy-posframe-height-alist -- sets the height of the list displayed for specific programs
+
+Available functions (positions) for 'ivy-posframe-display-functions-alist'
++ ivy-posframe-display-at-frame-center
++ ivy-posframe-display-at-window-center
++ ivy-posframe-display-at-frame-bottom-left
++ ivy-posframe-display-at-window-bottom-left
++ ivy-posframe-display-at-frame-bottom-window-center
++ ivy-posframe-display-at-point
++ ivy-posframe-display-at-frame-top-center
+
+=NOTE:= If the setting for 'ivy-posframe-display' is set to 'nil' (false), anything that is set to 'ivy-display-function-fallback' will just default to their normal position in Doom Emacs (usually a bottom split).  However, if this is set to 't' (true), then the fallback position will be centered in the window.
+
+#+BEGIN_SRC emacs-lisp
+
+(setq ivy-posframe-display-functions-alist
+      '((swiper                     . ivy-posframe-display-at-point)
+        (complete-symbol            . ivy-posframe-display-at-point)
+        (counsel-M-x                . ivy-display-function-fallback)
+        (counsel-esh-history        . ivy-posframe-display-at-window-center)
+        (counsel-describe-function  . ivy-display-function-fallback)
+        (counsel-describe-variable  . ivy-display-function-fallback)
+        (counsel-find-file          . ivy-display-function-fallback)
+        (counsel-recentf            . ivy-display-function-fallback)
+        (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+        (dmenu                      . ivy-posframe-display-at-frame-top-center)
+        (nil                        . ivy-posframe-display))
+      ivy-posframe-height-alist
+      '((swiper . 20)
+        (dmenu . 20)
+        (t . 10)))
+(ivy-posframe-mode 1) ; 1 enables posframe-mode, 0 disables it.
+
+#+END_SRC
+
+** IVY KEYBINDINGS
+By default, Doom Emacs does not use 'SPC v', so the format I use for these bindings is 'SPC v' plus 'key'.
+
+#+BEGIN_SRC emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+(map! :leader
+      (:prefix ("v" . "Ivy")
+       :desc "Ivy push view" "v p" #'ivy-push-view
+       :desc "Ivy switch view" "v s" #'ivy-switch-view))
+
+#+END_SRC
+
+
+
+
+* Org-mode Configs
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+    (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((emacs-lisp . t)
+        (python . t)
+        (ipython . t)
+        (shell . t)
+        (latex . t)
+        (ditaa . t)
+        (dot . t)
+        (gnuplot . t)
+        (julia . t))
+      )
+
+    (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+    (push '("conf-unix" . conf-unix) org-src-lang-modes)
+    (setq org-confirm-babel-evaluate nil)
+    ;; Syntax highlight in #+BEGIN_SRC blocks
+    (setq org-src-fontify-natively t)
+
+
+    ;; Set up the evil org
+  (use-package evil-org
+    :ensure t
+    :after org
+    :hook (org-mode . (lambda () evil-org-mode))
+    :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+
+#+end_src
+
+
+** Org mode bullets
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+#+end_src
+
+
+** Set up the template
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+  (use-package org-tempo)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("tex" . "src latex"))
+
+#+end_src
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+
+  (defun org-font-setup ()
+    ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.3)
+                    (org-level-2 . 1.25)
+                    (org-level-3 . 1.15)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil :font "Fira Code Retina" :weight 'Semibold :height (cdr face)))
+
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    )
+
+#+end_src
+
+** Fill the column for nicer look
+
+#+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+(defun org-mode-visual-fill ()
+  (setq visual-fill-column-width 110
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . org-mode-visual-fill))
+#+end_src
+
+
+
+  #+begin_src emacs-lisp :tangle /home/vikash/.doom.d/config.el
+        (defun org-mode-setup ()
+          (org-indent-mode)
+          (variable-pitch-mode 1)
+          (visual-line-mode 1))
+
+        (use-package org
+          :hook (org-mode . org-mode-setup)
+          :config
+          (setq org-ellipsis " ▾")
+
+          (setq org-agenda-start-with-log-mode t)
+          (setq org-log-done 'time)
+          (setq org-log-into-drawer t)
+
+          (setq org-agenda-files
+                '("~/Documents/OrgFiles/Tasks.org"
+                  "~/Documents/OrgFiles/Meetings.org"
+                  "~/Documents/OrgFiles/Birthdays.org"))
+
+          (setq org-todo-keywords
+                '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANC(c)")
+                  ))
+
+          (setq org-refile-targets
+                '(("Meetings.org" :maxlevel . 1)))
+
+          ;; Save Org buffers after refiling!
+          (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+          (setq org-tag-alist
+                '((:startgroup)
+                                                ; Put mutually exclusive tags here
+                  (:endgroup)
+                  ("@errand" . ?E)
+                  ("@home" . ?H)
+                  ("@work" . ?W)
+                  ("agenda" . ?a)
+                  ("planning" . ?p)
+                  ("publish" . ?P)
+                  ("batch" . ?b)
+                  ("note" . ?n)
+                  ("idea" . ?i)))
+
+          ;; Configure custom agenda views
+          (setq org-agenda-custom-commands
+                '(("d" "Dashboard"
+                   ((agenda "" ((org-deadline-warning-days 7)))
+                    (todo "NEXT"
+                          ((org-agenda-overriding-header "Next Tasks")))
+                    (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+                  ("n" "Next Tasks"
+                   ((todo "NEXT"
+                          ((org-agenda-overriding-header "Next Tasks")))))
+
+                  ("W" "Work Tasks" tags-todo "+work-email")
+
+                  ;; Low-effort next actions
+                  ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+                   ((org-agenda-overriding-header "Low Effort Tasks")
+                    (org-agenda-max-todos 20)
+                    (org-agenda-files org-agenda-files)))
+
+                  ("w" "Workflow Status"
+                   ((todo "WAIT"
+                          ((org-agenda-overriding-header "Waiting on External")
+                           (org-agenda-files org-agenda-files)))
+                    (todo "COMPLETED"
+                          ((org-agenda-overriding-header "Completed Projects")
+                           (org-agenda-files org-agenda-files)))
+                    (todo "CANC"
+                          ((org-agenda-overriding-header "Cancelled Projects")
+                           (org-agenda-files org-agenda-files)))))))
+
+          (setq org-capture-templates
+                `(("t" "Tasks / Projects")
+                  ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Meetings.org" "INBOX")
+                   "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+                  ("j" "Journal Entries")
+                  ("jj" "Journal" entry
+                   (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+                   "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+                   :clock-in :clock-resume
+                   :empty-lines 1)
+                  ))
+
+          (define-key global-map (kbd "C-c j")
+            (lambda () (interactive) (org-capture nil "jj")))
+
+          (define-key global-map (kbd "C-c t")
+            (lambda () (interactive) (org-capture nil "tt")))
+
+
+          (org-font-setup))
+
+    (setq org-agenda-span 8
+          org-agenda-start-on-weekday nil
+          org-agenda-start-day "-3d")
+
+
+  #+end_src
+
+
