@@ -1,0 +1,9 @@
+#!/bin/bash
+mkdir -p $HOME/opt/helix
+wget  https://github.com/helix-editor/helix/releases/download/$1/helix-$1-x86_64.AppImage -O $HOME/opt/helix/helix.appimage
+chmod u+x $HOME/opt/helix/helix.appimage
+cd $HOME/opt/helix
+./helix.appimage --appimage-extract
+mv squashfs-root bin
+cd bin
+mv AppRun hx
