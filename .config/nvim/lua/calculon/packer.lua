@@ -12,8 +12,11 @@ return require('packer').startup(function(use)
 	 use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 	 use('nvim-treesitter/playground')
 	 use {"Shatur/neovim-ayu"}
+     use('rmehri01/onenord.nvim')
 	 use ('mbbill/undotree')
 	 use ('tpope/vim-commentary')
+
+    use ('lervag/vimtex')
      -- use {
      --     'nvim-lualine/lualine.nvim',
      --     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
