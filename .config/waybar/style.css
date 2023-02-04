@@ -1,0 +1,142 @@
+@import "gruvbox.css";
+
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+}
+/* @base */
+/* rgba(43, 48, 59, 0.5); */
+window#waybar {
+    background-color: transparent; /*#@bg;  */
+    transition-duration: .5s;
+    padding: 0;
+}
+
+window#waybar.hidden {
+    opacity: 0.5;
+}
+
+/* window .modules-left, */
+/* window .modules-center, */
+/* window .modules-right { */
+/*       /1* background: @bg; *1/ */ 
+/*   padding: 0px 0px 0px 0px; */
+/* } */
+
+/* button { */
+/*     /1* Use box-shadow instead of border so the text isn't offset *1/ */
+/*     box-shadow: inset 0px 0px transparent; */
+/*     /1* Avoid rounded borders under each button name *1/ */
+/*     /1* border: rounded; *1/ */
+/*     border-radius: 12px; */
+/* } */
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button {
+    border-radius: 15px;
+    background-color: @bg;
+    margin-top: 5px;
+    margin-right: 1px;
+    color: @fg;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.focused {
+    background-color: @dark-red;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+
+
+#clock,
+#battery,
+#network,
+#tray,
+#mode,
+#pulseaudio,
+#idle_inhibitor,
+#scratchpad,
+#network,
+#mpd {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 5px;
+    margin-right: 10px;
+    border-radius: 15px;
+    background-color: @bg;
+    color: @fg;
+}
+
+
+
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 15px;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 15px;
+}
+
+
+
+#battery {
+    background-color: @bg;
+    color: @fg;
+}
+
+#battery.charging, #battery.plugged {
+    color: @dark-blue;
+    background-color: @bg;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: @bg;
+    color: @dark-red;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+label:focus {
+    background-color: #000000;
+}
+
+ 
+#network.disconnected {
+    background-color: @dark-red;
+}
+
+#idle_inhibitor.activated {
+    background-color: @bg;
+    color: @dark-red;
+}
+
+#clock {
+    color: @dark-blue;
+}
+
+
+

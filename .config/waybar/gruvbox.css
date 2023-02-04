@@ -1,0 +1,34 @@
+/*
+*
+* Catppuccin Gruvbox 
+*
+*/
+
+@define-color bg    #282828;
+@define-color fg    #d4be98;
+
+@define-color    fg4        #766f64;
+@define-color    fg3        #665c54;
+@define-color    fg2        #504945;
+@define-color    fg1        #3c3836;
+@define-color    bg0        #32302f;
+@define-color    fg0        #1d2021;
+@define-color    fg9        #ebdbb2;
+
+@define-color   dark-red      #ea6962;
+@define-color   red           #ea6962;
+@define-color   dark-green    #a9b665;
+@define-color   green         #a9b665;
+@define-color   dark-yellow   #e78a4e;
+@define-color   yellow        #d8a657;
+@define-color   dark-blue     #7daea3;
+@define-color   blue          #7daea3;
+@define-color   dark-magenta  #d3869b;
+@define-color   magenta       #d3869b;
+@define-color   dark-cyan     #89b482;
+@define-color   cyan          #89b482;
+@define-color   dark-gray     #665c54;
+@define-color   gray          #928374;
+
+
+

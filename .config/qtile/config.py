@@ -2,12 +2,12 @@ import os
 import re
 import socket
 import subprocess
-from libqtile import bar, hook, layout, qtile, widget
+from libqtile import bar, hook, layout, qtile
 from libqtile.config import EzClick as Click, EzDrag as Drag, EzKey as Key, Group, Match, Screen
-from libqtile.config import ScratchPad, DropDown
 from libqtile.lazy import lazy
-from libqtile.utils import guess_terminal
 from typing import List
+from widgets import widgets
+from colors import color_schema
 
 mod = "mod4"
 MYFONT = "Hack Nerd Font"
@@ -18,35 +18,13 @@ myFileManager = "pcmanfm"
 myPDFReader = "zathura"
 myTextEditor = "emacs"
 
-BLACK = '#29414f'
-RED = '#ec5f67'
-GREEN = '#99c794'
-YELLOW = '#fac863'
-BLUE = '#6699cc'
-MAGENTA = '#c594c5'
-CYAN = '#5fb3b3'
-WHITE = '#ffffff'
-
-def hide_show_bar(qtile):
-    bar = qtile.currentScreen.top
-    if bar.size == 0:
-        bar.size = 30
-        bar.window.unhide()
-    else:
-        bar.size = 0
-        bar.window.hide()
-    qtile.currentGroup.layoutAll()
-
-
-Key("M-S-d", lazy.function(hide_show_bar))
-
 keys = [
 	# Qtile Controls
 	Key("M-C-r", lazy.restart()),
 	Key("M-C-q", lazy.shutdown()),
 
 	# Window and Layout Controls
-	Key("M-k", lazy.layout.down()),
+
 	Key("M-j", lazy.layout.up()),
 	Key("M-S-k", lazy.layout.shuffle_down()),
 	Key("M-S-j", lazy.layout.shuffle_up()),
@@ -58,11 +36,12 @@ keys = [
 	Key("M-h", lazy.layout.shrink_main()),
 	Key("M-n", lazy.layout.normalize()),
 	Key("M-<Tab>", lazy.next_layout()),
-	Key("M-S-q", lazy.window.kill()),
+	Key("M-q", lazy.window.kill()),
 	Key("M-f", lazy.window.toggle_floating()),
 	Key("M-s", lazy.window.toggle_fullscreen()),
 	Key("M-<period>", lazy.next_screen()),
 	Key("M-<comma>", lazy.prev_screen()),
+	Key("M-b", lazy.hide_show_bar()),
 
 	# System Controls
 	Key("<XF86AudioLowerVolume>", lazy.spawn("amixer -M set Master 5%- unmute")),
@@ -75,37 +54,36 @@ keys = [
 
 	# Applications launcher
 	Key("M-d", lazy.spawn("/home/vikash/.config/rofi/bin/launcher_ribbon")),
-	Key("M-A-d", lazy.spawn("dmenu_run -b -l 10 -fn 'Source Code Pro SemiBold'")),
-	Key("M-w", lazy.spawn("rofi -show window")),
+	# Key("M-d", lazy.spawn("dmenu_run -b -l 10 -fn 'Source Code Pro SemiBold'")),
+	# Key("M-w", lazy.spawn("rofi -show window")),
 	Key("M-e", lazy.spawn(myBrowser)),
 	Key("M-A-i", lazy.spawn(myFileManager)),
 	Key("M-A-p", lazy.spawn(myPDFReader)),
 	Key("M-<Return>", lazy.spawn(myTerm)),
-	Key("M-b", lazy.spawn("papis --set picktool rofi open")),
 	Key("M-A-t", lazy.spawn(myTextEditor)),
 ]
 # GROUPS
 groups = (
-    Group('1:  ', layout='monadtall'),
-    Group('2:  ', layout='monadtall'),
-    Group('3:  ', layout='monadtall'),
-    Group('4:  ', layout='floating'),
-    Group('5:  ', layout='floating'),
-    Group('6:  ', layout='floating'),
-    Group('7:  ', layout='floating'),
-    Group('8:  ', layout='floating'),
-    Group('9:  ', layout='floating')
+    Group(' ', layout='monadtall'),
+    Group(' ', layout='monadtall'),
+    Group(' ', layout='monadtall'),
+    Group(' ', layout='floating'),
+    Group(' ', layout='floating'),
+    Group(' ', layout='floating'),
+    # Group('7:  ', layout='floating'),
+    # Group('8:  ', layout='floating'),
+    # Group('9:  ', layout='floating')
 )
 
-for k, group in zip(["1", "2", "3", "4", "5", "6", "7", "8", "9"], groups):
+for k, group in zip(["1", "2", "3", "4", "5", "6"], groups):
 	keys.append(Key("M-"+(k), lazy.group[group.name].toscreen()))			# Send current window to another group
 	keys.append(Key("M-S-"+(k), lazy.window.togroup(group.name)))	# Send current window to another group
 
 
-layout_theme = {"border_focus": GREEN,
-				"border_normal": BLACK,
-				"margin": 5,
-				"border_width": 2
+layout_theme = {"border_focus": color_schema['red'],
+				"border_normal": color_schema['yellow'],
+				"margin": 6,
+				"border_width": 3
 }
 
 layouts = [
@@ -123,221 +101,47 @@ layouts = [
 	layout.Floating(**layout_theme),
 	layout.Max(**layout_theme),
 	layout.MonadTall(**layout_theme),
-        layout.TreeTab(**layout_theme)
+    layout.TreeTab(**layout_theme)
 ]
 
-colours = [["#141414", "#141414"], # Background
-		   ["#FFFFFF", "#FFFFFF"], # Foreground
-		   ["#ABB2BF", "#ABB2BF"], # Grey Colour
-		   ["#E35374", "#E35374"],
-		   ["#89CA78", "#89CA78"],
-		   ["#F0C674", "#F0C674"],
-		   ["#61AFEF", "#61AFEF"],
-		   ["#D55FDE", "#D55FDE"],
-		   ["#2BBAC5", "#2BBAC5"]]
+
 
 prompt = "{0}@{1}: ".format(os.environ["USER"], socket.gethostname())
 
 widget_defaults = dict(
-	background = colours[0],
-	foreground = colours[1],
+	background = color_schema['bg'],
+	foreground = color_schema['fg'],
 	font = "SF Pro Text Regular",
-	fontsize = 13,
-	padding = 1
+	fontsize = 14,
+	padding = 2
 )
 extension_defaults = widget_defaults.copy()
 
-widgets = [
-	widget.Image(
-            foreground=WHITE,
-            background=BLACK,
-		filename = "~/.config/qtile/py.png",
-		mouse_callbacks = {"Button1": lambda: qtile.cmd_spawn("/home/vikash/.config/rofi/bin/launcher_misc")},
-		scale = True,
-	),
-	widget.Sep(
-            foreground=WHITE,
-            background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 5,
-	),
-	widget.GroupBox(
-            font=MYFONT,
-            fontsize=13,
-            spacing=0,
-            disable_drag=True,
-            active=MAGENTA,
-            inactive=WHITE,
-            rounded=False,
-            highlight_method="block",
-            this_current_screen_border=GREEN,
-            this_screen_border=CYAN,
-            other_current_screen_border=BLACK,
-            other_screen_border=BLACK,
-            foreground=WHITE,
-            background=BLACK,
-            urgent_text = colours[3],
-            invert_mouse_wheel = True,
-            margin = 2,
-            padding = 0,
-            urgent_alert_method = 'text',
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 10,
-	),
-	widget.CurrentLayout(
-                foreground=RED,
-                background=BLACK,
-		font = "SF Pro Text Semibold",
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 10,
-	),
-	widget.WindowName(
-                foreground=WHITE,
-                background=BLACK,
-		max_chars = 75,
-	),
-	widget.Systray(
-                foreground=WHITE,
-                background=BLACK,
-		icon_size = 14,
-		padding = 4,
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 10,
-	),
-	widget.TextBox(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[6],
-		font =  MYFONT,
-		fontsize = 14,
-		mouse_callbacks = ({
-			"Button1": lambda: qtile.cmd_spawn("amixer -M set Master toggle"),
-			"Button3": lambda: qtile.cmd_spawn("pavucontrol"),
-			"Button4": lambda: qtile.cmd_spawn("amixer -M set Master 5%+ unmute"),
-			"Button5": lambda: qtile.cmd_spawn("amixer -M set Master 5%- unmute"),
-		}),
-		padding = 0,
-		text = '墳 ',
-	),
-	widget.Volume(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[6],
-		mouse_callbacks = {"Button3": lambda: qtile.cmd_spawn("pavucontrol")},
-		step = 5,
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 10,
-	),
-	#widget.TextBox(
-	#	foreground = colours[7],
-	#	font = "JetBrainsMono Nerd Font Regular",
-	#	fontsize = 14,
-	#	padding = 0,
-	#	text = '爵 ',
-	#),
-	#widget.Net(
-	#	foreground = colours[7],
-	#	format = '{down}  ',
-	#	interface = 'enp1s0',
-	#),
-	widget.Battery(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[7],
-		low_foreground = RED,
-		charge_char = ' ',
-		discharge_char = ' ',
-		empty_char = ' ',
-		full_char = ' ',
-		unknown_char = ' ',
-		font = "JetBrainsMono Nerd Font Regular",
-		fontsize = 14,
-		format = '{char}',
-		low_percentage = 0.2,
-		padding = 0,
-		show_short_text = False,
-	),
-	widget.Battery(
-                foreground=WHITE,
-                background=BLACK,
-                # foreground=WHITE,
-                # background=GREEN,
-		# foreground = colours[7],
-		low_foreground = RED,
-		format = '{percent:2.0%}',
-		low_percentage = 0.2,
-		notify_below = 20,
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 5,
-	),
-	widget.TextBox(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[8],
-		font = MYFONT,
-		fontsize = 14,
-		padding = 0,
-		text = ' ',
-	),
-	widget.Clock(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[8],
-		format = '%d/%m  %H:%M ',
-	),
-	widget.Sep(
-                foreground=WHITE,
-                background=BLACK,
-		# foreground = colours[2],
-		linewidth = 0,
-		padding = 5,
-	),
-	#widget.StockTicker(
-	#	apikey = 'AESKWL5CJVHHJKR5',
-	#	url = 'https://www.alphavantage.co/query?'
-	#),
-]
+status_bar = lambda widgets: bar.Bar(widgets, 24, opacity=0.8, margin=[5,120,0,120])
 
-status_bar = lambda widgets: bar.Bar(widgets, 18, opacity=1.0)
+if qtile.core.name == "x11":
+    screens = [
+        Screen(top=status_bar(widgets),
+               wallpaper='/home/vikash/.wallpapers/ign_cityRainOther.png',
+               wallpaper_mode='fill'
+               ),
+        ]
 
-screens = [Screen(top=status_bar(widgets))]
+elif qtile.core.name == "wayland":
+    screens = [
+        Screen(top=status_bar(widgets),
+               wallpaper='/home/vikash/.wallpapers/ign_cityRainOther.png',
+               wallpaper_mode='fill'
+               ),
+        ]
+    connected_monitors = len(qtile.core.outputs)
+# logger.warning(f"Found {connected_monitors} monitor(s)")
 
-connected_monitors = subprocess.run(
-	"xrandr | grep 'connected' | cut -d ' ' -f 2",
-	shell = True,
-	stdout = subprocess.PIPE
-).stdout.decode("UTF-8").split("\n")[:-1].count("connected")
-
-if connected_monitors > 1:
-	for i in range(1, connected_monitors):
-		screens.append(Screen(top=status_bar(widgets)))
-
+    if connected_monitors > 1:
+        for _ in range(1, connected_monitors):
+            screens.append(Screen(top=status_bar(widgets), 
+                            wallpaper='/home/vikash/.wallpapers/ign_cityRainOther.png', 
+                            wallpaper_mode='fill'), )
 mouse = [
 	Drag("M-1", lazy.window.set_position_floating(),
 		start = lazy.window.get_position()),
@@ -378,6 +182,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='matplotlib'), # gnuplot 
     Match(wm_class='gnuplot_qt'), # file manager
     Match(wm_class='eog'), # file manager
+    Match(wm_class='gksqt'), # file manager
     Match(wm_class='pinentry-gtk-2'), # GPG key password entry
 ])
 
@@ -386,8 +191,9 @@ focus_on_window_activation = "smart"
 
 @hook.subscribe.startup
 def autostart():
-	home = os.path.expanduser('/home/vikash/.config/qtile/autostart.sh')
-	subprocess.call([home])
+    # qtile.cmd_hide_show_bar('all')
+    home = os.path.expanduser('/home/vikash/.config/qtile/autostart.sh')
+    subprocess.call([home])
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see several discussions on the
