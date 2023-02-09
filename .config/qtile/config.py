@@ -11,7 +11,7 @@ from colors import color_schema
 
 mod = "mod4"
 MYFONT = "Hack Nerd Font"
-myTerm = "kitty"
+myTerm = "alacritty"
 myBrowser = "qutebrowser"
 myConfig = "~/.config/qtile/config.py"
 myFileManager = "pcmanfm"

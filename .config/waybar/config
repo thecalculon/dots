@@ -2,12 +2,15 @@
      "layer": "bottom", // Waybar at top layer
      "position": "top", // Waybar position (top|bottom|left|right)
     "height": 20, // Waybar height (to be removed for auto height)
-     /* "width": 980, // Waybar width */
+    "margin-top": 2,
+    "margin-left": 120,
+    "margin-right": 120,
+     /* "width": 1080, // Waybar width */
     "spacing": 5, // Gaps between modules (4px)
     // Choose the order of the modules
-    "modules-left": ["wlr/workspaces", "wlr/mode", "wlr/scratchpad"],
+    "modules-left": ["custom/txtbox_", "wlr/workspaces", "wlr/mode", "wlr/scratchpad"],
     "modules-center": ["clock"],
-    "modules-right": ["idle_inhibitor", "pulseaudio", "network",   "battery"],
+    "modules-right": ["idle_inhibitor", "pulseaudio", "network", "battery", "custom/txtbox_"],
     // Modules configuration
     "wlr/workspaces": {
         "disable-scroll": true,
@@ -23,6 +26,9 @@
             "focused": " ",
             "default": " "
         }
+    },
+    "custom/txtbox_": {
+        "format": "   {}",
     },
     "keyboard-state": {
         "numlock": true,
@@ -56,7 +62,7 @@
     },
     "clock": {
         // "timezone": "America/New_York",
-          "format": "  {:%d/%m-%Y %H:%M}",
+          "format": " {:%d/%m   %H:%M}",
 
        // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
        // "format-alt": "{:%Y-%m-%d}"
@@ -87,7 +93,7 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon}",
+        "format": "{icon} {capacity}% ",
         "format-charging": "{capacity}%  ",
         "format-plugged": "{capacity}%  ",
         "format-alt": "{time} {icon}",
@@ -100,21 +106,18 @@
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%)  ",
-        "format-ethernet": "{ipaddr}/{cidr}  ",
+        "format-wifi": "  {signalStrength}%",
+        "format-ethernet": "  ",
         "tooltip-format": "{ifname} via {gwaddr}  ",
-        "format-linked": "{ifname} (No IP)  ",
-        "format-disconnected": "Disconnected ⚠ ",
+        "format-disconnected": " ⚠ ",
         "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
+        "format": "{icon} {volume}% ",
+        "format-bluetooth": " {icon} {volume}%",
+        "format-bluetooth-muted": "{icon}  ",
+        "format-muted": " ",
         "format-icons": {
             "headphone": " ",
             "hands-free": "",

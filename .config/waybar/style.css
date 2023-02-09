@@ -1,36 +1,37 @@
 @import "gruvbox.css";
-
 * {
     /* `otf-font-awesome` is required to be installed for icons */
     font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
-    font-size: 15px;
+    font-size: 12px;
 }
 /* @base */
 /* rgba(43, 48, 59, 0.5); */
 window#waybar {
-    background-color: transparent; /*#@bg;  */
-    transition-duration: .5s;
-    padding: 0;
+    border-radius: 15px;
+    background-color: @bg;
+    /* background-color: transparent; */ 
 }
 
 window#waybar.hidden {
     opacity: 0.5;
 }
 
-/* window .modules-left, */
-/* window .modules-center, */
-/* window .modules-right { */
-/*       /1* background: @bg; *1/ */ 
-/*   padding: 0px 0px 0px 0px; */
-/* } */
+window#waybar.termite {
+    background-color: #3F3F3F;
+}
 
-/* button { */
-/*     /1* Use box-shadow instead of border so the text isn't offset *1/ */
-/*     box-shadow: inset 0px 0px transparent; */
-/*     /1* Avoid rounded borders under each button name *1/ */
-/*     /1* border: rounded; *1/ */
-/*     border-radius: 12px; */
-/* } */
+window#waybar.chromium {
+    background-color: #000000;
+    border: none;
+}
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
 button:hover {
@@ -39,11 +40,12 @@ button:hover {
 }
 
 #workspaces button {
-    border-radius: 15px;
-    background-color: @bg;
-    margin-top: 5px;
-    margin-right: 1px;
-    color: @fg;
+    padding: 0px 3px;
+    /* border-radius: 15px; */
+    /* background-color: @bg; */
+    /* margin-top: 5px; */
+    color: @dark-red;
+
 }
 
 #workspaces button:hover {
@@ -51,7 +53,7 @@ button:hover {
 }
 
 #workspaces button.focused {
-    background-color: @dark-red;
+    background-color: #64727D;
     box-shadow: inset 0 -3px #ffffff;
 }
 
@@ -60,47 +62,56 @@ button:hover {
 }
 
 
+#mode {
+    background-color: #64727D;
+    border-bottom: 3px solid #ffffff;
+}
 
 #clock,
 #battery,
 #network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
 #tray,
 #mode,
-#pulseaudio,
 #idle_inhibitor,
 #scratchpad,
-#network,
+#pulseaudio,
 #mpd {
-    padding-left: 10px;
+    /* padding-left: 5px; */
     padding-right: 10px;
-    margin-top: 5px;
-    margin-right: 10px;
-    border-radius: 15px;
-    background-color: @bg;
+    /* margin-top: 1px; */
+    /* margin-right: 10px; */
+    /* border-radius: 15px; */
+    /* background-color: @bg; */
     color: @fg;
+    /* padding: 0 10px; */
 }
 
+#window,
+#workspaces {
+    margin: 0 4px;
+}
 
-
+/* If workspaces is the leftmost module, omit left margin */
 .modules-left > widget:first-child > #workspaces {
-    margin-left: 15px;
+    margin-left: 0;
 }
 
 /* If workspaces is the rightmost module, omit right margin */
 .modules-right > widget:last-child > #workspaces {
-    margin-right: 15px;
+    margin-right: 0;
 }
 
-
-
 #battery {
-    background-color: @bg;
+    /* background-color: @bg; */
     color: @fg;
 }
 
 #battery.charging, #battery.plugged {
     color: @dark-blue;
-    background-color: @bg;
+    /* background-color: @bg; */
 }
 
 @keyframes blink {
@@ -109,9 +120,8 @@ button:hover {
         color: #000000;
     }
 }
-
 #battery.critical:not(.charging) {
-    background-color: @bg;
+    /* background-color: @bg; */
     color: @dark-red;
     animation-name: blink;
     animation-duration: 0.5s;
@@ -120,23 +130,38 @@ button:hover {
     animation-direction: alternate;
 }
 
+
 label:focus {
     background-color: #000000;
 }
 
- 
-#network.disconnected {
-    background-color: @dark-red;
+#cpu {
+    background-color: #2ecc71;
+    color: #000000;
 }
 
-#idle_inhibitor.activated {
-    background-color: @bg;
-    color: @dark-red;
+#memory {
+    background-color: #9b59b6;
+}
+
+#disk {
+    background-color: #964B00;
+}
+
+#backlight {
+    background-color: #90b1b1;
+}
+
+
+#network.disconnected {
+    background-color: @dark-red;
 }
 
 #clock {
     color: @dark-blue;
 }
 
-
-
+#idle_inhibitor.activated {
+    background-color: @bg;
+    color: @dark-red;
+}

@@ -58,7 +58,7 @@ widgets = [
 	widget.Clock( 
               foreground =color_schema['dark-blue'],
               background =color_schema['bg'],
-              format = '  %d/%m  %H:%M '
+              format = '  %d/%m   %H:%M '
               ),
     widget.Spacer(),
     widget.Systray(
