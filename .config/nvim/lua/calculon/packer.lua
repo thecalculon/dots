@@ -15,6 +15,7 @@ return require('packer').startup(function(use)
      use('rmehri01/onenord.nvim')
 	 use ('mbbill/undotree')
 	 use ('tpope/vim-commentary')
+     use ( "windwp/nvim-autopairs")
 
     use ('lervag/vimtex')
      -- use {
