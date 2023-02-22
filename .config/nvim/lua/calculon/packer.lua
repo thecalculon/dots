@@ -16,7 +16,10 @@ return require('packer').startup(function(use)
 	 use ('mbbill/undotree')
 	 use ('tpope/vim-commentary')
      use ( "windwp/nvim-autopairs")
-
+use({
+    "kylechui/nvim-surround",
+    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+ })
     use ('lervag/vimtex')
      -- use {
      --     'nvim-lualine/lualine.nvim',
