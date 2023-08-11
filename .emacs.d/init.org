@@ -1,0 +1,563 @@
+#+title: My emacs configuration
+#+PROPERTY: header-args:emacs-lisp  :tangle "init.el"
+
+* General
+The general setting for the username, font and have the scratch buffer as the start etc.
+** Usernames
+#+begin_src emacs-lisp :tangle "init.el"
+
+(server-start)
+
+;username
+  (setq user-full-name "Vikash"
+        user-mail-address "vikashpandey.phy@gmail.com")
+
+(add-to-list 'exec-path "/home/vikash/opt/miniconda3/bin")
+(add-to-list 'exec-path "/home/vikash/opt/julia/bin")
+; julia path
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia/bin")))
+(setenv "PATH" (concat (expand-file-name "/home/vikash/opt/miniconda3/bin") ":" (getenv "PATH")))
+
+;set the font
+(set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
+(set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
+;dont save any backup
+(setq make-backup-files nil
+      auto-save-default nil)
+(setq inhibit-startup-message t) ; Disable startup message
+
+;start the buffer in scratch
+(switch-to-buffer "*scratch*")   ; Switch to *scratch* buffer on startup
+     ;
+  
+(setq use-dialog-box nil)
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+
+#+end_src
+
+#+RESULTS:
+: /home/vikash/opt/miniconda3/bin:/home/vikash/opt/miniconda3/bin:/home/vikash/opt/helix/bin:/home/vikash/opt/bin/stable/usr/bin:/home/vikash/.opam/default/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/opt/visit/bin:/home/vikash/opt/julia/bin:/home/vikash/opt/julia/bin
+
+** The looks of buffer
+#+begin_src emacs-lisp :tangle "init.el"
+
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(show-paren-mode 1)
+(electric-pair-mode t)
+(save-place-mode t)
+(savehist-mode t)
+(recentf-mode t)
+(setq-default indent-tabs-mode nil)
+(setq ring-bell-function 'ignore)
+
+#+end_src
+
+#+RESULTS:
+
+
+* Straight
+
+#+begin_src emacs-lisp :tangle "init.el"
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+
+
+#+end_src
+* Highlight numbers
+
+#+begin_src emacs-lisp :tangle "init.el"
+
+    (use-package highlight-numbers
+      :straight t
+      :ensure t
+      :config
+      (highlight-numbers-mode))
+
+
+#+end_src
+
+* Evil everywhere
+#+begin_src emacs-lisp :tangle "init.el"
+
+  (use-package evil
+      :straight t
+    :ensure t
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode 1))
+
+    (use-package evil-collection
+      :straight t
+      :ensure t
+      :after evil
+      :config
+     ; (evil-want-keybinding nil)
+      (evil-collection-init))
+
+    (use-package evil-escape
+      :straight t
+      :ensure t
+      :config
+      (evil-escape-mode 1)
+      (setq-default evil-escape-key-sequence "fd"))
+
+    (use-package evil-surround
+      :straight t
+      :ensure t
+      :config
+      (global-evil-surround-mode 1))
+
+    (use-package evil-commentary
+      :straight t
+      :ensure t
+      :config
+      (evil-commentary-mode))
+
+#+end_src
+
+* Theme
+#+begin_src emacs-lisp :tangle "init.el"
+
+(use-package doom-themes
+  :straight t
+  :config
+  (load-theme 'doom-gruvbox t))
+(use-package org
+  :ensure t
+  :config
+  (require 'org-tempo))
+
+
+#+end_src
+
+
+* Completions
+** Minibuffer completion
+Use the ivy with fuzzy finding for the minibuffer
+
+#+begin_src emacs-lisp :tangle "init.el"
+
+  (use-package ivy
+    :straight t
+    :config
+      (setq ivy-use-virtual-buffers t
+          ivy-count-format "(%d/%d) "
+          ivy-initial-inputs-alist nil
+          ivy-re-builders-alist
+          '((t . ivy--regex-fuzzy))))
+
+  ;This sets ivy--regex-fuzzy as the fuzzy matching strategy for all Ivy completion.
+  ;Optionally, you can also enable ivy-mode globally for all buffers. Add the following line to your configuration:
+
+  (ivy-mode 1)
+  (use-package ibuffer
+    :straight t
+     :config
+    (evil-set-initial-state 'ibuffer-mode 'normal))
+
+  (use-package general
+    :straight t
+    :config
+    (general-define-key
+      :states '(normal visual insert emacs)
+      :prefix "SPC"
+      :non-normal-prefix "M-SPC"
+      "b i" 'ibuffer
+   "f f" 'find-file
+        "m t" 'org-todo
+       "n t" 'org-todo-list
+  ))
+
+#+end_src
+
+** Main buffer completion
+Use corfu with orderless for the main buffer completion
+
+#+begin_src emacs-lisp :tangle "init.el"
+(use-package company
+  :straight t
+  :ensure t
+  :config
+  (global-company-mode))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-local company-backends
+                        (cons 'company-capf company-backends))))
+;; (use-package corfu
+;;   :straight t
+;;   :hook (after-init . global-corfu-mode)
+;;   :config
+;;   (setq corfu-cycle t
+;;         corfu-auto t
+;;         corfu-commit-predicate nil
+;;         corfu-quit-at-boundary t
+;;         corfu-echo-documentation nil))
+
+;; (use-package orderless
+;;   :straight t
+;;   :config
+;;   (setq completion-styles '(orderless)
+;;         orderless-component-separator #'orderless-escapable-split-on-space))
+
+;; (global-set-key [remap completion-at-point] #'corfu-completion-at-point)
+;; (global-set-key [remap completion] #'corfu-completion)
+
+;; (with-eval-after-load 'corfu
+;;   (setq corfu-auto-delay 0.2
+;;         corfu-auto-prefix-style 'partial
+;;         corfu-commit-delay 0.1
+;;         corfu-echo-documentation nil
+;;         corfu-quit-delay 0.2
+;;         corfu-quick-help-delay 1.0
+;;         corfu-quick-help-height 30))
+
+;; (add-hook 'ivy-mode-hook
+;;           (lambda ()
+;;             (setq ivy-re-builders-alist
+;;                   '((t . orderless-ivy-re-builder)))))
+
+;; (add-hook 'org-mode-hook 'corfu-mode)
+
+#+end_src
+
+
+
+
+* Org-mode configuration
+** General
+#+begin_src emacs-lisp :tangle "init.el"
+
+  (use-package org
+    :ensure t
+    :config
+    (require 'org-tempo))
+
+  ;; src block indentation / editing / syntax highlighting
+  (setq org-src-fontify-natively t
+        org-src-window-setup 'current-window ;; edit in current window
+        org-src-strip-leading-and-trailing-blank-lines t
+        org-src-preserve-indentation t ;; do not put two spaces on the left
+        org-src-tab-acts-natively t)
+
+(defun my/org-src-tab-width ()
+  "Set tab width to 4 spaces in Org source blocks."
+  (setq-local tab-width 4)
+  (setq-local indent-tabs-mode nil))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'org-src-mode-hook 'my/org-src-tab-width)))
+
+(defun my/org-src-tab-insert ()
+  "Insert 4 spaces instead of a tab in Org source blocks."
+  (interactive)
+  (if (org-in-src-block-p)
+      (insert "    ")
+    (call-interactively 'indent-for-tab-command)))
+
+(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
+
+#+end_src
+
+** Font and feel for the org-mode buffers
+First we set visual look and later we set the bullets.
+*** Fill the column for nicer look
+
+#+begin_src emacs-lisp :tangle init.el
+(use-package visual-fill-column
+  :ensure t
+  :commands visual-fill-column-mode)
+
+(defun org-mode-visual-fill ()
+  (setq visual-fill-column-width 140
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(defun org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(add-hook 'org-mode-hook 'org-mode-visual-fill)
+(add-hook 'org-mode-hook 'org-mode-setup)
+
+#+end_src
+
+*** Font
+#+begin_src emacs-lisp :tangle init.el
+
+  (defun org-font-setup ()
+    ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.3)
+                    (org-level-2 . 1.25)
+                    (org-level-3 . 1.15)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil :font "Fira Code Retina" :weight 'Semibold :height (cdr face)))
+
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    )
+(org-font-setup)
+
+#+end_src
+
+*** Org mode bullets
+Here we set the bullets to make the headings clear
+
+#+begin_src emacs-lisp :tangle init.el
+
+(use-package org-bullets
+  :straight t
+  :ensure t
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :config
+  (setq org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+#+end_src
+
+*** Set up the template
+Set the template for setting the
+
+#+begin_src emacs-lisp :tangle init.el
+
+(with-eval-after-load 'org-modules
+  (add-to-list 'org-modules 'org-tempo t))
+
+(with-eval-after-load 'org
+  (add-to-list 'org-structure-template-alist '("sel" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("spy" . "src python"))
+  (add-to-list 'org-structure-template-alist '("ssh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("stex" . "src latex")))
+
+#+end_src
+
+
+
+** Babel configuration
+
+#+begin_src emacs-lisp :tangle "init.el"
+
+    (use-package gnuplot
+      :straight t
+      )
+
+    (use-package ob-ipython
+      :straight t
+      )
+
+
+  ; to prevent the funny indentation.
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)
+       (ipython . t)
+       (shell . t)
+       (latex . t)
+       (gnuplot . t)
+                                            ;(julia-vterm . t)
+       )
+     )
+
+    (setq julia-vterm-repl-program "/home/vikash/opt/julia/bin/julia -t 4")
+    (defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
+    (defalias 'org-babel-variable-assignments:julia 'org-babel-variable-assignments:julia-vterm)
+    (add-hook 'julia-mode-hook #'julia-vterm-mode)
+
+    (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+    (push '("conf-unix" . conf-unix) org-src-lang-modes)
+    (setq org-confirm-babel-evaluate nil)
+    ;; Syntax highlight in #+BEGIN_SRC blocks
+    (setq org-src-fontify-natively t)
+
+
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
+
+** Org-agenda for organizing my calender
+*** Basics;
+Here we initialize the calender and set the org-files to look for each time
+
+#+begin_src emacs-lisp :tangle init.el
+                                        ;
+
+(setq org-ellipsis " ▾"
+      org-agenda-start-with-log-mode t
+      org-log-done 'time
+      org-log-into-drawer t
+      org-agenda-span 8
+      org-agenda-start-on-weekday nil
+      org-agenda-start-day "-3d"
+      org-agenda-files
+      '("~/Documents/OrgFiles/Tasks.org"
+        "~/Documents/OrgFiles/Meetings.org"
+        "~/Documents/OrgFiles/Birthdays.org")
+      org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANC(c)")
+        ))
+(setq org-refile-targets
+      '((org-agenda-files :maxlevel . 3)
+        (org-files-list :maxlevel . 2)))
+;; Save Org buffers after refiling!
+
+#+end_src
+
+*** Keybindings
+the keybindings are for org-agenda, org-todo and lists
+
+#+begin_src emacs-lisp :tangle init.el
+
+  (global-set-key (kbd "<f7>") 'org-agenda)
+
+  #+end_src
+
+*** Set-up for the org-dashboard
+
+#+begin_src emacs-lisp :tangle init.el
+
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+(setq org-tag-alist
+      '((:startgroup)
+                             ; Put mutually exclusive tags here
+        (:endgroup)
+        ("@errand" . ?E)
+        ("@home" . ?H)
+        ("@work" . ?W)
+        ("agenda" . ?a)
+        ("planning" . ?p)
+        ("publish" . ?P)
+        ("batch" . ?b)
+        ("note" . ?n)
+        ("idea" . ?i)))
+
+;; Configure custom agenda views
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+         ((agenda "" ((org-deadline-warning-days 7)))
+          (todo "NEXT"
+                ((org-agenda-overriding-header "Next Tasks")))
+          (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+        ("n" "Next Tasks"
+         ((todo "NEXT"
+                ((org-agenda-overriding-header "Next Tasks")))))
+
+        ("W" "Work Tasks" tags-todo "+work-email")
+
+        ;; Low-effort next actions
+        ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+         ((org-agenda-overriding-header "Low Effort Tasks")
+          (org-agenda-max-todos 20)
+          (org-agenda-files org-agenda-files)))
+
+        ("w" "Workflow Status"
+         ((todo "WAIT"
+                ((org-agenda-overriding-header "Waiting on External")
+                 (org-agenda-files org-agenda-files)))
+          (todo "COMPLETED"
+                ((org-agenda-overriding-header "Completed Projects")
+                 (org-agenda-files org-agenda-files)))
+          (todo "CANC"
+                ((org-agenda-overriding-header "Cancelled Projects")
+                 (org-agenda-files org-agenda-files)))))))
+#+end_src
+
+
+*** Capture the template
+#+begin_src emacs-lisp :tangle init.el
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Meetings.org" "INBOX")
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+        ("j" "Journal Entries")
+        ("jj" "Journal" entry
+         (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+        ))
+
+(define-key global-map (kbd "C-c j")
+  (lambda () (interactive) (org-capture nil "jj")))
+
+(define-key global-map (kbd "C-c t")
+  (lambda () (interactive) (org-capture nil "tt")))
+
+  #+end_src
+
+* ChatGpt
+
+#+begin_src emacs-lisp :tangle init.el
+
+;; (use-package chatgpt
+;;   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
+
+#+end_src
+
+* Elgot and treesitter
+** Eglot
+#+begin_src emacs-lisp :tangle init.el
+
+  (use-package eglot
+    :straight t
+  )
+
+#+end_src
+
+** tree-sitter
+#+begin_src emacs-lisp :tangle init.el
+
+    (use-package tree-sitter
+      :straight t
+    )
+
+    (use-package tree-sitter-langs
+      :straight t
+    )
+  (add-hook 'python-mode-hook #'tree-sitter-mode)
+
+#+end_src
