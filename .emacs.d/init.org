@@ -1,44 +1,64 @@
 #+title: My emacs configuration
 #+PROPERTY: header-args:emacs-lisp  :tangle "init.el"
 
+This is my emacs configuration after several iteration. One that I hope to keep for a longer time. It took some time to converge to this version. The blogs or tutorials that have been helpful are 'emacs-from-scratch' series by 'xxx'. 'My latex config ' by 'xxx'. I will make a list of everything. 
+
+One key aspect of elisp is that although it is fun, there are thousands/millions of functions of which some needs to be called in certain sequence to acheive what you desire with the Emacs. It is difficult to get a nice answer to what all these functions do. There are simply too many of them and at this point of time no one would be able to provide an appropriate answer. Another aspect that I think has emerged is that there are many function api's which perform similarly differing only very slightly. Come up with some example here. 
+* Important definitions
+m-x yas-describe-table loads all the snippets available in the current mode
+m-x customize-variable will allow customization of any variables.
+
 * General
-The general setting for the username, font and have the scratch buffer as the start etc.
-** Usernames
+The general setting for the username, font and have the scratch buffer as the start etc.  
+** Server
+I want to have the start-server separate as every-time I evaluate a code block here the emacs-client buffer are killed.
 #+begin_src emacs-lisp :tangle "init.el"
 
 (server-start)
+
+
+#+end_src
+
+** Username and font
+The font I the have converged on are Fira-Mono; (code variants have ligatures which eventually becomes difficult to deal with) Source-Code Pro, mononoki, and IBM-plex-mono for the monospaced font. The variable pitch font I liked are Fira-sans-book, IBM Sans, Cartilla, Source sans Pro, Iosevka Nerd Font. Important command to remember fc-list -l | grep "<font name>". If the desired font does not exist. Get it from package manager.
+#+begin_src emacs-lisp :tangle "init.el"
 
 ;username
   (setq user-full-name "Vikash"
         user-mail-address "vikashpandey.phy@gmail.com")
 
-(add-to-list 'exec-path "/home/vikash/opt/miniconda3/bin")
-(add-to-list 'exec-path "/home/vikash/opt/julia/bin")
+(add-to-list 'exec-path "/home/vikash/opt/anaconda3/bin")
+;; (add-to-list 'exec-path "/home/vikash/opt/julia/bin")
 ; julia path
-(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia/bin")))
-(setenv "PATH" (concat (expand-file-name "/home/vikash/opt/miniconda3/bin") ":" (getenv "PATH")))
+;; (setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia/bin")))
+(setenv "PATH" (concat (expand-file-name "/home/vikash/opt/anaconda3/bin") ":" (getenv "PATH")))
 
 ;set the font
-(set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
-(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
-(set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
+(set-face-attribute 'default nil :font "mononoki" :height 135 :weight 'Bold)
+(set-face-attribute 'fixed-pitch nil :font "mononoki" :height 135 :weight 'Bold)
+;(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 150 :weight 'Regular)
+;; (set-face-attribute 'variable-pitch nil :font "Source Sans Pro" :height 150 :weight 'Regular)
+(set-face-attribute 'variable-pitch nil :font "Iosevka Nerd Font" :height 150 :weight 'Regular)
 ;dont save any backup
 (setq make-backup-files nil
       auto-save-default nil)
 (setq inhibit-startup-message t) ; Disable startup message
-
-;start the buffer in scratch
 (switch-to-buffer "*scratch*")   ; Switch to *scratch* buffer on startup
      ;
-  
+(setq initial-scratch-message "
+; #+PROPERTY: header-args:jupyter-julia  :session ~/.kernel/emacs-julia-1.10-kernel.json
+; #+PROPERTY: header-args:jupyter-julia  :session /ssh:vikash<hostname>:~/.kernel/emacs-julia-1.10-kernel.json
+")
+
+
+;start the buffer in scratch
 (setq use-dialog-box nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
-
 
 #+end_src
 
 #+RESULTS:
-: /home/vikash/opt/miniconda3/bin:/home/vikash/opt/miniconda3/bin:/home/vikash/opt/helix/bin:/home/vikash/opt/bin/stable/usr/bin:/home/vikash/.opam/default/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/opt/visit/bin:/home/vikash/opt/julia/bin:/home/vikash/opt/julia/bin
+: yes-or-no-p
 
 ** The looks of buffer
 #+begin_src emacs-lisp :tangle "init.el"
@@ -53,16 +73,18 @@ The general setting for the username, font and have the scratch buffer as the st
 (recentf-mode t)
 (setq-default indent-tabs-mode nil)
 (setq ring-bell-function 'ignore)
+(global-display-line-numbers-mode t)
 
 #+end_src
 
 #+RESULTS:
-
-
+: t
+    
 * Straight
+Straight is a package manager which downloads package from the git. I also load the org immediately because the org version error that appears constantly whenever I call any org functions.
 
 #+begin_src emacs-lisp :tangle "init.el"
-
+        
 (defvar bootstrap-version)
 (let ((bootstrap-file
       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -79,8 +101,16 @@ The general setting for the username, font and have the scratch buffer as the st
 (straight-use-package 'use-package)
 
 
+(use-package org
+  :straight t
+  :ensure t
+  :config
+  (require 'org-tempo))
+
+
 #+end_src
-* Highlight numbers
+            
+* Highlight numbers and unicode
 
 #+begin_src emacs-lisp :tangle "init.el"
 
@@ -90,9 +120,16 @@ The general setting for the username, font and have the scratch buffer as the st
       :config
       (highlight-numbers-mode))
 
+(use-package unicode-fonts
+:straight t
+:config 
+(unicode-fonts-setup))
 
 #+end_src
 
+#+RESULTS:
+: t
+    
 * Evil everywhere
 #+begin_src emacs-lisp :tangle "init.el"
 
@@ -132,27 +169,68 @@ The general setting for the username, font and have the scratch buffer as the st
       :config
       (evil-commentary-mode))
 
+  (use-package evil-org
+      :straight t
+      :ensure t
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode))
+
+;(define-key evil-normal-state-map (kbd "gj") 'evil-next-visual-line)
+
+(define-key evil-motion-state-map [remap evil-next-line] #'evil-next-visual-line)
+(define-key evil-motion-state-map [remap evil-previous-line] #'evil-previous-visual-line)
+
+
+
 #+end_src
+
+#+RESULTS:
+: evil-next-visual-line
 
 * Theme
+Finally settled with the vanilla emacs color scheme with some modification to the org-mode source block. Had to add a shade for
+org-source blocks.
+
 #+begin_src emacs-lisp :tangle "init.el"
 
-(use-package doom-themes
-  :straight t
-  :config
-  (load-theme 'doom-gruvbox t))
-(use-package org
-  :ensure t
-  :config
-  (require 'org-tempo))
+;; (use-package doom-themes
+;;   :straight t
+;;   :config
+;;   (load-theme 'doom-gruvbox t))
+(load-theme 'modus-operandi t) 
+;; (load-theme 'gruvbox-light-soft t)
+    
 
+;; I want the face to be white else hard to see
+
+(display-time)
+;; (display-time-24-hr-format 1)
+
+;; (custom-set-faces
+;;  '(default ((t (:inherit nil :extend nil :stipple nil :background "#263238" :foreground "white" )))))
+
+(custom-set-faces
+ '(org-block-begin-line
+   ((t ( :foreground "gray1" :background "#EDEADE" :extend t))))
+ '(org-block
+   ((t (:background "#FFFFF0" :extend t))))
+ '(org-block-end-line
+   ((t ( :foreground "gray1" :background "#EDEADE" :extend t))))
+ )
+
+(use-package doom-modeline
+  :ensure t
+  :straight t
+  :hook (after-init . doom-modeline-mode))
 
 #+end_src
 
+#+RESULTS:
+: t
 
 * Completions
 ** Minibuffer completion
-Use the ivy with fuzzy finding for the minibuffer
+Use the ivy with fuzzy finding for the minibuffer. Setting initial-inputs 
 
 #+begin_src emacs-lisp :tangle "init.el"
 
@@ -161,14 +239,46 @@ Use the ivy with fuzzy finding for the minibuffer
     :config
       (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
-          ivy-initial-inputs-alist nil
-          ivy-re-builders-alist
-          '((t . ivy--regex-fuzzy))))
+          ;; ivy-initial-inputs-alist nil
+         ))
 
+
+
+  (use-package counsel
+    :straight t
+    :ensure t
+    :config
+    (use-package flx
+      :straight t
+      :ensure t)
+    (ivy-mode 1)
+    (setq ivy-height 20)
+    (setq ivy-re-builders-alist
+      '((ivy-switch-buffer . ivy--regex-plus)
+        (t . ivy--regex-fuzzy))))
+
+
+
+  ;; (setf (alist-get 'counsel-ag ivy-re-builders-alist)
+  ;;       #'ivy--regex-fuzzy)
+
+;(global-set-key (kbd "TAB") (lambda () (interactive) (insert-char 32 4)))
+
+(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "<f2> j") 'counsel-set-variable)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c v") 'ivy-push-view)
+(global-set-key (kbd "C-c V") 'ivy-pop-view)
   ;This sets ivy--regex-fuzzy as the fuzzy matching strategy for all Ivy completion.
   ;Optionally, you can also enable ivy-mode globally for all buffers. Add the following line to your configuration:
 
-  (ivy-mode 1)
   (use-package ibuffer
     :straight t
      :config
@@ -182,10 +292,25 @@ Use the ivy with fuzzy finding for the minibuffer
       :prefix "SPC"
       :non-normal-prefix "M-SPC"
       "b i" 'ibuffer
-   "f f" 'find-file
-        "m t" 'org-todo
+      "f f" 'counsel-find-file
+      "m t" 'org-todo
        "n t" 'org-todo-list
   ))
+
+
+(use-package yasnippet
+  :straight t
+  :config
+  (yas-global-mode))
+(define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "<tab>") 'yas-expand)
+
+
+(use-package yasnippet-snippets
+  :straight t)
+
+(setq yas-snippet-dirs (append yas-snippet-dirs
+                               '("/home/vikash/.emacs.d/snippets")))
 
 #+end_src
 
@@ -203,6 +328,10 @@ Use corfu with orderless for the main buffer completion
           (lambda ()
             (setq-local company-backends
                         (cons 'company-capf company-backends))))
+
+;; somehow corfu doesnot work
+
+
 ;; (use-package corfu
 ;;   :straight t
 ;;   :hook (after-init . global-corfu-mode)
@@ -240,24 +369,17 @@ Use corfu with orderless for the main buffer completion
 
 #+end_src
 
-
-
-
 * Org-mode configuration
 ** General
 #+begin_src emacs-lisp :tangle "init.el"
 
-  (use-package org
-    :ensure t
-    :config
-    (require 'org-tempo))
 
   ;; src block indentation / editing / syntax highlighting
   (setq org-src-fontify-natively t
         org-src-window-setup 'current-window ;; edit in current window
         org-src-strip-leading-and-trailing-blank-lines t
-        org-src-preserve-indentation t ;; do not put two spaces on the left
-        org-src-tab-acts-natively t)
+        org-src-preserve-indentation t) ;; do not put two spaces on the left
+        ;(org-src-tab-acts-natively t)
 
 (defun my/org-src-tab-width ()
   "Set tab width to 4 spaces in Org source blocks."
@@ -272,56 +394,60 @@ Use corfu with orderless for the main buffer completion
   "Insert 4 spaces instead of a tab in Org source blocks."
   (interactive)
   (if (org-in-src-block-p)
-      (insert "    ")
+      (insert "   ")
     (call-interactively 'indent-for-tab-command)))
 
-(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
+;(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
+;(define-key org-src-mode-map (kbd "TAB") (lambda () (interactive) (insert-char 32 4)))
 
 #+end_src
+
+#+RESULTS:
+: my/org-src-tab-insert
 
 ** Font and feel for the org-mode buffers
 First we set visual look and later we set the bullets.
 *** Fill the column for nicer look
-
 #+begin_src emacs-lisp :tangle init.el
 (use-package visual-fill-column
   :ensure t
   :commands visual-fill-column-mode)
 
-(defun org-mode-visual-fill ()
-  (setq visual-fill-column-width 140
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
+(setq visual-fill-column-width 140
+      visual-fill-column-center-text t)
 
 (defun org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
-(add-hook 'org-mode-hook 'org-mode-visual-fill)
+(add-hook 'org-mode-hook 'visual-fill-column-mode)
 (add-hook 'org-mode-hook 'org-mode-setup)
 
 #+end_src
 
 *** Font
 #+begin_src emacs-lisp :tangle init.el
+    ;; (custom-set-faces
+    ;; '(variable-pitch ((t (:family "CMU Sans Serif" :height 150)))))
+(add-hook 'org-mode-hook 'variable-pitch-mode) 
 
   (defun org-font-setup ()
     ;; Replace list hyphen with dot
-    (font-lock-add-keywords 'org-mode
+   (font-lock-add-keywords 'org-mode
                             '(("^ *\\([-]\\) "
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
     ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.3)
-                    (org-level-2 . 1.25)
-                    (org-level-3 . 1.15)
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
                     (org-level-4 . 1.0)
                     (org-level-5 . 1.1)
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Fira Code Retina" :weight 'Semibold :height (cdr face)))
+      (set-face-attribute (car face) nil :font "IBM Plex Sans" :weight 'Semibold :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -330,11 +456,17 @@ First we set visual look and later we set the bullets.
     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-document-info-keyword nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-property-value nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-tag nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-block-end-line nil :inherit 'fixed-pitch)
     )
 (org-font-setup)
 
 #+end_src
+
+#+RESULTS:
 
 *** Org mode bullets
 Here we set the bullets to make the headings clear
@@ -367,20 +499,34 @@ Set the template for setting the
 
 #+end_src
 
-
-
 ** Babel configuration
 
 #+begin_src emacs-lisp :tangle "init.el"
 
-    (use-package gnuplot
-      :straight t
-      )
+(use-package gnuplot
+  :straight t
+  )
 
-    (use-package ob-ipython
-      :straight t
-      )
+;; (use-package ob-ipython
+;;   :straight t
+;;   )
 
+(use-package jupyter
+  :straight t
+  )
+
+
+(use-package ess
+:straight t
+)
+
+(use-package julia-mode
+:straight t
+)
+
+(use-package julia-vterm
+:straight t
+)
 
   ; to prevent the funny indentation.
 
@@ -388,32 +534,57 @@ Set the template for setting the
      'org-babel-load-languages
      '((emacs-lisp . t)
        (python . t)
-       (ipython . t)
+       (jupyter . t)
        (shell . t)
        (latex . t)
+       (dot . t)
        (gnuplot . t)
-                                            ;(julia-vterm . t)
+       (julia . t)
        )
      )
 
-    (setq julia-vterm-repl-program "/home/vikash/opt/julia/bin/julia -t 4")
-    (defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
-    (defalias 'org-babel-variable-assignments:julia 'org-babel-variable-assignments:julia-vterm)
-    (add-hook 'julia-mode-hook #'julia-vterm-mode)
+ (with-eval-after-load 'jupyter 
+    (define-key jupyter-repl-mode-map (kbd "C-l") #'jupyter-repl-clear-cells)
+    (define-key jupyter-repl-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
+    (define-key jupyter-org-interaction-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-r") #'jupyter-eval-line-or-region)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-r") #'jupyter-repl-restart-kernel)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-k") #'jupyter-shutdown-kernel)
+    (add-hook 'jupyter-org-interaction-mode-hook (lambda ()  (company-mode)
+						   (setq company-backends '((company-capf))))) 
+    (add-hook 'jupyter-repl-mode-hook (lambda () (company-mode)
+				        :config (set-face-attribute
+					         'jupyter-repl-input-prompt nil :foreground "dim gray")
+				        :config (set-face-attribute
+					         'jupyter-repl-input-prompt nil :background "lightblue")
+				        ;; :config (set-face-attribute 'comment
+				        ;; 			    nil :foreground "dim gray")
+				        :config (set-face-attribute
+					         'jupyter-repl-output-prompt nil :foreground "black")
+				        (setq company-backends '((company-capf)))))
+    ;; (add-hook 'jupyter-repl-mode-hook #'smartparens-mode)
+    ;; (setq jupyter-repl-prompt-margin-width 4)
+    )
 
-    (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
-    (push '("conf-unix" . conf-unix) org-src-lang-modes)
-    (setq org-confirm-babel-evaluate nil)
-    ;; Syntax highlight in #+BEGIN_SRC blocks
-    (setq org-src-fontify-natively t)
 
+(add-to-list 'org-src-lang-modes '("jupyter-julia" . julia))
+(add-to-list 'org-src-lang-modes '("jupyter-python" . python))
+
+(defalias 'org-babel-variable-assignments:jupyter-julia 'org-babel-variable-assignments:julia)
+(add-hook 'julia-mode-hook #'julia-vterm-mode)
+;; (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+(setq org-confirm-babel-evaluate nil)
+;; Syntax highlight in #+BEGIN_SRC blocks
+(setq org-src-fontify-natively t)
+
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+;(add-hook org-babel-after-execute-hook 'org-display-inline-images 'append)
 
 #+end_src
 
 #+RESULTS:
-: t
-
-
+| org-redisplay-inline-images |
 
 
 ** Org-agenda for organizing my calender
@@ -451,7 +622,7 @@ the keybindings are for org-agenda, org-todo and lists
 
   (global-set-key (kbd "<f7>") 'org-agenda)
 
-  #+end_src
+#+end_src
 
 *** Set-up for the org-dashboard
 
@@ -508,6 +679,7 @@ the keybindings are for org-agenda, org-todo and lists
 
 *** Capture the template
 #+begin_src emacs-lisp :tangle init.el
+
 (setq org-capture-templates
       `(("t" "Tasks / Projects")
         ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Meetings.org" "INBOX")
@@ -527,21 +699,12 @@ the keybindings are for org-agenda, org-todo and lists
 (define-key global-map (kbd "C-c t")
   (lambda () (interactive) (org-capture nil "tt")))
 
-  #+end_src
-
-* ChatGpt
-
-#+begin_src emacs-lisp :tangle init.el
-
-;; (use-package chatgpt
-;;   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
-
 #+end_src
 
 * Elgot and treesitter
 ** Eglot
 #+begin_src emacs-lisp :tangle init.el
-
+ 
   (use-package eglot
     :straight t
   )
@@ -561,3 +724,114 @@ the keybindings are for org-agenda, org-todo and lists
   (add-hook 'python-mode-hook #'tree-sitter-mode)
 
 #+end_src
+
+* Latex
+
+#+begin_src emacs-lisp :tangle init.el
+
+;; latex config 
+;; this is for reading pdf in emacs;
+(use-package pdf-tools
+  :straight t)
+(pdf-tools-install)
+
+(use-package auctex
+  :straight t
+  )
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master 'nil)
+
+(use-package xenops
+  :straight t )
+;;   ;:config
+;; (add-hook LaTeX-mode-hook xenops-mode)
+  ;; (add-hook LaTeX-mode-hook #'xenops-mode))
+
+(setq +latex-viewers '(pdf-tools))
+(use-package cdlatex
+:straight t
+)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
+(add-hook 'latex-mode-hook 'turn-on-cdlatex)   ; normal emacs latex mode
+(add-hook 'pdf-view-mode 'pdf-view-themed-minor-mode)   ; normal emacs latex mode
+(set-default 'preview-scale-function 0.8)
+
+(defvar pdf-minimal-width 72
+  "Minimal width of a window displaying a pdf.
+If an integer, number of columns.  If a float, fraction of the
+original window.")
+
+(defvar pdf-split-width-threshold 120
+  "Minimum width a window should have to split it horizontally
+for displaying a pdf in the right.")
+
+(defun pdf-split-window-sensibly (&optional window)
+  "A version of `split-window-sensibly' for pdfs.
+It prefers splitting horizontally, and takes `pdf-minimal-width'
+into account."
+  (let ((window (or window (selected-window)))
+	(width (- (if (integerp pdf-minimal-width)
+		      pdf-minimal-width
+		    (round (* pdf-minimal-width (window-width window)))))))
+    (or (and (window-splittable-p window t)
+	     ;; Split window horizontally.
+	     (with-selected-window window
+	       (split-window-right width)))
+	(and (window-splittable-p window)
+	     ;; Split window vertically.
+	     (with-selected-window window
+	       (split-window-below)))
+	(and (eq window (frame-root-window (window-frame window)))
+	     (not (window-minibuffer-p window))
+	     ;; If WINDOW is the only window on its frame and is not the
+	     ;; minibuffer window, try to split it vertically disregarding
+	     ;; the value of `split-height-threshold'.
+	     (let ((split-height-threshold 0))
+	       (when (window-splittable-p window)
+		 (with-selected-window window
+		   (split-window-below))))))))
+
+(defun display-buffer-pop-up-window-pdf-split-horizontally (buffer alist)
+  "Call `display-buffer-pop-up-window', using `pdf-split-window-sensibly'
+when needed."
+  (let ((split-height-threshold nil)
+	(split-width-threshold pdf-split-width-threshold)
+	(split-window-preferred-function #'pdf-split-window-sensibly))
+    (display-buffer-pop-up-window buffer alist)))
+
+(add-to-list 'display-buffer-alist '("\\.pdf\\(<[^>]+>\\)?$" . (display-buffer-pop-up-window-pdf-split-horizontally)))
+
+;; (cdlatex-mode-map "TAB" #'cdlatex-tab)
+#+end_src
+
+#+RESULTS:
+| \.pdf\(<[^>]+>\)?$ | display-buffer-pop-up-window-pdf-split-horizontally |
+* Custom 
+
+#+begin_src emacs-lisp
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(TeX-view-program-selection
+   '(((output-dvi has-no-display-manager)
+      "dvi2tty")
+     ((output-dvi style-pstricks)
+      "PDF Tools")
+     (output-dvi "PDF Tools")
+     (output-pdf "PDF Tools")
+     (output-html "xdg-open")))
+ '(display-time-24hr-format t)
+ '(org-startup-folded t))
+
+
+
+#+end_src
+    
+
+
