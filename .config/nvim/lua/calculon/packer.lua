@@ -12,6 +12,7 @@ return require('packer').startup(function(use)
 	 use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 	 use('nvim-treesitter/playground')
 	 use {"Shatur/neovim-ayu"}
+    use({ "miikanissi/modus-themes.nvim" })
      use('rmehri01/onenord.nvim')
 	 use ('mbbill/undotree')
 	 use ('tpope/vim-commentary')
