@@ -1,89 +1,137 @@
-#+title: My emacs configuration
-#+PROPERTY: header-args:emacs-lisp  :tangle "init.el"
+#+title: Emacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle "init.el"
 
-This is my emacs configuration after several iteration. One that I hope to keep for a longer time. It took some time to converge to this version. The blogs or tutorials that have been helpful are 'emacs-from-scratch' series by 'xxx'. 'My latex config ' by 'xxx'. I will make a list of everything. 
 
-One key aspect of elisp is that although it is fun, there are thousands/millions of functions of which some needs to be called in certain sequence to acheive what you desire with the Emacs. It is difficult to get a nice answer to what all these functions do. There are simply too many of them and at this point of time no one would be able to provide an appropriate answer. Another aspect that I think has emerged is that there are many function api's which perform similarly differing only very slightly. Come up with some example here. 
+* Introduction
+This is my emacs configuration at the limit of N\to\infty, where N is the number of iterations that the config has suffered. Since the condition for the thermodynamic limit has been satisfied, this config behaves the way I want. At least for most of the things I want. For the people not familiar with the thermodynamic limit, I will try to explain in a couple of sentences. Imagine a bottle filled with air. When the number of air molecules in the bottle is large enough, what an individual molecule do doesn't matter, but emergent quantities like density and pressure determine the dynamics. An analogy drawn to the config would be how the config collectively behaves versus each code block blocking the other functions.
+The blogs and tutorials that have been helpful are the following.  
+
+1. [[https://systemcrafters.net/emacs-from-scratch/] Systems Crafters Emacs from scratch]
+2. [[https://hieuphay.com/doom-emacs-config/] My emacs config by Hieu Phay] and possibly also vanilla emacs config [[https://hieuphay.com/emacs-config/]]
+3. [https://michaelneuper.com/posts/efficient-latex-editing-with-emacs] Introduction to latex editing by Micheal Neuper]
+4. https://github.com/daviwil/emacs-from-scratch/blob/master/Emacs.org Notes on the config. Could be important.
+ 
+The following are blogs are also recommended, as it pop-ups frequently when searching for other people configs.  Although I have never read these blogs to put firm weight on the recommendation.
+
+1. [[https://sachachua.com/dotemacs/index.html#babel-init] Sacha Chua emacs config]
+2. Mastering Emacs [[https://www.masteringemacs.org/book]] 
+ 
+** Emacs as a whole
+The title makes a very little sense, I will rant about my thoughts on emacs for a while. A little background is necessary. Computer was never a part of my work life until I started my Master's degree. Even then the use case was limited to writing basic fortran programs in a shared machine. The real machine I had was when I quit the Master's degree and joined an Integrated MS-PhD program. It was quite late for a machine at this age (around 2014). Also, the etiquette to maintain a good habit of taking notes, organizing them into publishable articles, writing good codes e.t.c was missing. I am blaming it to not having a computer, but having a good environment enabling people to do these things also matter. 
+
+Having a personal machine changed a few things. Social media provied the environment, as I was able to read on how people organize life. As time went by I was needed to write both programs and codes a lot. And then came the configuration blackhole of Emacs. Historically speaking the software itself was written in 70s. Its age is comparable to lifetime of a person for instance. It is amazing to think on how a software this old has survived to date and is actively maintained. There are many libraries which are also old, but software packages are few. 
+
+Since emacs is very old, it is like old-grandpa/mom (can't think of any gender-neutral term here). Like grandpa has done a lot in his life, a lot of things have been done in emacs. Thus, there are thousands/millions of functions that are build in it. It gets difficult to browse through them to know what each of these do. (Can't organize my thoughts at this moment will revisit later) One key aspect of elisp is that although it is fun, of which some needs to be called in certain sequence to acheive what you desire with the Emacs.  There are simply too many of them and at this point of time no one would be able to provide an appropriate answer. Another aspect that I think has emerged is that there are many function api's which perform similarly differing only very slightly. Come up with some example here.
+
+** Not working or needs improvements
+The following are the configs I would want to implement at some level to enhance my work flow
+1. Organize the config into sub parts to ensure that each source blocks has only about 60?70 lines of config. It should be such that each block fits into the screen perfectly.
+2. Table in org-mode with +----+---+ is bit weird
+3. Corfu not working with yas. Fix it.
+4. pdf-tools scroll is not very smooth
+5. Configure Magit and fly-check
+6. EMMS set up a local music directory with few music
+   
+   
 * Important definitions
-m-x yas-describe-table loads all the snippets available in the current mode
-m-x customize-variable will allow customization of any variables.
+
+| SYMBOLS | DEFINITION             | DESCRIPTION                                      |
+| M-x     | Yas-describe-table     | loads all the snippets for the current mode      |
+| M-x     | customize-variable     | will allow customization of any variables.       |
+| M-x     | describe-function      | will describe the desired function               |
+| C-c n l | org-roam-buffer-toggle | toggle between different org-roam buffers        |
+| C-c n f | org-roam-node-find     | Find a node in org roam file with specific title |
+| C-c n i | org-roam-node-insert   | Insert a title with a org-roam node              |
+| C-M-i   | completion-at-point    | Complete at a point in a emacs traditional way   |
+| M-i     | tab-to-tab-stop        | Inserts tab                                      |
+| C-\     | toggle-input-method    | Useful to insert greek symbols in julia block    |
+|         |                        |                                                  |
+
+In zathura synctex use control and mouse button 1 to go to the text buffer opened in emacs.
 
 * General
 The general setting for the username, font and have the scratch buffer as the start etc.  
 ** Server
-I want to have the start-server separate as every-time I evaluate a code block here the emacs-client buffer are killed.
+This command should come at the very beginning. The purpose is to start a server with which several files can be opened in an existing emacs software. Just type emacsclient <filename> anywhere in the terminal, it will open in an existing emacs window, provided it is running in the background. 
+
 #+begin_src emacs-lisp :tangle "init.el"
-
 (server-start)
-
-
 #+end_src
 
 ** Username and font
-The font I the have converged on are Fira-Mono; (code variants have ligatures which eventually becomes difficult to deal with) Source-Code Pro, mononoki, and IBM-plex-mono for the monospaced font. The variable pitch font I liked are Fira-sans-book, IBM Sans, Cartilla, Source sans Pro, Iosevka Nerd Font. Important command to remember fc-list -l | grep "<font name>". If the desired font does not exist. Get it from package manager.
-#+begin_src emacs-lisp :tangle "init.el"
+
+The font I the have converged on are following
+*Fixed-space* where the each letter are spaced equally aka monospaced
+1. Fira-Mono/Code (Code variants comes with ligatures which eventually becomes difficult to edit.)
+2. Source-Code Pro
+3. Mononoki 
+4. IBM-PLEX-MONO
+5. Iosevka
+*Variable Pitch* letters are not fixed pitched
+1. Fira-Sans-Book 
+2. IBM-Sans ; Source-Code-Sans;  Source-SansV15
+3. Cartilla
+4. TeX Gyre Pagella/Iosevka Etiole  for a book like feel
+5. Iosevka Nerd Font (Maybe this has fixed pitch) Iosevka Etoile  
+Important hack to remember here is that all of the above font can be build in Iosevka. This has already been done and are present in the arch package manager as ttc-iosevka-ss<xx> xx is number corresponding to some build close to above mentioned font.
+
+#+begin_src emacs-lisp :tangle "init.el" 
 
 ;username
   (setq user-full-name "Vikash"
         user-mail-address "vikashpandey.phy@gmail.com")
 
 (add-to-list 'exec-path "/home/vikash/opt/anaconda3/bin")
-;; (add-to-list 'exec-path "/home/vikash/opt/julia/bin")
+(add-to-list 'exec-path "/home/vikash/opt/julia-1.10.0/bin")
 ; julia path
-;; (setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia-1.10.0/bin")))
 (setenv "PATH" (concat (expand-file-name "/home/vikash/opt/anaconda3/bin") ":" (getenv "PATH")))
 
 ;set the font
-(set-face-attribute 'default nil :font "mononoki" :height 135 :weight 'Bold)
-(set-face-attribute 'fixed-pitch nil :font "mononoki" :height 135 :weight 'Bold)
-;(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 150 :weight 'Regular)
-;; (set-face-attribute 'variable-pitch nil :font "Source Sans Pro" :height 150 :weight 'Regular)
-(set-face-attribute 'variable-pitch nil :font "Iosevka Nerd Font" :height 150 :weight 'Regular)
-;dont save any backup
-(setq make-backup-files nil
-      auto-save-default nil)
-(setq inhibit-startup-message t) ; Disable startup message
-(switch-to-buffer "*scratch*")   ; Switch to *scratch* buffer on startup
-     ;
-(setq initial-scratch-message "
-; #+PROPERTY: header-args:jupyter-julia  :session ~/.kernel/emacs-julia-1.10-kernel.json
-; #+PROPERTY: header-args:jupyter-julia  :session /ssh:vikash<hostname>:~/.kernel/emacs-julia-1.10-kernel.json
-")
-
-
-;start the buffer in scratch
-(setq use-dialog-box nil)
-(defalias 'yes-or-no-p 'y-or-n-p)
+(set-face-attribute 'default nil :font "Iosevka Custom" :height 135 :weight 'Semibold)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka Custom" :height 135 :weight 'Semibold)
+(set-face-attribute 'variable-pitch nil :font "SourceSans3VF" :height 155 :weight 'Regular)
 
 #+end_src
 
 #+RESULTS:
-: yes-or-no-p
-
 ** The looks of buffer
-#+begin_src emacs-lisp :tangle "init.el"
+The codes below customizes the buffer. I think the commands are self-explainatory.
 
+#+begin_src emacs-lisp
+
+(setq make-backup-files nil
+      auto-save-default nil) ; to prevent emacs from creating files with ~ in the end. 
+(setq inhibit-startup-message t) ; Disable startup message
+(switch-to-buffer "*scratch*")   ; Switch to *scratch* buffer on startup
+(setq initial-scratch-message "
+; #+PROPERTY: header-args:jupyter-julia  :session ~/.kernel/emacs-julia-1.10-kernel.json
+; #+PROPERTY: header-args:jupyter-julia  :session /ssh:vikash<hostname>:~/.kernel/emacs-julia-1.10-kernel.json
+"); Although these are set in yasnippet I want it in here so that it can be pasted quickly in the org-mode
+(setq use-dialog-box nil) 
+(defalias 'yes-or-no-p 'y-or-n-p) ; no need to type yes and no in emacs
+(display-time) ; display time in the modebar
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (show-paren-mode 1)
-(electric-pair-mode t)
+(electric-pair-mode t) ; always make two brackets or quotes 
 (save-place-mode t)
 (savehist-mode t)
 (recentf-mode t)
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+;; (setq indent-line-function 'insert-tab)
 (setq ring-bell-function 'ignore)
-(global-display-line-numbers-mode t)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 #+end_src
 
-#+RESULTS:
-: t
-    
+
 * Straight
 Straight is a package manager which downloads package from the git. I also load the org immediately because the org version error that appears constantly whenever I call any org functions.
 
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp :tangle "init.el" 
         
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -100,39 +148,77 @@ Straight is a package manager which downloads package from the git. I also load 
 
 (straight-use-package 'use-package)
 
+#+end_src
+
+** Install org-mode
+Seems this is a dependency from emacs-jupyter package which installs org from the package manager. I would have liked to have jupyter rely on the org that comes default with the emacs installation. Since this is not the case I will have to install it. 
+#+begin_src emacs-lisp :tangle "init.el"
 
 (use-package org
   :straight t
-  :ensure t
-  :config
-  (require 'org-tempo))
-
+  :ensure t)
 
 #+end_src
             
-* Highlight numbers and unicode
+
+* Numbers and dired 
+Numbers are by default not highlited in emacs. In program mode I like to have the numbers colored differently for more visibility. This is done using highlight-numbers package. Similarly unicode-fonts and nerd-fonts are used to present folders and other things as an icon in dired (directory-mode or buffers). These are simply for the asthetic part of the emacs and serves no purpose in production part. Although it is nice to have a well designed interface if I am spending a lot of time in a day just staring at it. At the end of source block are custom faces which sets the color of the numbers. In addition other org-mode configs are also here. The emacs does it automatically, hence I have kept it all here as I call highlight number the first time.
 
 #+begin_src emacs-lisp :tangle "init.el"
 
-    (use-package highlight-numbers
-      :straight t
-      :ensure t
-      :config
-      (highlight-numbers-mode))
+(use-package highlight-numbers
+  :straight t
+  :ensure t)
+
+(add-hook 'prog-mode-hook #'highlight-numbers-mode)
 
 (use-package unicode-fonts
-:straight t
-:config 
-(unicode-fonts-setup))
+  :straight t
+  :config 
+  (unicode-fonts-setup))
+
+(use-package nerd-icons
+  :straight t
+  ;; :custom
+  ;; "Symbols Nerd Font Mono" is the default and is recommended but you can use any other Nerd Font if you want
+  ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
+
+(use-package dired-sidebar
+  ;; This gives the option to have a nice sidebar with all the dired options.
+  :ensure t
+  :straight t
+  :commands (dired-sidebar-toggle-sidebar))
+
+ (setq dired-sidebar-subtree-line-prefix "__")
+ (setq dired-sidebar-use-term-integration t)
+
+(use-package nerd-icons-dired
+  :straight t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight-numbers-number ((t (:foreground "orange red"))))
+ ;; '(org-block ((t (:background "#FFFFF0" :extend t))))
+ ;; '(org-block-begin-line ((t (:foreground "gray1" :background "#EDEADE" :extend t))))
+ ;; '(org-block-end-line ((t (:foreground "gray1" :background "#EDEADE" :extend t))))
+)
 
 #+end_src
 
 #+RESULTS:
-: t
-    
-* Evil everywhere
-#+begin_src emacs-lisp :tangle "init.el"
 
+
+* Evil 
+Evil is the vim-like keybindings in emacs. It is so good that I have never felt the transition process. Doom emacs implements it even better. Here I have evil everywhere as long as I am programming. I don't have evil-mode activated in org-agenda.    
+** Load the evil and other subsidiary.
+#+begin_src emacs-lisp :tangle "init.el"
+  
   (use-package evil
       :straight t
     :ensure t
@@ -141,7 +227,7 @@ Straight is a package manager which downloads package from the git. I also load 
     (setq evil-want-keybinding nil)
     :config
     (evil-mode 1))
-
+ 
     (use-package evil-collection
       :straight t
       :ensure t
@@ -156,6 +242,13 @@ Straight is a package manager which downloads package from the git. I also load 
       :config
       (evil-escape-mode 1)
       (setq-default evil-escape-key-sequence "fd"))
+
+#+end_src
+
+** Evil packages 
+These are packages even in vim. It is great that it is implemented in Emacs as well.
+
+#+begin_src emacs-lisp :tangle "init.el"
 
     (use-package evil-surround
       :straight t
@@ -176,81 +269,67 @@ Straight is a package manager which downloads package from the git. I also load 
       (add-hook 'org-mode-hook 'evil-org-mode))
 
 ;(define-key evil-normal-state-map (kbd "gj") 'evil-next-visual-line)
+;;(define-key evil-insert-state-map (kbd "<tab>") 'tab-to-tab-stop)
 
 (define-key evil-motion-state-map [remap evil-next-line] #'evil-next-visual-line)
 (define-key evil-motion-state-map [remap evil-previous-line] #'evil-previous-visual-line)
 
-
+                    
 
 #+end_src
 
-#+RESULTS:
-: evil-next-visual-line
+
 
 * Theme
-Finally settled with the vanilla emacs color scheme with some modification to the org-mode source block. Had to add a shade for
-org-source blocks.
+I will rant for a while. 
+Finally settled with the vanilla emacs color scheme with some modification to the org-mode source block. Had to add a shade for org-source blocks.
 
 #+begin_src emacs-lisp :tangle "init.el"
 
-;; (use-package doom-themes
-;;   :straight t
-;;   :config
-;;   (load-theme 'doom-gruvbox t))
-(load-theme 'modus-operandi t) 
-;; (load-theme 'gruvbox-light-soft t)
-    
+(use-package doom-themes
+  :straight t
+  )
+(use-package spacemacs-theme
+  :straight t
+  )
 
-;; I want the face to be white else hard to see
-
-(display-time)
-;; (display-time-24-hr-format 1)
-
-;; (custom-set-faces
-;;  '(default ((t (:inherit nil :extend nil :stipple nil :background "#263238" :foreground "white" )))))
-
-(custom-set-faces
- '(org-block-begin-line
-   ((t ( :foreground "gray1" :background "#EDEADE" :extend t))))
- '(org-block
-   ((t (:background "#FFFFF0" :extend t))))
- '(org-block-end-line
-   ((t ( :foreground "gray1" :background "#EDEADE" :extend t))))
- )
-
+;; (load-theme 'modus-operandi t) 
+(load-theme 'doom-gruvbox-light t) 
+;;(load-theme 'spacemacs-light t)
 (use-package doom-modeline
   :ensure t
   :straight t
   :hook (after-init . doom-modeline-mode))
+(setq doom-modeline-height 20)
+;; this is not a theme but colors the braces for better visibility
+(use-package rainbow-delimiters
+  :straight t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 #+end_src
 
-#+RESULTS:
-: t
 
 * Completions
 ** Minibuffer completion
 Use the ivy with fuzzy finding for the minibuffer. Setting initial-inputs 
 
 #+begin_src emacs-lisp :tangle "init.el"
+(use-package flx
+      :straight t
+      :ensure t)
 
   (use-package ivy
     :straight t
     :config
       (setq ivy-use-virtual-buffers t
           ivy-count-format "(%d/%d) "
-          ;; ivy-initial-inputs-alist nil
+         ;; ivy-initial-inputs-alist nil
          ))
-
-
 
   (use-package counsel
     :straight t
     :ensure t
     :config
-    (use-package flx
-      :straight t
-      :ensure t)
     (ivy-mode 1)
     (setq ivy-height 20)
     (setq ivy-re-builders-alist
@@ -284,6 +363,11 @@ Use the ivy with fuzzy finding for the minibuffer. Setting initial-inputs
      :config
     (evil-set-initial-state 'ibuffer-mode 'normal))
 
+(use-package nerd-icons-ibuffer
+  :ensure t
+  :straight t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+
   (use-package general
     :straight t
     :config
@@ -311,63 +395,171 @@ Use the ivy with fuzzy finding for the minibuffer. Setting initial-inputs
 
 (setq yas-snippet-dirs (append yas-snippet-dirs
                                '("/home/vikash/.emacs.d/snippets")))
+(use-package which-key
+  :straight t
+  :init
+  (setq
+   which-key-show-early-on-C-h t
+   which-key-idle-delay 10000
+   which-key-idle-secondary-delay 0.05
+  which-key-popup-type 'minibuffer
+  which-key-side-window-max-height 0.25)
+  :config
+  (which-key-mode) 
+  )
+
+;; ibuffer-sidebar seems to not work well
+(use-package ibuffer-sidebar
+  :straight t
+  :commands (ibuffer-sidebar-toggle-sidebar)
+  )
+
+(defun +sidebar-toggle ()
+  "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
+  (interactive)
+  (dired-sidebar-toggle-sidebar)
+  (ibuffer-sidebar-toggle-sidebar))
+
+(use-package ivy-rich
+  :straight t
+  :init 
+ (ivy-rich-mode 1))
+
+(use-package nerd-icons-ivy-rich
+  :straight t
+  :ensure t
+  :init
+  (nerd-icons-ivy-rich-mode 1)
+  )
+
 
 #+end_src
+
+#+RESULTS:
+: +sidebar-toggle
 
 ** Main buffer completion
 Use corfu with orderless for the main buffer completion
 
 #+begin_src emacs-lisp :tangle "init.el"
-(use-package company
-  :straight t
-  :ensure t
-  :config
-  (global-company-mode))
+  (use-package company
+    :straight t
+    :ensure t)
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq-local company-backends
-                        (cons 'company-capf company-backends))))
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local company-backends
+  ;;                         (cons 'company-capf company-backends))))
 
-;; somehow corfu doesnot work
+  (add-to-list 'company-backends 'company-dabbrev-code) 
+  (add-to-list 'company-backends 'company-yasnippet)
+  (add-to-list 'company-backends 'company-files)
+
+  ;; somehow corfu doesnot work
+  (use-package corfu
+    :straight t
+    :config
+    (global-corfu-mode)
+    (setq corfu-cycle t
+          corfu-auto t
+          corfu-commit-predicate nil
+          corfu-quit-at-boundary t
+          corfu-quit-no-match 'separator
+          corfu-echo-documentation nil))
+
+  (use-package orderless
+    :straight t
+    :config
+    (setq completion-styles '(orderless)
+          orderless-component-separator #'orderless-escapable-split-on-space))
+
+  (global-set-key [remap completion-at-point] #'corfu-completion-at-point)
+  (global-set-key [remap completion] #'corfu-completion)
+
+  (with-eval-after-load 'corfu
+    (setq corfu-auto-delay 0.2
+          corfu-auto-prefix-style 'partial
+          corfu-commit-delay 0.1
+          corfu-echo-documentation nil
+          corfu-quit-delay 0.2
+          corfu-quick-help-delay 1.0
+          corfu-quick-help-height 30))
 
 
-;; (use-package corfu
-;;   :straight t
-;;   :hook (after-init . global-corfu-mode)
-;;   :config
-;;   (setq corfu-cycle t
-;;         corfu-auto t
-;;         corfu-commit-predicate nil
-;;         corfu-quit-at-boundary t
-;;         corfu-echo-documentation nil))
+  ;; Use Dabbrev with Corfu!
+  (use-package dabbrev
+    :straight t
+    ;; Swap M-/ and C-M-/
+    :bind (("M-/" . dabbrev-expand)
+           ("C-M-/" . dabbrev-completion))
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
 
-;; (use-package orderless
-;;   :straight t
-;;   :config
-;;   (setq completion-styles '(orderless)
-;;         orderless-component-separator #'orderless-escapable-split-on-space))
+  ;; Add extensions
+  (use-package cape
+    :straight t
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    :bind (("C-c p p" . completion-at-point) ;; capf
+           ("C-c p t" . complete-tag)        ;; etags
+           ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+           ("C-c p h" . cape-history)
+           ("C-c p f" . cape-file)
+           ("C-c p k" . cape-keyword)
+           ("C-c p s" . cape-elisp-symbol)
+           ("C-c p e" . cape-elisp-block)
+           ("C-c p a" . cape-abbrev)
+           ("C-c p l" . cape-line)
+           ("C-c p w" . cape-dict)
+           ("C-c p \\" . cape-tex)
+           ("C-c p _" . cape-tex)
+           ("C-c p ^" . cape-tex))
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    ;;(add-to-list 'completion-at-point-functions #'cape-history)
+    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+    ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+    ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  )
 
-;; (global-set-key [remap completion-at-point] #'corfu-completion-at-point)
-;; (global-set-key [remap completion] #'corfu-completion)
+  (use-package emacs
+    :straight t
+    :init
+    ;; TAB cycle if there are only few candidates
+    (setq completion-cycle-threshold 3)
+    ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+    ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (setq tab-always-indent 'complete))
 
-;; (with-eval-after-load 'corfu
-;;   (setq corfu-auto-delay 0.2
-;;         corfu-auto-prefix-style 'partial
-;;         corfu-commit-delay 0.1
-;;         corfu-echo-documentation nil
-;;         corfu-quit-delay 0.2
-;;         corfu-quick-help-delay 1.0
-;;         corfu-quick-help-height 30))
+  (use-package nerd-icons-corfu
+    :straight t
+    )
+(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
 
-;; (add-hook 'ivy-mode-hook
-;;           (lambda ()
-;;             (setq ivy-re-builders-alist
-;;                   '((t . orderless-ivy-re-builder)))))
-
-;; (add-hook 'org-mode-hook 'corfu-mode)
+  ;; (add-hook 'org-mode-hook 'corfu-mode)
 
 #+end_src
+
+#+RESULTS:
+
 
 * Org-mode configuration
 ** General
@@ -378,13 +570,23 @@ Use corfu with orderless for the main buffer completion
   (setq org-src-fontify-natively t
         org-src-window-setup 'current-window ;; edit in current window
         org-src-strip-leading-and-trailing-blank-lines t
+        org-src-tab-acts-natively t
+        org-latex-create-formula-image-program 'dvisvgm
         org-src-preserve-indentation t) ;; do not put two spaces on the left
-        ;(org-src-tab-acts-natively t)
 
 (defun my/org-src-tab-width ()
   "Set tab width to 4 spaces in Org source blocks."
   (setq-local tab-width 4)
   (setq-local indent-tabs-mode nil))
+
+;; Disable line number mode in several buffers;
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                treemacs-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 
 (add-hook 'org-mode-hook
           (lambda ()
@@ -397,9 +599,9 @@ Use corfu with orderless for the main buffer completion
       (insert "   ")
     (call-interactively 'indent-for-tab-command)))
 
-;(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
-;(define-key org-src-mode-map (kbd "TAB") (lambda () (interactive) (insert-char 32 4)))
+(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
 
+(setq org-ellipsis " ····")
 #+end_src
 
 #+RESULTS:
@@ -408,6 +610,8 @@ Use corfu with orderless for the main buffer completion
 ** Font and feel for the org-mode buffers
 First we set visual look and later we set the bullets.
 *** Fill the column for nicer look
+Here we set the visual fill column mode for the nice feel it provides. 
+
 #+begin_src emacs-lisp :tangle init.el
 (use-package visual-fill-column
   :ensure t
@@ -422,12 +626,15 @@ First we set visual look and later we set the bullets.
   (visual-line-mode 1))
 
 (add-hook 'org-mode-hook 'visual-fill-column-mode)
+(add-hook 'ibuffer-mode-hook 'visual-fill-column-mode)
 (add-hook 'org-mode-hook 'org-mode-setup)
 
 #+end_src
 
-*** Font
+*** Font config
+
 #+begin_src emacs-lisp :tangle init.el
+
     ;; (custom-set-faces
     ;; '(variable-pitch ((t (:family "CMU Sans Serif" :height 150)))))
 (add-hook 'org-mode-hook 'variable-pitch-mode) 
@@ -439,15 +646,15 @@ First we set visual look and later we set the bullets.
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
     ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.2)
-                    (org-level-2 . 1.1)
-                    (org-level-3 . 1.05)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.1)
-                    (org-level-6 . 1.1)
-                    (org-level-7 . 1.1)
-                    (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "IBM Plex Sans" :weight 'Semibold :height (cdr face)))
+    (dolist (face '((org-level-1 . 1.25)
+                    (org-level-2 . 1.10)
+                    (org-level-3 . 1.025)
+                    (org-level-4 . 1.025)
+                    (org-level-5 . 1.0)
+                    (org-level-6 . 1.0)
+                    (org-level-7 . 1.0)
+                    (org-level-8 . 1.0)))
+      (set-face-attribute (car face) nil :font "Fira Sans Book" :weight 'Regular :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -479,7 +686,8 @@ Here we set the bullets to make the headings clear
   :after org
   :hook (org-mode . org-bullets-mode)
   :config
-  (setq org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (setq org-bullets-bullet-list '("●" "▶" "◆" "○" "▲" )))
+
 
 #+end_src
 
@@ -487,15 +695,16 @@ Here we set the bullets to make the headings clear
 Set the template for setting the
 
 #+begin_src emacs-lisp :tangle init.el
-
-(with-eval-after-load 'org-modules
-  (add-to-list 'org-modules 'org-tempo t))
-
 (with-eval-after-load 'org
-  (add-to-list 'org-structure-template-alist '("sel" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("spy" . "src python"))
-  (add-to-list 'org-structure-template-alist '("ssh" . "src shell"))
-  (add-to-list 'org-structure-template-alist '("stex" . "src latex")))
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("jp" . "src jupyter-python"))
+  (add-to-list 'org-structure-template-alist '("jj" . "src jupyter-julia"))
+)
 
 #+end_src
 
@@ -546,22 +755,22 @@ Set the template for setting the
  (with-eval-after-load 'jupyter 
     (define-key jupyter-repl-mode-map (kbd "C-l") #'jupyter-repl-clear-cells)
     (define-key jupyter-repl-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
-    (define-key jupyter-org-interaction-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
+   ; (define-key jupyter-org-interaction-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
     (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-r") #'jupyter-eval-line-or-region)
     (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-r") #'jupyter-repl-restart-kernel)
     (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-k") #'jupyter-shutdown-kernel)
-    (add-hook 'jupyter-org-interaction-mode-hook (lambda ()  (company-mode)
-						   (setq company-backends '((company-capf))))) 
-    (add-hook 'jupyter-repl-mode-hook (lambda () (company-mode)
-				        :config (set-face-attribute
-					         'jupyter-repl-input-prompt nil :foreground "dim gray")
-				        :config (set-face-attribute
-					         'jupyter-repl-input-prompt nil :background "lightblue")
+   ; (add-hook 'jupyter-org-interaction-mode-hook (lambda ()  (company-mode)
+   ;						   (setq company-backends '((company-capf))))) 
+  ;  (add-hook 'jupyter-repl-mode-hook (lambda () (company-mode)
+				;        :config (set-face-attribute
+					;         'jupyter-repl-input-prompt nil :foreground "dim gray")
+				       ; :config (set-face-attribute
+					;         'jupyter-repl-input-prompt nil :background "lightblue")
 				        ;; :config (set-face-attribute 'comment
 				        ;; 			    nil :foreground "dim gray")
-				        :config (set-face-attribute
-					         'jupyter-repl-output-prompt nil :foreground "black")
-				        (setq company-backends '((company-capf)))))
+				        ;:config (set-face-attribute
+					;         'jupyter-repl-output-prompt nil :foreground "black")
+;				        (setq company-backends '((company-capf)))))
     ;; (add-hook 'jupyter-repl-mode-hook #'smartparens-mode)
     ;; (setq jupyter-repl-prompt-margin-width 4)
     )
@@ -586,94 +795,70 @@ Set the template for setting the
 #+RESULTS:
 | org-redisplay-inline-images |
 
-
 ** Org-agenda for organizing my calender
-*** Basics;
-Here we initialize the calender and set the org-files to look for each time
+Org-agenda is an old way to track journals set up meetings etc. With different calanders that do it automatically this program will not that useful now I guess. I want it do just track basic todos and any travel plans I have. 
+
+*** Keybindings
+Coming from the vim mode I keep pressing j and k in the org-agenda mode. These are bound to go-to-date-time and capture template respectively. Since I don't need to use these, best I unbind them and leave these function unassigned. I want my agenda to load very fast. hence F7 
 
 #+begin_src emacs-lisp :tangle init.el
-                                        ;
 
-(setq org-ellipsis " ▾"
-      org-agenda-start-with-log-mode t
+(global-set-key (kbd "<f7>") 'org-agenda)
+
+(eval-after-load 'org-agenda
+  '(progn
+     (define-key org-agenda-mode-map "j" nil)
+     (define-key org-agenda-mode-map "k" nil)))                                       ;
+
+#+end_src
+
+*** Basic settings
+Here I set the basics of agenda and set files from which to read the entries for dashboard. It expects Tasks and Meetings and Planning  
+#+begin_src emacs-lisp :tangle init.el
+
+ (setq     org-agenda-start-with-log-mode t
       org-log-done 'time
       org-log-into-drawer t
       org-agenda-span 8
       org-agenda-start-on-weekday nil
       org-agenda-start-day "-3d"
       org-agenda-files
-      '("~/Documents/OrgFiles/Tasks.org"
-        "~/Documents/OrgFiles/Meetings.org"
-        "~/Documents/OrgFiles/Birthdays.org")
+      '("~/Documents/OrgFiles/Tasksandmeetings.org"  ;; Tasksandmeeting.org
+        "~/Documents/OrgFiles/Planning.org" ;; Planning.org
+        "~/Documents/OrgFiles/Birthdays.org") ;; Birthdays.org
       org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANC(c)")
-        ))
+      '((sequence "TODO(t)" "STARTED" "|" "DONE(d)" "CANC(c)")
+       (sequence "PLAN(p)" "REMINDER(r)" "WAIT(w@/!)" "|" "COMPLETED(c)" "CANCELLED(k@)" ))
+      )
+
+
 (setq org-refile-targets
-      '((org-agenda-files :maxlevel . 3)
-        (org-files-list :maxlevel . 2)))
+      '(("~/Documents/Orgfiles/Archive.org" :maxlevel . 1)))
+
 ;; Save Org buffers after refiling!
-
-#+end_src
-
-*** Keybindings
-the keybindings are for org-agenda, org-todo and lists
-
-#+begin_src emacs-lisp :tangle init.el
-
-  (global-set-key (kbd "<f7>") 'org-agenda)
-
-#+end_src
-
-*** Set-up for the org-dashboard
-
-#+begin_src emacs-lisp :tangle init.el
-
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
 
-(setq org-tag-alist
-      '((:startgroup)
-                             ; Put mutually exclusive tags here
-        (:endgroup)
-        ("@errand" . ?E)
-        ("@home" . ?H)
-        ("@work" . ?W)
-        ("agenda" . ?a)
-        ("planning" . ?p)
-        ("publish" . ?P)
-        ("batch" . ?b)
-        ("note" . ?n)
-        ("idea" . ?i)))
+#+end_src
 
-;; Configure custom agenda views
+#+RESULTS:
+
+*** Dashboard 
+ This is the main deal. Here I will design what I want to appear in the dashboard.
+
+#+begin_src emacs-lisp :tangle init.el
+
 (setq org-agenda-custom-commands
       '(("d" "Dashboard"
          ((agenda "" ((org-deadline-warning-days 7)))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Next Tasks")))
-          (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+          (todo "PLAN"
+                ((org-agenda-overriding-header "planning")))
+           (todo "TODO"
+                ((org-agenda-overriding-header "todos")))
+          (todo "REMINDER"
+                ((org-agenda-overriding-header "Reminders")))))))
 
-        ("n" "Next Tasks"
-         ((todo "NEXT"
-                ((org-agenda-overriding-header "Next Tasks")))))
 
-        ("W" "Work Tasks" tags-todo "+work-email")
 
-        ;; Low-effort next actions
-        ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-         ((org-agenda-overriding-header "Low Effort Tasks")
-          (org-agenda-max-todos 20)
-          (org-agenda-files org-agenda-files)))
-
-        ("w" "Workflow Status"
-         ((todo "WAIT"
-                ((org-agenda-overriding-header "Waiting on External")
-                 (org-agenda-files org-agenda-files)))
-          (todo "COMPLETED"
-                ((org-agenda-overriding-header "Completed Projects")
-                 (org-agenda-files org-agenda-files)))
-          (todo "CANC"
-                ((org-agenda-overriding-header "Cancelled Projects")
-                 (org-agenda-files org-agenda-files)))))))
 #+end_src
 
 
@@ -682,9 +867,11 @@ the keybindings are for org-agenda, org-todo and lists
 
 (setq org-capture-templates
       `(("t" "Tasks / Projects")
-        ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Meetings.org" "INBOX")
-         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-
+        ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Tasksandmeetings.org" "Meetings")
+         "** TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        ("p" "plan / Reminder")
+        ("pp" "Plan" entry (file+olp "~/Documents/OrgFiles/Planning.org" "Future Plans")
+         "** PLAN %?\n  %U\n  %a\n  %i" :empty-lines 1)
         ("j" "Journal Entries")
         ("jj" "Journal" entry
          (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
@@ -696,36 +883,124 @@ the keybindings are for org-agenda, org-todo and lists
 (define-key global-map (kbd "C-c j")
   (lambda () (interactive) (org-capture nil "jj")))
 
+(define-key global-map (kbd "C-c p")
+  (lambda () (interactive) (org-capture nil "pp")))
+
 (define-key global-map (kbd "C-c t")
   (lambda () (interactive) (org-capture nil "tt")))
 
 #+end_src
 
-* Elgot and treesitter
+#+RESULTS:
+| lambda | nil | (interactive) | (org-capture nil tt) |
+
+** Org-Roam
+Org roam is a new note-keeping tools in emacs and integrates well with org. I don't use org-mode a lot; but since I am unable to escape the note keeping part and a lot of documents I read tends to get lost over time leading to an infinite loop of doing the same thing again and again. I will start organizing my notes using org-roam from now on. The below configuration is copy pasted from
+ davil emacs-from scratch series.
+ 
+#+begin_src  emacs-lisp
+
+(use-package org-roam
+  :ensure t
+  :straight t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Documents/my_notes/RoamNotes")
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+  :config
+  (org-roam-setup))
+
+  
+#+end_src
+
+#+RESULTS:
+: completion-at-point
+
+
+* Eglot and treesitter
+
 ** Eglot
+
 #+begin_src emacs-lisp :tangle init.el
  
   (use-package eglot
     :straight t
-  )
+;    :hook
+     ;; (c-mode-hook . eglot-ensure)
+     ;; (f90-mode-hook . eglot-ensure)
+    )
+
+(with-eval-after-load 'eglot
+   (setq completion-category-defaults nil))
+
+(advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
 
 #+end_src
 
 ** tree-sitter
+
+Tree sitter is a new way of highlighting
+
 #+begin_src emacs-lisp :tangle init.el
 
     (use-package tree-sitter
       :straight t
-    )
+      :init
+       (global-tree-sitter-mode))
 
     (use-package tree-sitter-langs
       :straight t
     )
-  (add-hook 'python-mode-hook #'tree-sitter-mode)
+  ;; (add-hook 'python-mode-hook #'tree-sitter-mode)
+
+(setq treesit-language-source-alist
+      '(
+     (bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (fortran  "https://github.com/stadelmanma/tree-sitter-fortran")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     (cuda "https://github.com/theHamsta/tree-sitter-cuda")
+     (julia "https://github.com/tree-sitter/tree-sitter-julia")
+     (latex "https://github.com/latex-lsp/tree-sitter-latex")
+     (org"https://github.com/milisims/tree-sitter-org")
+   ))
 
 #+end_src
 
+#+RESULTS:
+| bash     | https://github.com/tree-sitter/tree-sitter-bash    |
+| cmake    | https://github.com/uyha/tree-sitter-cmake          |
+| elisp    | https://github.com/Wilfred/tree-sitter-elisp       |
+| json     | https://github.com/tree-sitter/tree-sitter-json    |
+| make     | https://github.com/alemuller/tree-sitter-make      |
+| markdown | https://github.com/ikatyang/tree-sitter-markdown   |
+| python   | https://github.com/tree-sitter/tree-sitter-python  |
+| yaml     | https://github.com/ikatyang/tree-sitter-yaml       |
+| fortran  | https://github.com/stadelmanma/tree-sitter-fortran |
+| c        | https://github.com/tree-sitter/tree-sitter-c       |
+| cpp      | https://github.com/tree-sitter/tree-sitter-cpp     |
+| cuda     | https://github.com/theHamsta/tree-sitter-cuda      |
+| julia    | https://github.com/tree-sitter/tree-sitter-julia   |
+| latex    | https://github.com/latex-lsp/tree-sitter-latex     |
+| org      | https://github.com/milisims/tree-sitter-org        |
+
+
 * Latex
+
+** General latex configuration
 
 #+begin_src emacs-lisp :tangle init.el
 
@@ -734,6 +1009,14 @@ the keybindings are for org-agenda, org-todo and lists
 (use-package pdf-tools
   :straight t)
 (pdf-tools-install)
+
+(defun my/hooks_pdf_tools ()
+  "Disable line numbers in the current buffer."
+  (display-line-numbers-mode -1)
+  (auto-revert-mode 1)
+)
+
+(add-hook 'pdf-view-mode-hook 'my/hooks_pdf_tools)
 
 (use-package auctex
   :straight t
@@ -748,16 +1031,42 @@ the keybindings are for org-agenda, org-todo and lists
 ;;   ;:config
 ;; (add-hook LaTeX-mode-hook xenops-mode)
   ;; (add-hook LaTeX-mode-hook #'xenops-mode))
+;; Add this to .emacs.d/init.el:
+(with-eval-after-load "tex"
+  ;; enable synctex support for latex-mode
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  ;; add a new view program
+  (add-to-list 'TeX-view-program-list
+        '(;; arbitrary name for this view program
+          "Zathura"
+          (;; zathura command (may need an absolute path)
+           "zathura"
+           ;; %o expands to the name of the output file
+           " %o"
+           ;; insert page number if TeX-source-correlate-mode
+           ;; is enabled
+           (mode-io-correlate " --synctex-forward %n:0:%b"))))
+  ;; use the view command named "Zathura" for pdf output
+  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
 
-(setq +latex-viewers '(pdf-tools))
+
+
+(setq xenops-reveal-on-entry t
+      xenops-image-directory (expand-file-name "xenops/image" user-emacs-directory)
+      xenops-math-latex-process 'dvisvgm
+      xenops-math-image-scale-factor 1
+      )
+
 (use-package cdlatex
 :straight t
 )
 
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
-(add-hook 'latex-mode-hook 'turn-on-cdlatex)   ; normal emacs latex mode
+(add-hook 'latex-mode-hook 'turn-on-cdlatex)   
+(add-hook 'latex-mode-hook 'visual-line-mode)   ; normal emacs latex mode
+(add-hook 'Latex-mode-hook 'visual-line-mode) 
 (add-hook 'pdf-view-mode 'pdf-view-themed-minor-mode)   ; normal emacs latex mode
-(set-default 'preview-scale-function 0.8)
+(set-default 'preview-scale-function 1.1)
 
 (defvar pdf-minimal-width 72
   "Minimal width of a window displaying a pdf.
@@ -807,12 +1116,165 @@ when needed."
 ;; (cdlatex-mode-map "TAB" #'cdlatex-tab)
 #+end_src
 
-#+RESULTS:
-| \.pdf\(<[^>]+>\)?$ | display-buffer-pop-up-window-pdf-split-horizontally |
-* Custom 
+** Biblatex and cite configuration
 
 #+begin_src emacs-lisp
 
+ (use-package citar
+  :straight t
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup)
+  :custom
+  (citar-bibliography '("/home/vikash/Documents/my_notes/bib/references.bib")))
+
+ (use-package bibtex
+   :straight t
+    :custom
+    (bibtex-dialect 'BibTeX)
+    (bibtex-user-optional-fields
+     '(("keywords" "Keywords to describe the entry" "")
+       ("file" "Link to a document file." "" )))
+    (bibtex-align-at-equal-sign t))
+
+(use-package citar-embark
+  :straight t
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+
+(use-package biblio
+  :straight t)
+ 
+#+end_src
+
+#+RESULTS:
+
+
+* Spell and Grammar Check
+
+** Flyspell
+For spell checking the go-to tool in emacs is flycheck. The configuration given in the emacs wiki seems sound. I will just copy paste them here.
+
+#+begin_src emacs-lisp
+
+; Seems like flyspell is already installed in emacs; just set it up
+  (dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+
+;; (global-set-key (kbd "<f8>") 'ispell-word)
+;; to note vim key-binding z= also works for ispell=word checking
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word)
+  )
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word) 
+
+#+end_src
+
+#+RESULTS:
+
+** Language server
+An alternative tool to keep track of is flycheck-languagetool. This setup will have the options 'M-x langtoo-? to pass the entire text.
+#+begin_src emacs-lisp
+
+(use-package langtool
+  :straight t)
+(setq langtool-java-classpath
+      "/usr/share/languagetool:/usr/share/java/languagetool/*")
+
+#+end_src
+
+
+* Magit
+Magit is a emacs package to use git in the buffer. 
+
+#+begin_src emacs-lisp
+ (use-package magit
+  :straight t
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+(use-package forge
+  :straight t
+  :after magit) 
+
+
+#+end_src
+
+#+RESULTS:
+
+
+* Other subsidiaries 
+** Markdown-mode
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+  :ensure t
+  :straight t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+#+end_src
+
+** Emms- emacs native music player
+#+begin_src emacs-lisp
+
+  (use-package emms
+    :straight t
+    :init
+    (require 'emms-setup)
+    (require 'emms-mpris)
+    (emms-all)
+    (emms-default-players)
+    (emms-mpris-enable)
+    :custom
+    (emms-source-file-default-directory "~/Music")
+    (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+    :bind
+    (("<f5>"   . emms-browser)
+     ("M-<f5>" . emms)
+     ("M-p" . emms-previous)
+     ("M-n" . emms-next)
+     ("M-s" . emms-pause)))
+
+(emms-all)
+(setq emms-player-list '(emms-player-mpv)
+      emms-info-functions '(emms-info-native))
+
+#+end_src
+
+#+RESULTS:
+| emms-info-native |
+
+** EAF for quick browsing 
+This seems to have too much of dependencies. If one breaks everything comes crashing down like cards. Although it is wishful thinking. 
+#+begin_src emacs-lisp
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+;; (require 'eaf)
+;; (require 'eaf-browser)
+;; (require 'eaf-pdf-viewer)
+
+#+end_src
+
+#+RESULTS:
+: eaf-browser
+
+* Custom 
+
+#+begin_src emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -822,16 +1284,92 @@ when needed."
    '(((output-dvi has-no-display-manager)
       "dvi2tty")
      ((output-dvi style-pstricks)
-      "PDF Tools")
-     (output-dvi "PDF Tools")
-     (output-pdf "PDF Tools")
+      "Zathura")
+     (output-dvi "Zathura")
+     (output-pdf "Zathura")
      (output-html "xdg-open")))
  '(display-time-24hr-format t)
+ '(f90-comment-region "!!")
+ '(org-highlight-latex-and-related '(native))
  '(org-startup-folded t))
 
 
-
 #+end_src
-    
+
+#+RESULTS:
+            
+
+
+
+* Might be relevant some-day
+These functions will build html from buffer and render.
+
+#+begin_src example
+(defun org-babel-render-html ()
+  (interactive)
+  (let* ((element (org-element-at-point))
+         (start (org-element-property :begin element))
+         (end (org-element-property :end element))
+         (value (org-element-property :value element)))
+    (goto-char start)
+    (forward-line)
+    (delete-region (point) end)
+    (insert value)
+    (shr-render-region start (point))
+    (goto-char start)
+    (forward-line)
+    (delete-char -1)))
+
+(defun org-babel-process-export-html-block ()
+  (interactive)
+  (let* ((element (org-element-context))
+         (beg (org-element-property :begin element))
+         (end (org-element-property :end element))
+         (value (org-element-property :value element)))
+    (with-temp-buffer
+      (insert value)
+      (shr-render-buffer (current-buffer)))
+    (let ((html-contents (with-current-buffer "*html*"
+                           (unless (text-properties-at (point))
+                             (let ((contents (buffer-string)))
+                               (kill-buffer)
+                               contents)))))
+      (when (print html-contents)
+        (kill-region beg end)
+        (goto-char beg)
+        (insert "#+RESULTS\n: " html-contents "\n")))))
+
+config for the unicode fonts
+
+(use-package unicode-fonts
+  :straight t
+  :config
+  ;; Common math symbols
+  (dolist (unicode-block '("Mathematical Alphanumeric Symbols"))
+    (push "JuliaMono" (cadr (assoc unicode-block unicode-fonts-block-font-mapping))))
+  (dolist (unicode-block '("Greek and Coptic"))
+    (push "Iosevka Custom" (cadr (assoc unicode-block unicode-fonts-block-font-mapping))))
+  ;; CJK characters
+  (dolist (unicode-block '("CJK Unified Ideographs" "CJK Symbols and Punctuation" "CJK Radicals Supplement" "CJK Compatibility Ideographs"))
+    (push "Sarasa Mono SC" (cadr (assoc unicode-block unicode-fonts-block-font-mapping))))
+  (dolist (unicode-block '("Hangul Syllables" "Hangul Jamo Extended-A" "Hangul Jamo Extended-B"))
+    (push "Sarasa Mono K" (cadr (assoc unicode-block unicode-fonts-block-font-mapping))))
+  ;; Other unicode block
+  (dolist (unicode-block '("Braille Patterns"))
+    (push "Iosevka Custom" (cadr (assoc unicode-block unicode-fonts-block-font-mapping))))
+  )
+
+#+end_src example
+
+
+
+
+Initialize thermodynamic rel  
+
+
+
+
+
+
 
 
