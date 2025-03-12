@@ -1,7 +1,6 @@
 #+title: Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle "init.el"
 
-
 * Introduction
 This is my emacs configuration at the limit of N\to\infty, where N is the number of iterations that the config has suffered. Since the condition for the thermodynamic limit has been satisfied, this config behaves the way I want. At least for most of the things I want. For the people not familiar with the thermodynamic limit, I will try to explain in a couple of sentences. Imagine a bottle filled with air. When the number of air molecules in the bottle is large enough, what an individual molecule do doesn't matter, but emergent quantities like density and pressure determine the dynamics. An analogy drawn to the config would be how the config collectively behaves versus each code block blocking the other functions.
 The blogs and tutorials that have been helpful are the following.  
@@ -49,6 +48,7 @@ The following are the configs I would want to implement at some level to enhance
 
 In zathura synctex use control and mouse button 1 to go to the text buffer opened in emacs.
 
+
 * General
 The general setting for the username, font and have the scratch buffer as the start etc.  
 ** Server
@@ -59,7 +59,6 @@ This command should come at the very beginning. The purpose is to start a server
 #+end_src
 
 ** Username and font
-
 The font I the have converged on are following
 *Fixed-space* where the each letter are spaced equally aka monospaced
 1. Fira-Mono/Code (Code variants comes with ligatures which eventually becomes difficult to edit.)
@@ -72,14 +71,14 @@ The font I the have converged on are following
 2. IBM-Sans ; Source-Code-Sans;  Source-SansV15
 3. Cartilla
 4. TeX Gyre Pagella/Iosevka Etiole  for a book like feel
-5. Iosevka Nerd Font (Maybe this has fixed pitch) Iosevka Etoile  
+5. Iosevka Nerd Font (Maybe this has fixed pitch) Iosevka Etoile
+6. Cardo google font. The famous book Mastering Emacs  uses this font. 
 Important hack to remember here is that all of the above font can be build in Iosevka. This has already been done and are present in the arch package manager as ttc-iosevka-ss<xx> xx is number corresponding to some build close to above mentioned font.
-
 #+begin_src emacs-lisp :tangle "init.el" 
 
 ;username
   (setq user-full-name "Vikash"
-        user-mail-address "vikashpandey.phy@gmail.com")
+        user-mail-address "vkpnbeta@gmail.com")
 
 (add-to-list 'exec-path "/home/vikash/opt/anaconda3/bin")
 (add-to-list 'exec-path "/home/vikash/opt/julia-1.10.0/bin")
@@ -88,9 +87,12 @@ Important hack to remember here is that all of the above font can be build in Io
 (setenv "PATH" (concat (expand-file-name "/home/vikash/opt/anaconda3/bin") ":" (getenv "PATH")))
 
 ;set the font
-(set-face-attribute 'default nil :font "Iosevka Custom" :height 135 :weight 'Semibold)
-(set-face-attribute 'fixed-pitch nil :font "Iosevka Custom" :height 135 :weight 'Semibold)
-(set-face-attribute 'variable-pitch nil :font "SourceSans3VF" :height 155 :weight 'Regular)
+(set-face-attribute 'default nil :font "Iosevka Custom" :height 150 :weight 'Semibold)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka Custom" :height 150 :weight 'Semibold)
+;; (set-face-attribute 'variable-pitch nil :font "SourceSans3VF" :height 155 :weight 'Regular)
+(set-face-attribute 'variable-pitch nil :font "CMU Typewriter Text" :height 170 :weight 'Regular)
+;;(set-face-attribute 'variable-pitch nil :font "Iosevka Etoile" :height 145 :weight 'Regular)
+;; (set-face-attribute 'variable-pitch nil :font "CMU Concrete" :height 135 :weight 'SemiBold)
 
 #+end_src
 
@@ -124,6 +126,9 @@ The codes below customizes the buffer. I think the commands are self-explainator
 ;; (setq indent-line-function 'insert-tab)
 (setq ring-bell-function 'ignore)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+;; These are for the transparancy
+(set-frame-parameter nil 'alpha-background 100) ; For current frame
+(add-to-list 'default-frame-alist '(alpha-background . 100))
 
 #+end_src
 
@@ -161,7 +166,7 @@ Seems this is a dependency from emacs-jupyter package which installs org from th
 #+end_src
             
 
-* Numbers and dired 
+* Numbers and dired
 Numbers are by default not highlited in emacs. In program mode I like to have the numbers colored differently for more visibility. This is done using highlight-numbers package. Similarly unicode-fonts and nerd-fonts are used to present folders and other things as an icon in dired (directory-mode or buffers). These are simply for the asthetic part of the emacs and serves no purpose in production part. Although it is nice to have a well designed interface if I am spending a lot of time in a day just staring at it. At the end of source block are custom faces which sets the color of the numbers. In addition other org-mode configs are also here. The emacs does it automatically, hence I have kept it all here as I call highlight number the first time.
 
 #+begin_src emacs-lisp :tangle "init.el"
@@ -203,18 +208,26 @@ Numbers are by default not highlited in emacs. In program mode I like to have th
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(highlight-numbers-number ((t (:foreground "orange red"))))
- ;; '(org-block ((t (:background "#FFFFF0" :extend t))))
- ;; '(org-block-begin-line ((t (:foreground "gray1" :background "#EDEADE" :extend t))))
- ;; '(org-block-end-line ((t (:foreground "gray1" :background "#EDEADE" :extend t))))
+ '(highlight-numbers-number ((t (:aquamarineforeground "BlueViolet"))))  
+ '(org-block ((t (:background "#F8F8FF" :extend t)))) ;; These are for light theme
+ '(org-block-begin-line ((t (:foreground "gray1" :background "#EDEADE" :extend t)))) ; light theme
+ '(org-block-end-line ((t (:foreground "gray1" :background "#EDEADE" :extend t)))) ; light theme
+;  '(org-block ((t (:background "gray10" :extend t)))) ;For dark theme
+ ;; '(org-block-begin-line ((t (:foreground "gray60" :background "#595959" :extend t)))) ;For dark  theme
+ ;; '(org-block-end-line ((t (:foreground "gray60" :background "#595959" :extend t)))) ; for dark theme
+ '(org-level-1 ((t (:foreground "DarkRed" :extend t)))) ; use VoiletRed1 in modus-vivendi
+ '(org-level-2 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-3 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-4 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-5 ((t (:foreground "DarkRed" :extend t))))
 )
-
+  
 #+end_src
 
 #+RESULTS:
 
 
-* Evil 
+* Evil
 Evil is the vim-like keybindings in emacs. It is so good that I have never felt the transition process. Doom emacs implements it even better. Here I have evil everywhere as long as I am programming. I don't have evil-mode activated in org-agenda.    
 ** Load the evil and other subsidiary.
 #+begin_src emacs-lisp :tangle "init.el"
@@ -293,8 +306,9 @@ Finally settled with the vanilla emacs color scheme with some modification to th
   :straight t
   )
 
-;; (load-theme 'modus-operandi t) 
-(load-theme 'doom-gruvbox-light t) 
+(load-theme 'modus-operandi t) 
+;; (load-theme 'modus-vivendi t) 
+;; (load-theme 'doom-gruvbox-light t) 
 ;;(load-theme 'spacemacs-light t)
 (use-package doom-modeline
   :ensure t
@@ -307,6 +321,9 @@ Finally settled with the vanilla emacs color scheme with some modification to th
   :hook (prog-mode . rainbow-delimiters-mode))
 
 #+end_src
+
+#+RESULTS:
+| rainbow-delimiters-mode | highlight-numbers-mode | display-line-numbers-mode |
 
 
 * Completions
@@ -536,6 +553,19 @@ Use corfu with orderless for the main buffer completion
     ;;(add-to-list 'completion-at-point-functions #'cape-line)
   )
 
+
+(use-package yasnippet-capf
+  :straight t
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+;; It expands automoatically which is annoying
+(setopt corfu-on-exact-match 'show)
+;; (require 'company-yasnippet)
+;; (add-to-list 'completion-at-point-functions
+;;                      (cape-company-to-capf #'company-yasnippet))
+
+
   (use-package emacs
     :straight t
     :init
@@ -570,7 +600,7 @@ Use corfu with orderless for the main buffer completion
   (setq org-src-fontify-natively t
         org-src-window-setup 'current-window ;; edit in current window
         org-src-strip-leading-and-trailing-blank-lines t
-        org-src-tab-acts-natively t
+ ;       org-src-tab-acts-natively t
         org-latex-create-formula-image-program 'dvisvgm
         org-src-preserve-indentation t) ;; do not put two spaces on the left
 
@@ -588,9 +618,9 @@ Use corfu with orderless for the main buffer completion
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (add-hook 'org-src-mode-hook 'my/org-src-tab-width)))
+;(add-hook 'org-mode-hook
+;          (lambda ()
+;            (add-hook 'org-src-mode-hook 'my/org-src-tab-width)))
 
 (defun my/org-src-tab-insert ()
   "Insert 4 spaces instead of a tab in Org source blocks."
@@ -599,7 +629,7 @@ Use corfu with orderless for the main buffer completion
       (insert "   ")
     (call-interactively 'indent-for-tab-command)))
 
-(define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
+; (define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
 
 (setq org-ellipsis " ····")
 #+end_src
@@ -646,15 +676,15 @@ Here we set the visual fill column mode for the nice feel it provides.
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
     ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.25)
-                    (org-level-2 . 1.10)
-                    (org-level-3 . 1.025)
-                    (org-level-4 . 1.025)
-                    (org-level-5 . 1.0)
-                    (org-level-6 . 1.0)
-                    (org-level-7 . 1.0)
-                    (org-level-8 . 1.0)))
-      (set-face-attribute (car face) nil :font "Fira Sans Book" :weight 'Regular :height (cdr face)))
+    (dolist (face '((org-level-1 . 1.40)
+                    (org-level-2 . 1.30)
+                    (org-level-3 . 1.2)
+                    (org-level-4 . 1.1)
+                    (org-level-5 . 1.05)
+                    (org-level-6 . 1.05)
+                    (org-level-7 . 1.05)
+                    (org-level-8 . 1.05)))
+      (set-face-attribute (car face) nil :font "CMU Typewriter Text" :weight 'Bold :height (cdr face)))
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -686,9 +716,15 @@ Here we set the bullets to make the headings clear
   :after org
   :hook (org-mode . org-bullets-mode)
   :config
-  (setq org-bullets-bullet-list '("●" "▶" "◆" "○" "▲" )))
+  (setq org-bullets-bullet-list '("➜" "⤷" "⤷" "⤷" "⤷")))
 
-
+;➀➁➂➃➄➅➆➇➈➉
+;➜	
+;✰✱✲✳✴✵✶✷✸✹✺	
+;➥	
+;⟾	
+;⤿
+;⟹🢂	
 #+end_src
 
 *** Set up the template
@@ -715,6 +751,9 @@ Set the template for setting the
 (use-package gnuplot
   :straight t
   )
+
+;; (use-package ob-async
+;;   :straight t)
 
 ;; (use-package ob-ipython
 ;;   :straight t
@@ -916,7 +955,10 @@ Org roam is a new note-keeping tools in emacs and integrates well with org. I do
   :config
   (org-roam-setup))
 
-  
+  (use-package citar-org-roam
+  :straight t
+  :after (citar org-roam)
+  :config (citar-org-roam-mode))
 #+end_src
 
 #+RESULTS:
@@ -928,7 +970,9 @@ Org roam is a new note-keeping tools in emacs and integrates well with org. I do
 ** Eglot
 
 #+begin_src emacs-lisp :tangle init.el
- 
+
+ (use-package project :straight t) ;; Somehow the project is removed 
+
   (use-package eglot
     :straight t
 ;    :hook
@@ -942,6 +986,8 @@ Org roam is a new note-keeping tools in emacs and integrates well with org. I do
 (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
 
 #+end_src
+
+#+RESULTS:
 
 ** tree-sitter
 
@@ -999,6 +1045,19 @@ Tree sitter is a new way of highlighting
 
 
 * Latex
+** Font 
+The font in the latex is set to Typewriter text from CMU. 
+#+begin_src emacs-lisp :tangle init.el
+ (defun my/set-latex-font ()
+  "Set a different font for LaTeX files."
+  (face-remap-add-relative 'default :family "CMU Typewriter Text" :height 170))
+
+(add-hook 'LaTeX-mode-hook 'my/set-latex-font)
+ 
+#+end_src
+
+#+RESULTS:
+| my/set-latex-font | preview-mode-setup | citar-capf-setup | my/latex-hooks | TeX-source-correlate-mode |
 
 ** General latex configuration
 
@@ -1030,23 +1089,17 @@ Tree sitter is a new way of highlighting
   :straight t )
 ;;   ;:config
 ;; (add-hook LaTeX-mode-hook xenops-mode)
-  ;; (add-hook LaTeX-mode-hook #'xenops-mode))
+;; (add-hook LaTeX-mode-hook #'xenops-mode))
+
 ;; Add this to .emacs.d/init.el:
 (with-eval-after-load "tex"
   ;; enable synctex support for latex-mode
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   ;; add a new view program
   (add-to-list 'TeX-view-program-list
-        '(;; arbitrary name for this view program
-          "Zathura"
-          (;; zathura command (may need an absolute path)
-           "zathura"
-           ;; %o expands to the name of the output file
-           " %o"
-           ;; insert page number if TeX-source-correlate-mode
-           ;; is enabled
+        '("Zathura"
+          ("zathura" " %o"
            (mode-io-correlate " --synctex-forward %n:0:%b"))))
-  ;; use the view command named "Zathura" for pdf output
   (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
 
 
@@ -1054,17 +1107,33 @@ Tree sitter is a new way of highlighting
 (setq xenops-reveal-on-entry t
       xenops-image-directory (expand-file-name "xenops/image" user-emacs-directory)
       xenops-math-latex-process 'dvisvgm
-      xenops-math-image-scale-factor 1
+      xenops-math-image-scale-factor 0.7
       )
+
+(defun xenops-math-reveal (element)
+  "Remove image overlay for ELEMENT.
+If a prefix argument is in effect, also delete its cache file."
+  (xenops-element-overlays-delete element)
+  (if current-prefix-arg
+      (delete-file (xenops-math-get-cache-file element)))
+  ;; TODO: is :begin-content for block math off by one?
+  (let ((element-type (plist-get element :type))
+        (begin-content (plist-get element :begin-content)))
+    )
+  (xenops-math-render-below-maybe element))
 
 (use-package cdlatex
 :straight t
 )
+(defun my/latex-hooks ()
+ (turn-on-cdlatex)
+ (visual-line-mode t)
+ (visual-fill-column-mode t)
+)
 
-(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
-(add-hook 'latex-mode-hook 'turn-on-cdlatex)   
-(add-hook 'latex-mode-hook 'visual-line-mode)   ; normal emacs latex mode
-(add-hook 'Latex-mode-hook 'visual-line-mode) 
+(add-hook 'LaTeX-mode-hook 'my/latex-hooks)
+(add-hook 'latex-mode-hook 'my/latex-hooks)
+
 (add-hook 'pdf-view-mode 'pdf-view-themed-minor-mode)   ; normal emacs latex mode
 (set-default 'preview-scale-function 1.1)
 
@@ -1077,50 +1146,13 @@ original window.")
   "Minimum width a window should have to split it horizontally
 for displaying a pdf in the right.")
 
-(defun pdf-split-window-sensibly (&optional window)
-  "A version of `split-window-sensibly' for pdfs.
-It prefers splitting horizontally, and takes `pdf-minimal-width'
-into account."
-  (let ((window (or window (selected-window)))
-	(width (- (if (integerp pdf-minimal-width)
-		      pdf-minimal-width
-		    (round (* pdf-minimal-width (window-width window)))))))
-    (or (and (window-splittable-p window t)
-	     ;; Split window horizontally.
-	     (with-selected-window window
-	       (split-window-right width)))
-	(and (window-splittable-p window)
-	     ;; Split window vertically.
-	     (with-selected-window window
-	       (split-window-below)))
-	(and (eq window (frame-root-window (window-frame window)))
-	     (not (window-minibuffer-p window))
-	     ;; If WINDOW is the only window on its frame and is not the
-	     ;; minibuffer window, try to split it vertically disregarding
-	     ;; the value of `split-height-threshold'.
-	     (let ((split-height-threshold 0))
-	       (when (window-splittable-p window)
-		 (with-selected-window window
-		   (split-window-below))))))))
-
-(defun display-buffer-pop-up-window-pdf-split-horizontally (buffer alist)
-  "Call `display-buffer-pop-up-window', using `pdf-split-window-sensibly'
-when needed."
-  (let ((split-height-threshold nil)
-	(split-width-threshold pdf-split-width-threshold)
-	(split-window-preferred-function #'pdf-split-window-sensibly))
-    (display-buffer-pop-up-window buffer alist)))
-
-(add-to-list 'display-buffer-alist '("\\.pdf\\(<[^>]+>\\)?$" . (display-buffer-pop-up-window-pdf-split-horizontally)))
-
-;; (cdlatex-mode-map "TAB" #'cdlatex-tab)
 #+end_src
 
 ** Biblatex and cite configuration
 
 #+begin_src emacs-lisp
 
- (use-package citar
+(use-package citar
   :straight t
   :hook
   (LaTeX-mode . citar-capf-setup)
@@ -1128,14 +1160,17 @@ when needed."
   :custom
   (citar-bibliography '("/home/vikash/Documents/my_notes/bib/references.bib")))
 
- (use-package bibtex
-   :straight t
-    :custom
-    (bibtex-dialect 'BibTeX)
-    (bibtex-user-optional-fields
-     '(("keywords" "Keywords to describe the entry" "")
-       ("file" "Link to a document file." "" )))
-    (bibtex-align-at-equal-sign t))
+(add-to-list 'completion-at-point-functions #'citar-capf)
+(setq citar-search-function #'citar-ivy-filter)
+
+(use-package bibtex
+  :straight t
+  :custom
+  (bibtex-dialect 'BibTeX)
+  (bibtex-user-optional-fields
+   '(("keywords" "Keywords to describe the entry" "")
+     ("file" "Link to a document file." "" )))
+  (bibtex-align-at-equal-sign t))
 
 (use-package citar-embark
   :straight t
@@ -1145,7 +1180,7 @@ when needed."
 
 (use-package biblio
   :straight t)
- 
+
 #+end_src
 
 #+RESULTS:
@@ -1216,8 +1251,25 @@ Magit is a emacs package to use git in the buffer.
 #+RESULTS:
 
 
+* Ellama 
+This is for interacting with the local AI from emacs.
+
+#+begin_src emacs-lisp
+(use-package ellama
+  :straight t
+  :ensure t
+  :bind ("C-c e" . ellama-transient-main-menu)
+  ;; send last message in chat buffer with C-c C-c
+  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+  :init (setopt ellama-auto-scroll t)
+  :config
+  ;; show ellama context in header line in all buffers
+  (ellama-context-header-line-global-mode +1))
+
+#+end_src
+
 * Other subsidiaries 
-** Markdown-mode
+** Markdown-modes
 #+begin_src emacs-lisp
   (use-package markdown-mode
   :ensure t
@@ -1226,7 +1278,12 @@ Magit is a emacs package to use git in the buffer.
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-do)))
+(use-package yaml-mode
+:ensure t
+:straight t)
 #+end_src
+
+#+RESULTS:
 
 ** Emms- emacs native music player
 #+begin_src emacs-lisp
@@ -1239,6 +1296,8 @@ Magit is a emacs package to use git in the buffer.
     (emms-all)
     (emms-default-players)
     (emms-mpris-enable)
+    :hook
+    (emms-browser-mode . visual-fill-column-mode)
     :custom
     (emms-source-file-default-directory "~/Music")
     (emms-browser-covers #'emms-browser-cache-thumbnail-async)
@@ -1272,6 +1331,20 @@ This seems to have too much of dependencies. If one breaks everything comes cras
 #+RESULTS:
 : eaf-browser
 
+** Resizing the buffer
+#+begin_src emacs-lisp
+  
+(use-package windresize
+  :straight t)
+
+(global-set-key (kbd "<f2>") 'windresize)
+
+#+end_src
+
+#+RESULTS:
+: windresize
+
+
 * Custom 
 
 #+begin_src emacs-lisp
@@ -1290,8 +1363,10 @@ This seems to have too much of dependencies. If one breaks everything comes cras
      (output-html "xdg-open")))
  '(display-time-24hr-format t)
  '(f90-comment-region "!!")
+ '(org-agenda-window-setup 'only-window)
  '(org-highlight-latex-and-related '(native))
- '(org-startup-folded t))
+ '(tex-fontify-script nil)
+'(org-startup-folded t))
 
 
 #+end_src

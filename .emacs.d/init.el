@@ -1,190 +1,221 @@
-; (setq dw/is-termux
-      ; (string-suffix-p "Android" (string-trim (shell-command-to-string "uname -a"))))
-
-(package-initialize)
 (server-start)
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t))
-(unless (assoc-default "org" package-archives)
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
-(add-to-list 'load-path "/usr/share/emacs/site-lisp")
-(add-to-list 'custom-theme-load-path "/home/vikash/.emacs.d/themes")
+;username
+  (setq user-full-name "Vikash"
+        user-mail-address "vkpnbeta@gmail.com")
 
-(setq user-full-name "Vikash"
-      user-mail-address "vikashpandey.phy@gmail.com")
+(add-to-list 'exec-path "/home/vikash/opt/anaconda3/bin")
+(add-to-list 'exec-path "/home/vikash/opt/julia-1.10.0/bin")
+; julia path
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "/home/vikash/opt/julia-1.10.0/bin")))
+(setenv "PATH" (concat (expand-file-name "/home/vikash/opt/anaconda3/bin") ":" (getenv "PATH")))
 
-(setq tramp-default-method "ssh")
+;set the font
+(set-face-attribute 'default nil :font "Iosevka Custom" :height 150 :weight 'Semibold)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka Custom" :height 150 :weight 'Semibold)
+;; (set-face-attribute 'variable-pitch nil :font "SourceSans3VF" :height 155 :weight 'Regular)
+(set-face-attribute 'variable-pitch nil :font "CMU Typewriter Text" :height 170 :weight 'Regular)
+;;(set-face-attribute 'variable-pitch nil :font "Iosevka Etoile" :height 145 :weight 'Regular)
+;; (set-face-attribute 'variable-pitch nil :font "CMU Concrete" :height 135 :weight 'SemiBold)
 
-;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
-;;       in Emacs and init.el will be generated automatically!
-
-;; You will most likely need to adjust this font size for your system!
-(defvar default-font-size 130)
-(defvar default-variable-font-size 130)
-
-;; Make frame transparency overridable
-(defvar frame-transparency '(90 . 90))
-
-(use-package spacegray-theme :defer t)
-(use-package doom-themes :defer t)
-(load-theme 'doom-city-lights t)
-(doom-themes-visual-bell-config)
-
-;; (load-theme 'gruvbox-dark-soft t)
-;; (doom-themes-visual-bell-config)
-
-;; You must run (all-the-icons-install-fonts) one time after
-;; installing this package!
-(use-package all-the-icons)
-
-(use-package doom-modeline
-  :init (doom-modeline-mode 1))
-  ;;:custom ((doom-modeline-height 15))
-(setq doom-modeline-height 3)
-(use-package minions
-  :hook (doom-modeline-mode . minions-mode))
-(setq display-time-24hr-format t)
-
-(set-face-attribute 'default nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
-;; Set the fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 135 :weight 'Semibold)
-
-
-;; (set-face-attribute 'default nil :font "Source Code Pro Semibold" :height default-font-size)
-;; Set the fixed pitch face
-;; (set-face-attribute 'fixed-pitch nil :font "Source Code Pro Semibold" :height default-font-size)
-
-                                        ;          (set-face-attribute 'default nil :font "Fira Code Medium" :height default-font-size)
-;; Set the fixed pitch face
-                                        ;          (set-face-attribute 'fixed-pitch nil :font "Fira Code Medium" :height default-font-size)
-;; Set the variable pitch face
-
-;; (set-face-attribute 'default nil :font "IBM Plex Serif" :height 145)
-(set-face-attribute 'variable-pitch nil :font "Fira Code Retina" :height 145 :weight 'Semibold)
-
-                                        ;      (use-package fira-code-mode
-                                        ;      :config (global-fira-code-mode))
-
-;; (use-package rainbow-delimiters
-;; :hook (prog-mode . rainbow-delimiters-mode))
-
-(add-hook 'prog-mode-hook 'highlight-numbers-mode)
-
-(use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
-
-(use-package evil-commentary
-:after evil
-:config 
-  (evil-commentary-mode t))
-
-(setq load-prefer-newer t)
-(fset 'yes-or-no-p 'y-or-n-p)
-; want emacs to start scratch instead of manual
-(setq inhibit-startup-screen t)
-;; set the path for the backup files and stuffs
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-(setq delete-old-versions -1)
-(setq version-control t)
-(setq vc-make-backup-files t)
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-
-(tool-bar-mode -1)
+(setq make-backup-files nil
+      auto-save-default nil) ; to prevent emacs from creating files with ~ in the end. 
+(setq inhibit-startup-message t) ; Disable startup message
+(switch-to-buffer "*scratch*")   ; Switch to *scratch* buffer on startup
+(setq initial-scratch-message "
+; #+PROPERTY: header-args:jupyter-julia  :session ~/.kernel/emacs-julia-1.10-kernel.json
+; #+PROPERTY: header-args:jupyter-julia  :session /ssh:vikash<hostname>:~/.kernel/emacs-julia-1.10-kernel.json
+"); Although these are set in yasnippet I want it in here so that it can be pasted quickly in the org-mode
+(setq use-dialog-box nil) 
+(defalias 'yes-or-no-p 'y-or-n-p) ; no need to type yes and no in emacs
+(display-time) ; display time in the modebar
 (menu-bar-mode -1)
-(electric-pair-mode)
-(display-time-mode 1)
-
-(setq blink-matching-paren nil)
-(show-paren-mode t)
-(setq show-paren-delay 0)
-(setq show-paren-style 'parenthesis)
-(abbrev-mode t)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(show-paren-mode 1)
+(electric-pair-mode t) ; always make two brackets or quotes 
+(save-place-mode t)
+(savehist-mode t)
+(recentf-mode t)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+;; (setq indent-line-function 'insert-tab)
 (setq ring-bell-function 'ignore)
-(setq visible-bell t)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+;; These are for the transparancy
+(set-frame-parameter nil 'alpha-background 100) ; For current frame
+(add-to-list 'default-frame-alist '(alpha-background . 100))
 
-;I guess will use the yas mode everywhere
-     (yas-global-mode 1)
-           (use-package company
-                     :ensure t
-                     :init 
-                     (add-hook 'after-init-hook 'global-company-mode))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-          (use-package company-auctex
-                     :ensure t
-                     :init
-                    (add-hook 'LaTeX-mode-hook 'company-auctex-init))
+(straight-use-package 'use-package)
 
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
+(use-package org
+  :straight t
+  :ensure t)
 
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
+(use-package highlight-numbers
+  :straight t
+  :ensure t)
 
-(use-package counsel
-  :bind (("C-M-j" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (counsel-mode 1))
+(add-hook 'prog-mode-hook #'highlight-numbers-mode)
 
-(global-set-key (kbd "<f6>") 'elfeed)
-(global-set-key (kbd "<f7>") 'mu4e)
-(defun mp-add-elfeed-keys ()
-  (local-set-key (kbd "C-a") 'elfeed-update))
+(use-package unicode-fonts
+  :straight t
+  :config 
+  (unicode-fonts-setup))
 
-(add-hook 'elfeed-search-mode-hook 'mp-add-elfeed-keys)
+(use-package nerd-icons
+  :straight t
+  ;; :custom
+  ;; "Symbols Nerd Font Mono" is the default and is recommended but you can use any other Nerd Font if you want
+  ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
 
-(global-set-key (kbd "\eo") 'other-window)
-(global-set-key (kbd "RET") 'newline-and-indent)
-(define-key global-map "\ef" 'counsel-find-file) 
-(global-set-key (read-kbd-macro "\eb") 'ivy-switch-buffer)
-(define-key global-map "\eg" 'goto-line)
-(define-key global-map "\en" 'next-error)
-(define-key global-map "\eN" 'previous-error)
+(use-package dired-sidebar
+  ;; This gives the option to have a nice sidebar with all the dired options.
+  :ensure t
+  :straight t
+  :commands (dired-sidebar-toggle-sidebar))
+
+ (setq dired-sidebar-subtree-line-prefix "__")
+ (setq dired-sidebar-use-term-integration t)
+
+(use-package nerd-icons-dired
+  :straight t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight-numbers-number ((t (:aquamarineforeground "BlueViolet"))))  
+ '(org-block ((t (:background "#F8F8FF" :extend t)))) ;; These are for light theme
+ '(org-block-begin-line ((t (:foreground "gray1" :background "#EDEADE" :extend t)))) ; light theme
+ '(org-block-end-line ((t (:foreground "gray1" :background "#EDEADE" :extend t)))) ; light theme
+;  '(org-block ((t (:background "gray10" :extend t)))) ;For dark theme
+ ;; '(org-block-begin-line ((t (:foreground "gray60" :background "#595959" :extend t)))) ;For dark  theme
+ ;; '(org-block-end-line ((t (:foreground "gray60" :background "#595959" :extend t)))) ; for dark theme
+ '(org-level-1 ((t (:foreground "DarkRed" :extend t)))) ; use VoiletRed1 in modus-vivendi
+ '(org-level-2 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-3 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-4 ((t (:foreground "DarkRed" :extend t))))
+ '(org-level-5 ((t (:foreground "DarkRed" :extend t))))
+)
+
+  (use-package evil
+      :straight t
+    :ensure t
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode 1))
+ 
+    (use-package evil-collection
+      :straight t
+      :ensure t
+      :after evil
+      :config
+     ; (evil-want-keybinding nil)
+      (evil-collection-init))
+
+    (use-package evil-escape
+      :straight t
+      :ensure t
+      :config
+      (evil-escape-mode 1)
+      (setq-default evil-escape-key-sequence "fd"))
+
+    (use-package evil-surround
+      :straight t
+      :ensure t
+      :config
+      (global-evil-surround-mode 1))
+
+    (use-package evil-commentary
+      :straight t
+      :ensure t
+      :config
+      (evil-commentary-mode))
+
+  (use-package evil-org
+      :straight t
+      :ensure t
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode))
+
+;(define-key evil-normal-state-map (kbd "gj") 'evil-next-visual-line)
+;;(define-key evil-insert-state-map (kbd "<tab>") 'tab-to-tab-stop)
+
+(define-key evil-motion-state-map [remap evil-next-line] #'evil-next-visual-line)
+(define-key evil-motion-state-map [remap evil-previous-line] #'evil-previous-visual-line)
+
+(use-package doom-themes
+  :straight t
+  )
+(use-package spacemacs-theme
+  :straight t
+  )
+
+(load-theme 'modus-operandi t) 
+;; (load-theme 'modus-vivendi t) 
+;; (load-theme 'doom-gruvbox-light t) 
+;;(load-theme 'spacemacs-light t)
+(use-package doom-modeline
+  :ensure t
+  :straight t
+  :hook (after-init . doom-modeline-mode))
+(setq doom-modeline-height 20)
+;; this is not a theme but colors the braces for better visibility
+(use-package rainbow-delimiters
+  :straight t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package flx
+      :straight t
+      :ensure t)
+
+  (use-package ivy
+    :straight t
+    :config
+      (setq ivy-use-virtual-buffers t
+          ivy-count-format "(%d/%d) "
+         ;; ivy-initial-inputs-alist nil
+         ))
+
+  (use-package counsel
+    :straight t
+    :ensure t
+    :config
+    (ivy-mode 1)
+    (setq ivy-height 20)
+    (setq ivy-re-builders-alist
+      '((ivy-switch-buffer . ivy--regex-plus)
+        (t . ivy--regex-fuzzy))))
+
+
+
+  ;; (setf (alist-get 'counsel-ag ivy-re-builders-alist)
+  ;;       #'ivy--regex-fuzzy)
+
+;(global-set-key (kbd "TAB") (lambda () (interactive) (insert-char 32 4)))
 
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
@@ -192,681 +223,764 @@
 (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 (global-set-key (kbd "<f2> j") 'counsel-set-variable)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 (global-set-key (kbd "C-c v") 'ivy-push-view)
 (global-set-key (kbd "C-c V") 'ivy-pop-view)
+  ;This sets ivy--regex-fuzzy as the fuzzy matching strategy for all Ivy completion.
+  ;Optionally, you can also enable ivy-mode globally for all buffers. Add the following line to your configuration:
 
-(global-set-key (kbd "C-c c") 'counsel-compile)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c L") 'counsel-git-log)
-(global-set-key (kbd "C-c k") 'counsel-rg)
-(global-set-key (kbd "C-c m") 'counsel-linux-app)
-(global-set-key (kbd "C-c n") 'counsel-fzf)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-c J") 'counsel-file-jump)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(global-set-key (kbd "C-c w") 'counsel-wmctrl)
+  (use-package ibuffer
+    :straight t
+     :config
+    (evil-set-initial-state 'ibuffer-mode 'normal))
 
-(defun dw/dont-arrow-me-bro ()
-  (interactive)
-  (message "Arrow keys are bad, you know?"))
+(use-package nerd-icons-ibuffer
+  :ensure t
+  :straight t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
-  ; (unless dw/is-termux
-    ;; Disable arrow keys in normal and visual modes
-    (define-key evil-normal-state-map (kbd "<left>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<right>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<down>") 'dw/dont-arrow-me-bro)
-    (define-key evil-normal-state-map (kbd "<up>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<left>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<right>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<down>") 'dw/dont-arrow-me-bro)
-    (evil-global-set-key 'motion (kbd "<up>") 'dw/dont-arrow-me-bro)
-;)
+  (use-package general
+    :straight t
+    :config
+    (general-define-key
+      :states '(normal visual insert emacs)
+      :prefix "SPC"
+      :non-normal-prefix "M-SPC"
+      "b i" 'ibuffer
+      "f f" 'counsel-find-file
+      "m t" 'org-todo
+       "n t" 'org-todo-list
+  ))
 
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal)
-;)
 
-(package-install-file "/home/vikash/.emacs.d/pkgs/julia-vterm.el/julia-vterm.el")
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . t)
-    (python . t)
-    (julia-vterm . t)
-    (ipython . t)
-    (shell . t)
-    (latex . t)
-    (ditaa . t)
-    (dot . t)
-    (gnuplot . t)))
+(use-package yasnippet
+  :straight t
+  :config
+  (yas-global-mode))
+(define-key yas-minor-mode-map (kbd "TAB") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "<tab>") 'yas-expand)
 
-(add-hook 'julia-mode-hook #'julia-vterm-mode)
-(setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
-(push '("conf-unix" . conf-unix) org-src-lang-modes)
-(setq org-confirm-babel-evaluate nil)
-;; Syntax highlight in #+BEGIN_SRC blocks
-(setq org-src-fontify-natively t)
 
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+(use-package yasnippet-snippets
+  :straight t)
 
-(use-package org-tempo)
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
-(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-(add-to-list 'org-structure-template-alist '("tex" . "src latex"))
-
-(defun org-font-setup ()
-  ;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-  ;; Set faces for heading levels
-  (dolist (face '((org-level-1 . 1.3)
-                  (org-level-2 . 1.25)
-                  (org-level-3 . 1.15)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Fira Code Retina" :weight 'Semibold :height (cdr face)))
-
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+(setq yas-snippet-dirs (append yas-snippet-dirs
+                               '("/home/vikash/.emacs.d/snippets")))
+(use-package which-key
+  :straight t
+  :init
+  (setq
+   which-key-show-early-on-C-h t
+   which-key-idle-delay 10000
+   which-key-idle-secondary-delay 0.05
+  which-key-popup-type 'minibuffer
+  which-key-side-window-max-height 0.25)
+  :config
+  (which-key-mode) 
   )
 
-(defun org-mode-visual-fill ()
-  (setq visual-fill-column-width 110
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
+;; ibuffer-sidebar seems to not work well
+(use-package ibuffer-sidebar
+  :straight t
+  :commands (ibuffer-sidebar-toggle-sidebar)
+  )
+
+(defun +sidebar-toggle ()
+  "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
+  (interactive)
+  (dired-sidebar-toggle-sidebar)
+  (ibuffer-sidebar-toggle-sidebar))
+
+(use-package ivy-rich
+  :straight t
+  :init 
+ (ivy-rich-mode 1))
+
+(use-package nerd-icons-ivy-rich
+  :straight t
+  :ensure t
+  :init
+  (nerd-icons-ivy-rich-mode 1)
+  )
+
+  (use-package company
+    :straight t
+    :ensure t)
+
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local company-backends
+  ;;                         (cons 'company-capf company-backends))))
+
+  (add-to-list 'company-backends 'company-dabbrev-code) 
+  (add-to-list 'company-backends 'company-yasnippet)
+  (add-to-list 'company-backends 'company-files)
+
+  ;; somehow corfu doesnot work
+  (use-package corfu
+    :straight t
+    :config
+    (global-corfu-mode)
+    (setq corfu-cycle t
+          corfu-auto t
+          corfu-commit-predicate nil
+          corfu-quit-at-boundary t
+          corfu-quit-no-match 'separator
+          corfu-echo-documentation nil))
+
+  (use-package orderless
+    :straight t
+    :config
+    (setq completion-styles '(orderless)
+          orderless-component-separator #'orderless-escapable-split-on-space))
+
+  (global-set-key [remap completion-at-point] #'corfu-completion-at-point)
+  (global-set-key [remap completion] #'corfu-completion)
+
+  (with-eval-after-load 'corfu
+    (setq corfu-auto-delay 0.2
+          corfu-auto-prefix-style 'partial
+          corfu-commit-delay 0.1
+          corfu-echo-documentation nil
+          corfu-quit-delay 0.2
+          corfu-quick-help-delay 1.0
+          corfu-quick-help-height 30))
+
+
+  ;; Use Dabbrev with Corfu!
+  (use-package dabbrev
+    :straight t
+    ;; Swap M-/ and C-M-/
+    :bind (("M-/" . dabbrev-expand)
+           ("C-M-/" . dabbrev-completion))
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode))
+
+  ;; Add extensions
+  (use-package cape
+    :straight t
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    :bind (("C-c p p" . completion-at-point) ;; capf
+           ("C-c p t" . complete-tag)        ;; etags
+           ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+           ("C-c p h" . cape-history)
+           ("C-c p f" . cape-file)
+           ("C-c p k" . cape-keyword)
+           ("C-c p s" . cape-elisp-symbol)
+           ("C-c p e" . cape-elisp-block)
+           ("C-c p a" . cape-abbrev)
+           ("C-c p l" . cape-line)
+           ("C-c p w" . cape-dict)
+           ("C-c p \\" . cape-tex)
+           ("C-c p _" . cape-tex)
+           ("C-c p ^" . cape-tex))
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    ;;(add-to-list 'completion-at-point-functions #'cape-history)
+    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+    ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+    ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  )
+
+
+(use-package yasnippet-capf
+  :straight t
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+;; It expands automoatically which is annoying
+(setopt corfu-on-exact-match 'show)
+;; (require 'company-yasnippet)
+;; (add-to-list 'completion-at-point-functions
+;;                      (cape-company-to-capf #'company-yasnippet))
+
+
+  (use-package emacs
+    :straight t
+    :init
+    ;; TAB cycle if there are only few candidates
+    (setq completion-cycle-threshold 3)
+    ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+    ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (setq tab-always-indent 'complete))
+
+  (use-package nerd-icons-corfu
+    :straight t
+    )
+(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+
+  ;; (add-hook 'org-mode-hook 'corfu-mode)
+
+  ;; src block indentation / editing / syntax highlighting
+  (setq org-src-fontify-natively t
+        org-src-window-setup 'current-window ;; edit in current window
+        org-src-strip-leading-and-trailing-blank-lines t
+ ;       org-src-tab-acts-natively t
+        org-latex-create-formula-image-program 'dvisvgm
+        org-src-preserve-indentation t) ;; do not put two spaces on the left
+
+(defun my/org-src-tab-width ()
+  "Set tab width to 4 spaces in Org source blocks."
+  (setq-local tab-width 4)
+  (setq-local indent-tabs-mode nil))
+
+;; Disable line number mode in several buffers;
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                treemacs-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+;(add-hook 'org-mode-hook
+;          (lambda ()
+;            (add-hook 'org-src-mode-hook 'my/org-src-tab-width)))
+
+(defun my/org-src-tab-insert ()
+  "Insert 4 spaces instead of a tab in Org source blocks."
+  (interactive)
+  (if (org-in-src-block-p)
+      (insert "   ")
+    (call-interactively 'indent-for-tab-command)))
+
+; (define-key org-src-mode-map (kbd "TAB") 'my/org-src-tab-insert)
+
+(setq org-ellipsis " ····")
 
 (use-package visual-fill-column
-  :hook (org-mode . org-mode-visual-fill))
-
-(use-package which-key)
-
-    (defun efs/lsp-mode-setup ()
-      (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-      (lsp-headerline-breadcrumb-mode))
-
-    (use-package lsp-mode
-      :commands (lsp lsp-deferred)
-      :hook (lsp-mode . efs/lsp-mode-setup)
-      :init
-      (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-      :config
-      (lsp-enable-which-key-integration t))
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-(use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-	   ("<tab>" . company-complete-selection))
-	  (:map lsp-mode-map
-	   ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
-
-  (use-package lsp-treemacs
-      :after lsp)
-
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master t)
-;; lets try lsp
-
-
-(add-hook 'LaTeX-mode-hook
-          '(lambda ()
-             (use-package latex-math-preview )
-             (use-package latex-extra)
-             (use-package ac-math)
-             (use-package latex-math-preview)
-             (setq TeX-PDF-mode t)
-             (company-mode)
-             (flyspell-mode)
-             (flycheck-mode)
-             (outline-minor-mode t)
-             (abbrev-mode)
-             (auto-fill-mode)
-             ))
-
-(use-package reftex
-  ;; :defer 3
-  :commands turn-on-reftex
-  :hook ((latex-mode LaTeX-mode) . turn-on-reftex)
-  :config
-  (setq reftex-plug-into-AUCTeX t))
-
-(with-eval-after-load "tex"
-  ;; enable synctex support for latex-mode
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  ;; add a new view program
-  (add-to-list 'TeX-view-program-list
-               '(;; arbitrary name for this view program
-                 "Zathura"
-                 (;; zathura command (may need an absolute path)
-                  "zathura"
-                  ;; %o expands to the name of the output file
-                  " %o"
-                  ;; insert page number if TeX-source-correlate-mode
-                  ;; is enabled
-                  (mode-io-correlate " --synctex-forward %n:0:%b"))))
-  ;; use the view command named "Zathura" for pdf output
-  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
-
-(quietly-read-abbrev-file "~/.emacs.d/emacs_abbrevs")
-
-(use-package cdlatex
   :ensure t
-  ;; :defer 2
-  ;; :commands turn-on-cdlatex
-  :hook (LaTeX-mode . turn-on-cdlatex)
-  :config
-  (progn
-    (setq cdlatex-command-alist
-          '(("vc" "Insert \\vect{}" "\\vect{?}"
-             cdlatex-position-cursor nil nil t)
-            ("smat" "Insert smallmatrix env"
-             "\\left( \\begin{smallmatrix} ? \\end{smallmatrix} \\right)"
-             cdlatex-position-cursor nil nil t)
-            ("bmat" "Insert bmatrix env"
-             "\\begin{bmatrix} ? \\end{bmatrix}"
-             cdlatex-position-cursor nil nil t)
-            ("pmat" "Insert pmatrix env"
-             "\\begin{pmatrix} ? \\end{pmatrix}"
-             cdlatex-position-cursor nil nil t)
-            ("equ*" "Insert equation* env"
-             "\\begin{equation*}\n?\n\\end{equation*}"
-             cdlatex-position-cursor nil t nil)
-            ("sn*" "Insert section* env"
-             "\\section*{?}"
-             cdlatex-position-cursor nil t nil)
-            ("ss*" "Insert subsection* env"
-             "\\subsection*{?}"
-             cdlatex-position-cursor nil t nil)
-            ("sss*" "Insert subsubsection* env"
-             "\\subsubsection*{?}"
-             cdlatex-position-cursor nil t nil)))
+  :commands visual-fill-column-mode)
 
-    (setq cdlatex-math-symbol-alist '((?F ("\\Phi"))
-                                      (?o ("\\omega" "\\mho" "\\mathcal{O}"))
-                                      (?6 ("\\partial"))
-                                      (?v ("\\vee" "\\forall"))))
-    (setq cdlatex-math-modify-alist '((?b "\\mathbb" "\\textbf" t nil nil)
-                                      (?B "\\mathbf" "\\textbf" t nil nil)))
-    (setq cdlatex-paired-parens "$[{("))
-  )
-
-(setq fortran-continuation-string "&")
-  (setq fortran-do-indent 4)
-  (setq fortran-if-indent 4)
-  (setq fortran-structure-indent 4)
-
-  ;; Fortran 90 settings
-  (setq f90-do-indent 4)
-  (setq f90-if-indent 4)
-  (setq f90-type-indent 2)
-  (setq f90-program-indent 2)
-  (setq f90-continuation-indent 4)
-  (setq f90-smart-end 'blink)
-
-;; Set Fortran and Fortran 90 mode for appropriate extensions
-(setq auto-mode-alist
-      (cons '("\\.F90$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.pf$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.f95$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.F$" . fortran-mode) auto-mode-alist))
-
-(add-hook 'fortran-mode-hook 'lsp)
-;; (add-to-list 'lsp-language-id-configuration '(fortran-mode . "fortran"))
-
-(add-hook 'python-mode-hook 'lsp)
-;; (add-to-list 'lsp-language-id-configuration '(python-mode . "python"))
-
-(use-package magit
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-  ;; (use-package evil-magit
-  ;; :after magit)
-
-;; NOTE: Make sure to configure a GitHub token before using this package!
-;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-(use-package forge)
+(setq visual-fill-column-width 140
+      visual-fill-column-center-text t)
 
 (defun org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
 
-(use-package org
-  :hook (org-mode . org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾")
+(add-hook 'org-mode-hook 'visual-fill-column-mode)
+(add-hook 'ibuffer-mode-hook 'visual-fill-column-mode)
+(add-hook 'org-mode-hook 'org-mode-setup)
 
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
+    ;; (custom-set-faces
+    ;; '(variable-pitch ((t (:family "CMU Sans Serif" :height 150)))))
+(add-hook 'org-mode-hook 'variable-pitch-mode) 
 
-  (setq org-agenda-files
-        '("~/Documents/OrgFiles/Tasks.org"
-          "~/Documents/OrgFiles/Habits.org"
-          "~/Documents/OrgFiles/Birthdays.org"))
+  (defun org-font-setup ()
+    ;; Replace list hyphen with dot
+   (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  (require 'org-habit)
-  (add-to-list 'org-modules 'org-habit)
-  (setq org-habit-graph-column 60)
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.40)
+                    (org-level-2 . 1.30)
+                    (org-level-3 . 1.2)
+                    (org-level-4 . 1.1)
+                    (org-level-5 . 1.05)
+                    (org-level-6 . 1.05)
+                    (org-level-7 . 1.05)
+                    (org-level-8 . 1.05)))
+      (set-face-attribute (car face) nil :font "CMU Typewriter Text" :weight 'Bold :height (cdr face)))
 
-  (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-
-  (setq org-refile-targets
-    '(("Archive.org" :maxlevel . 1)
-      ("Tasks.org" :maxlevel . 1)))
-
-  ;; Save Org buffers after refiling!
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-  (setq org-tag-alist
-    '((:startgroup)
-       ; Put mutually exclusive tags here
-       (:endgroup)
-       ("@errand" . ?E)
-       ("@home" . ?H)
-       ("@work" . ?W)
-       ("agenda" . ?a)
-       ("planning" . ?p)
-       ("publish" . ?P)
-       ("batch" . ?b)
-       ("note" . ?n)
-       ("idea" . ?i)))
-
-  ;; Configure custom agenda views
-  (setq org-agenda-custom-commands
-   '(("d" "Dashboard"
-     ((agenda "" ((org-deadline-warning-days 7)))
-      (todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))
-      (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-
-    ("n" "Next Tasks"
-     ((todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))))
-
-    ("W" "Work Tasks" tags-todo "+work-email")
-
-    ;; Low-effort next actions
-    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-     ((org-agenda-overriding-header "Low Effort Tasks")
-      (org-agenda-max-todos 20)
-      (org-agenda-files org-agenda-files)))
-
-    ("w" "Workflow Status"
-     ((todo "WAIT"
-            ((org-agenda-overriding-header "Waiting on External")
-             (org-agenda-files org-agenda-files)))
-      (todo "REVIEW"
-            ((org-agenda-overriding-header "In Review")
-             (org-agenda-files org-agenda-files)))
-      (todo "PLAN"
-            ((org-agenda-overriding-header "In Planning")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "BACKLOG"
-            ((org-agenda-overriding-header "Project Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "READY"
-            ((org-agenda-overriding-header "Ready for Work")
-             (org-agenda-files org-agenda-files)))
-      (todo "ACTIVE"
-            ((org-agenda-overriding-header "Active Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "COMPLETED"
-            ((org-agenda-overriding-header "Completed Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "CANC"
-            ((org-agenda-overriding-header "Cancelled Projects")
-             (org-agenda-files org-agenda-files)))))))
-
-  (setq org-capture-templates
-    `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-
-      ("j" "Journal Entries")
-      ("jj" "Journal" entry
-           (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
-           :empty-lines 1)
-      ("jm" "Meeting" entry
-           (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
-           :empty-lines 1)
-
-      ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
-      ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/Documents/OrgFiles/Metrics.org" "Weight")
-       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
-
-  (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
-
-  (org-font-setup))
-
-(require 'org-mime)
-
-  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
-  (require 'mu4e)
-
-  (setq mu4e-maildir (expand-file-name "~/.Maildir"))
-
-  ; get mail
-  (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/mu4e/.mbsyncrc -a"
-    ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
-    mu4e-view-prefer-html t
-    mu4e-update-interval 1200
-    mu4e-headers-auto-update t
-    mu4e-compose-signature-auto-include nil
-    mu4e-compose-format-flowed t)
-
-  ;; to view selected message in the browser, no signin, just html mail
-  (add-to-list 'mu4e-view-actions
-    '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-
-  ;; enable inline images
-  (setq mu4e-view-show-images t)
-  ;; use imagemagick, if available
-  (when (fboundp 'imagemagick-register-types)
-    (imagemagick-register-types))
-
-  ;; every new email composition gets its own frame!
-  (setq mu4e-compose-in-new-frame t)
-
-  ;; don't save message to Sent Messages, IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
-
-  (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
-
-  ;; <tab> to navigate to links, <RET> to open them in browser
-  (add-hook 'mu4e-view-mode-hook
-    (lambda()
-  ;; try to emulate some of the eww key-bindings
-  (local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
-  (local-set-key (kbd "<tab>") 'shr-next-link)
-  (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-
-  ;; from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx
-  (add-hook 'mu4e-headers-mode-hook
-        (defun my/mu4e-change-headers ()
-          (interactive)
-          (setq mu4e-headers-fields
-                `((:human-date . 25) ;; alternatively, use :date
-                  (:flags . 6)
-                  (:from . 22)
-                  (:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
-                  (:size . 7)))))
-
-  ;; if you use date instead of human-date in the above, use this setting
-  ;; give me ISO(ish) format date-time stamps in the header list
-  ;(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-
-  ;; spell check
-
-(setq mail-user-agent 'mu4e-user-agent)
-(use-package org-msg
-  :config
-  (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil tex:dvipng")
-  (setq org-msg-startup "hidestars indent inlineimages")
-  (setq org-msg-greeting-fmt "\n%s,\n\n")
-  (setq org-msg-greeting-fmt-mailto t)
-  (setq org-msg-signature "
-            #+begin_signature
-            -- *Vikash Pandey* \\\\
-                Research Scholar \\\\
-                TIFR-Hyderabad \\\\
-            #+end_signature")
-  (org-msg-mode))
-
-  ;; (add-hook 'mu4e-compose-mode-hook
-  ;;     (defun my-do-compose-stuff ()
-  ;;        "My settings for message composition."
-  ;;        (visual-line-mode)
-  ;;        (org-mu4e-compose-org-mode)
-  ;;            (use-hard-newlines -1)
-  ;;        (flyspell-mode)))
-
-  (setq org-mime-export-options '(:section-numbers nil
-                                  :with-author nil
-                                  :with-toc nil))
-  (require 'smtpmail)
-
-  ;;rename files when moving
-  ;;NEEDED FOR MBSYNC
-  (setq mu4e-change-filenames-when-moving t)
-
-  ;;set up queue for offline email
-  ;;use mu mkdir  ~/Maildir/acc/queue to set up first
-  (setq smtpmail-queue-mail nil)  ;; start in normal mode
-
-  ;;from the info manual
-  (setq mu4e-attachment-dir  "~/Downloads")
-
-  (setq message-kill-buffer-on-exit t)
-  (setq mu4e-compose-dont-reply-to-self t)
-
-  (require 'org-mu4e)
-
-  ;; convert org mode to HTML automatically
-  (setq org-mu4e-convert-to-html t)
-
-  ;;from vxlabs config
-  ;; show full addresses in view message (instead of just names)
-  ;; toggle per name with M-RET
-  (setq mu4e-view-show-addresses 't)
-
-  ;; don't ask when quitting
-  (setq mu4e-confirm-quit nil)
-
-  ;; mu4e-context
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy 'always-ask)
-  (setq mu4e-contexts
-    (list
-     (make-mu4e-context
-      :name "work" ;;for acc1-gmail
-      :enter-func (lambda () (mu4e-message "Entering context work"))
-      :leave-func (lambda () (mu4e-message "Leaving context work"))
-      :match-func (lambda (msg)
-                    (when msg
-                  (mu4e-message-contact-field-matches
-                   msg '(:from :to :cc :bcc) "vikashpandey.phy@gmail.com")))
-      :vars '((user-mail-address . "vikashpandey.phy@gmail.com")
-              (user-full-name . "Vikash Pandey")
-              (mu4e-sent-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].Sent Mail")
-              (mu4e-drafts-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].drafts")
-              (mu4e-trash-folder . "/vikashpandey.phy-gmail/[vikashpandey.phy].Trash")
-              (mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 25, org-mode 9, mu4e 1.0\n"))
-              (mu4e-compose-format-flowed . t)
-              (smtpmail-queue-dir . "~/.Maildir/vikashpandey.phy-gmail/queue/cur")
-              (message-send-mail-function . smtpmail-send-it)
-              (smtpmail-smtp-user . "vikashpandey.phy")
-              (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-              (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
-              (smtpmail-default-smtp-server . "smtp.gmail.com")
-              (smtpmail-smtp-server . "smtp.gmail.com")
-              (smtpmail-smtp-service . 587)
-              (smtpmail-debug-info . t)
-              (smtpmail-debug-verbose . t)
-              (mu4e-maildir-shortcuts . ( ("/vikashpandey.phy-gmail/INBOX"            . ?i)
-                                          ("/vikashpandey.phy-gmail/[vikashpandey.phy].Sent Mail" . ?s)
-                                          ("/vikashpandey.phy-gmail/[vikashpandey.phy].Trash"       . ?t)
-                                          ("/vikashpandey.phy-gmail/[vikashpandey.phy].All Mail"  . ?a)
-                                          ("/vikashpandey.phy-gmail/[vikashpandey.phy].Starred"   . ?r)
-                                          ("/vikashpandey.phy-gmail/[vikashpandey.phy].drafts"    . ?d)
-                                          ))))
-     (make-mu4e-context
-      :name "personal" ;;for acc2-gmail
-      :enter-func (lambda () (mu4e-message "Entering context personal"))
-      :leave-func (lambda () (mu4e-message "Leaving context personal"))
-      :match-func (lambda (msg)
-                    (when msg
-                  (mu4e-message-contact-field-matches
-                   msg '(:from :to :cc :bcc) "vikashp@tifrh.res.in")))
-      :vars '((user-mail-address . "vikashp@tifrh.res.in")
-              (user-full-name . "Vikash Pandey")
-              (mu4e-sent-folder . "/vikashp-gmail/[vikashp].Sent Mail")
-              (mu4e-drafts-folder . "/vikashp-gmail/[vikashp].drafts")
-              (mu4e-trash-folder . "/vikashp-gmail/[vikashp].Trash")
-              (mu4e-compose-signature . (concat "Vikash Pandey\n" "Emacs is awesome!\n"))
-              (mu4e-compose-format-flowed . t)
-              (smtpmail-queue-dir . "~/.Maildir/vikashp-gmail/queue/cur")
-              (message-send-mail-function . smtpmail-send-it)
-              (smtpmail-smtp-user . "vikashp@tifrh.res.in")
-              (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-              (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
-              (smtpmail-default-smtp-server . "smtp.gmail.com")
-              (smtpmail-smtp-server . "smtp.gmail.com")
-              (smtpmail-smtp-service . 587)
-              (smtpmail-debug-info . t)
-              (smtpmail-debug-verbose . t)
-              (mu4e-maildir-shortcuts . ( ("/vikashp-gmail/INBOX"            . ?i)
-                                          ("/vikashp-gmail/[vikashp].Sent Mail" . ?s)
-                                          ("/vikashp-gmail/[vikashp].Trash"     . ?t)
-                                          ("/vikashp-gmail/[vikashp].All Mail"  . ?a)
-                                          ("/vikashp-gmail/[vikashp].Starred"   . ?r)
-                                          ("/vikashp-gmail/[vikashp].drafts"    . ?d)
-                                          ))))))
-
-;; need to figure out how to push relevant article to some file 
-(require 'elfeed)
-;; (require 'elfeed-org)
-;; (elfeed-org)
-;; (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
-(setq elfeed-feeds
-      '(("https://www.archlinux.org/feeds/news/" archlinux)
-      ("http://www.smbc-comics.com/rss.php" smbc comic)
-      ("https://www.xkcd.com/rss.xml" xkcd comic)
-;;       ; ("http://emacsrocks.com/atom.xml" emacsrocks emacs)
-      ("https://phys.org/rss-feed/breaking/space-news/space-exploration/" space-sci)
-       ("http://export.arxiv.org/api/query?search_query=physics.ed-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" phy-ed)
-       ("http://export.arxiv.org/api/query?search_query=cond-mat.stat-mech&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" cond-mat)
-       ("http://export.arxiv.org/api/query?search_query=physics.hist-ph&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending" hist-ph)
-       ("http://export.arxiv.org/api/query?search_query=physics.flu-dyn&start=0&max_results=30&sortBy=submittedDate&sortOrder=descending" fluid-dyn)
-       ;; ("https://arxiv.org/list/physics.ao-ph/recent" arxiv atmosphere and oceanic)
-;      ("http://export.arxiv.org/rss/physics.hist-ph" arxiv hist and philosophy physics)
-      ; ("http://export.arxiv.org/rss/physics.ed-ph" arxiv physics education)
-      ; ("http://export.arxiv.org/rss/cond-mat.stat-mech" arxiv condensed matter)
-       ))
-
-(defun concatenate-authors (authors-list)
-  "Given AUTHORS-LIST, list of plists; return string of all authors
-concatenated."
-  (mapconcat
-   (lambda (author) (plist-get author :name))
-   authors-list ", "))
-
-
-(defun my-search-print-fn (entry)
-  "Print ENTRY to the buffer."
-  (let* ((date (elfeed-search-format-date (elfeed-entry-date entry)))
-         (title (or (elfeed-meta entry :title)
-                    (elfeed-entry-title entry) ""))
-         (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-         (feed (elfeed-entry-feed entry))
-         (feed-title
-          (when feed
-            (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-         (entry-authors (concatenate-authors
-                         (elfeed-meta entry :authors)))
-         (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-         (tags-str (mapconcat
-                    (lambda (s) (propertize s 'face
-                                            'elfeed-search-tag-face))
-                    tags ","))
-         (title-width (- (window-width) 10
-                         elfeed-search-trailing-width))
-         (title-column (elfeed-format-column
-                        title (elfeed-clamp
-                               elfeed-search-title-min-width
-                               title-width
-                               100)
-                        :left))
-         (authors-width 50)
-         (authors-column (elfeed-format-column
-                        entry-authors (elfeed-clamp
-                               elfeed-search-title-min-width
-                               authors-width
-                               50)
-                        :left)))
-
-    (insert (propertize date 'face 'elfeed-search-date-face) " ")
-
-    (insert (propertize title-column
-                        'face title-faces 'kbd-help title) " ")
-
-    (insert (propertize authors-column
-                        'face 'elfeed-search-date-face
-                        'kbd-help entry-authors) " ")
-
-    ;; (when feed-title
-    ;;   (insert (propertize entry-authors
-    ;; 'face 'elfeed-search-feed-face) " "))
-
-;    (when entry-authors
- ;     (insert (propertize feed-title
-;			  'face 'elfeed-search-feed-face) " "))
-
-    ;; (when tags
-    ;;   (insert "(" tags-str ")"))
-
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-document-info-keyword nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-property-value nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-tag nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-block-end-line nil :inherit 'fixed-pitch)
     )
-  )
-(setq elfeed-search-print-entry-function #'my-search-print-fn)
+(org-font-setup)
 
-(require 'elfeed-score)
-(elfeed-score-enable)
-(define-key elfeed-search-mode-map "=" elfeed-score-map) ; need to see if this works
+(use-package org-bullets
+  :straight t
+  :ensure t
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :config
+  (setq org-bullets-bullet-list '("➜" "⤷" "⤷" "⤷" "⤷")))
+
+;➀➁➂➃➄➅➆➇➈➉
+;➜	
+;✰✱✲✳✴✵✶✷✸✹✺	
+;➥	
+;⟾	
+;⤿
+;⟹🢂
+
+(with-eval-after-load 'org
+  ;; This is needed as of Org 9.2
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("jp" . "src jupyter-python"))
+  (add-to-list 'org-structure-template-alist '("jj" . "src jupyter-julia"))
+)
+
+(use-package gnuplot
+  :straight t
+  )
+
+;; (use-package ob-async
+;;   :straight t)
+
+;; (use-package ob-ipython
+;;   :straight t
+;;   )
+
+(use-package jupyter
+  :straight t
+  )
+
+
+(use-package ess
+:straight t
+)
+
+(use-package julia-mode
+:straight t
+)
+
+(use-package julia-vterm
+:straight t
+)
+
+  ; to prevent the funny indentation.
+
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)
+       (jupyter . t)
+       (shell . t)
+       (latex . t)
+       (dot . t)
+       (gnuplot . t)
+       (julia . t)
+       )
+     )
+
+ (with-eval-after-load 'jupyter 
+    (define-key jupyter-repl-mode-map (kbd "C-l") #'jupyter-repl-clear-cells)
+    (define-key jupyter-repl-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
+   ; (define-key jupyter-org-interaction-mode-map (kbd "TAB") #'company-complete-common-or-cycle)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c C-r") #'jupyter-eval-line-or-region)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-r") #'jupyter-repl-restart-kernel)
+    (define-key jupyter-repl-interaction-mode-map (kbd "C-c M-k") #'jupyter-shutdown-kernel)
+   ; (add-hook 'jupyter-org-interaction-mode-hook (lambda ()  (company-mode)
+   ;						   (setq company-backends '((company-capf))))) 
+  ;  (add-hook 'jupyter-repl-mode-hook (lambda () (company-mode)
+				;        :config (set-face-attribute
+					;         'jupyter-repl-input-prompt nil :foreground "dim gray")
+				       ; :config (set-face-attribute
+					;         'jupyter-repl-input-prompt nil :background "lightblue")
+				        ;; :config (set-face-attribute 'comment
+				        ;; 			    nil :foreground "dim gray")
+				        ;:config (set-face-attribute
+					;         'jupyter-repl-output-prompt nil :foreground "black")
+;				        (setq company-backends '((company-capf)))))
+    ;; (add-hook 'jupyter-repl-mode-hook #'smartparens-mode)
+    ;; (setq jupyter-repl-prompt-margin-width 4)
+    )
+
+
+(add-to-list 'org-src-lang-modes '("jupyter-julia" . julia))
+(add-to-list 'org-src-lang-modes '("jupyter-python" . python))
+
+(defalias 'org-babel-variable-assignments:jupyter-julia 'org-babel-variable-assignments:julia)
+(add-hook 'julia-mode-hook #'julia-vterm-mode)
+;; (setq org-ditaa-jar-path "/usr/share/java/ditaa/ditaa-0.11.jar")
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+(setq org-confirm-babel-evaluate nil)
+;; Syntax highlight in #+BEGIN_SRC blocks
+(setq org-src-fontify-natively t)
+
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+;(add-hook org-babel-after-execute-hook 'org-display-inline-images 'append)
+
+(global-set-key (kbd "<f7>") 'org-agenda)
+
+(eval-after-load 'org-agenda
+  '(progn
+     (define-key org-agenda-mode-map "j" nil)
+     (define-key org-agenda-mode-map "k" nil)))                                       ;
+
+ (setq     org-agenda-start-with-log-mode t
+      org-log-done 'time
+      org-log-into-drawer t
+      org-agenda-span 8
+      org-agenda-start-on-weekday nil
+      org-agenda-start-day "-3d"
+      org-agenda-files
+      '("~/Documents/OrgFiles/Tasksandmeetings.org"  ;; Tasksandmeeting.org
+        "~/Documents/OrgFiles/Planning.org" ;; Planning.org
+        "~/Documents/OrgFiles/Birthdays.org") ;; Birthdays.org
+      org-todo-keywords
+      '((sequence "TODO(t)" "STARTED" "|" "DONE(d)" "CANC(c)")
+       (sequence "PLAN(p)" "REMINDER(r)" "WAIT(w@/!)" "|" "COMPLETED(c)" "CANCELLED(k@)" ))
+      )
+
+
+(setq org-refile-targets
+      '(("~/Documents/Orgfiles/Archive.org" :maxlevel . 1)))
+
+;; Save Org buffers after refiling!
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+         ((agenda "" ((org-deadline-warning-days 7)))
+          (todo "PLAN"
+                ((org-agenda-overriding-header "planning")))
+           (todo "TODO"
+                ((org-agenda-overriding-header "todos")))
+          (todo "REMINDER"
+                ((org-agenda-overriding-header "Reminders")))))))
+
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "~/Documents/OrgFiles/Tasksandmeetings.org" "Meetings")
+         "** TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        ("p" "plan / Reminder")
+        ("pp" "Plan" entry (file+olp "~/Documents/OrgFiles/Planning.org" "Future Plans")
+         "** PLAN %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        ("j" "Journal Entries")
+        ("jj" "Journal" entry
+         (file+olp+datetree "~/Documents/OrgFiles/Journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+        ))
+
+(define-key global-map (kbd "C-c j")
+  (lambda () (interactive) (org-capture nil "jj")))
+
+(define-key global-map (kbd "C-c p")
+  (lambda () (interactive) (org-capture nil "pp")))
+
+(define-key global-map (kbd "C-c t")
+  (lambda () (interactive) (org-capture nil "tt")))
+
+(use-package org-roam
+  :ensure t
+  :straight t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Documents/my_notes/RoamNotes")
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+  :config
+  (org-roam-setup))
+
+  (use-package citar-org-roam
+  :straight t
+  :after (citar org-roam)
+  :config (citar-org-roam-mode))
+
+ (use-package project :straight t) ;; Somehow the project is removed 
+
+  (use-package eglot
+    :straight t
+;    :hook
+     ;; (c-mode-hook . eglot-ensure)
+     ;; (f90-mode-hook . eglot-ensure)
+    )
+
+(with-eval-after-load 'eglot
+   (setq completion-category-defaults nil))
+
+(advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+
+    (use-package tree-sitter
+      :straight t
+      :init
+       (global-tree-sitter-mode))
+
+    (use-package tree-sitter-langs
+      :straight t
+    )
+  ;; (add-hook 'python-mode-hook #'tree-sitter-mode)
+
+(setq treesit-language-source-alist
+      '(
+     (bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (fortran  "https://github.com/stadelmanma/tree-sitter-fortran")
+     (c "https://github.com/tree-sitter/tree-sitter-c")
+     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+     (cuda "https://github.com/theHamsta/tree-sitter-cuda")
+     (julia "https://github.com/tree-sitter/tree-sitter-julia")
+     (latex "https://github.com/latex-lsp/tree-sitter-latex")
+     (org"https://github.com/milisims/tree-sitter-org")
+   ))
+
+ (defun my/set-latex-font ()
+  "Set a different font for LaTeX files."
+  (face-remap-add-relative 'default :family "CMU Typewriter Text" :height 170))
+
+(add-hook 'LaTeX-mode-hook 'my/set-latex-font)
+
+;; latex config 
+;; this is for reading pdf in emacs;
+(use-package pdf-tools
+  :straight t)
+(pdf-tools-install)
+
+(defun my/hooks_pdf_tools ()
+  "Disable line numbers in the current buffer."
+  (display-line-numbers-mode -1)
+  (auto-revert-mode 1)
+)
+
+(add-hook 'pdf-view-mode-hook 'my/hooks_pdf_tools)
+
+(use-package auctex
+  :straight t
+  )
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master 'nil)
+
+(use-package xenops
+  :straight t )
+;;   ;:config
+;; (add-hook LaTeX-mode-hook xenops-mode)
+;; (add-hook LaTeX-mode-hook #'xenops-mode))
+
+;; Add this to .emacs.d/init.el:
+(with-eval-after-load "tex"
+  ;; enable synctex support for latex-mode
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  ;; add a new view program
+  (add-to-list 'TeX-view-program-list
+        '("Zathura"
+          ("zathura" " %o"
+           (mode-io-correlate " --synctex-forward %n:0:%b"))))
+  (setcdr (assq 'output-pdf TeX-view-program-selection) '("Zathura")))
+
+
+
+(setq xenops-reveal-on-entry t
+      xenops-image-directory (expand-file-name "xenops/image" user-emacs-directory)
+      xenops-math-latex-process 'dvisvgm
+      xenops-math-image-scale-factor 0.7
+      )
+
+(defun xenops-math-reveal (element)
+  "Remove image overlay for ELEMENT.
+If a prefix argument is in effect, also delete its cache file."
+  (xenops-element-overlays-delete element)
+  (if current-prefix-arg
+      (delete-file (xenops-math-get-cache-file element)))
+  ;; TODO: is :begin-content for block math off by one?
+  (let ((element-type (plist-get element :type))
+        (begin-content (plist-get element :begin-content)))
+    )
+  (xenops-math-render-below-maybe element))
+
+(use-package cdlatex
+:straight t
+)
+(defun my/latex-hooks ()
+ (turn-on-cdlatex)
+ (visual-line-mode t)
+ (visual-fill-column-mode t)
+)
+
+(add-hook 'LaTeX-mode-hook 'my/latex-hooks)
+(add-hook 'latex-mode-hook 'my/latex-hooks)
+
+(add-hook 'pdf-view-mode 'pdf-view-themed-minor-mode)   ; normal emacs latex mode
+(set-default 'preview-scale-function 1.1)
+
+(defvar pdf-minimal-width 72
+  "Minimal width of a window displaying a pdf.
+If an integer, number of columns.  If a float, fraction of the
+original window.")
+
+(defvar pdf-split-width-threshold 120
+  "Minimum width a window should have to split it horizontally
+for displaying a pdf in the right.")
+
+(use-package citar
+  :straight t
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup)
+  :custom
+  (citar-bibliography '("/home/vikash/Documents/my_notes/bib/references.bib")))
+
+(add-to-list 'completion-at-point-functions #'citar-capf)
+(setq citar-search-function #'citar-ivy-filter)
+
+(use-package bibtex
+  :straight t
+  :custom
+  (bibtex-dialect 'BibTeX)
+  (bibtex-user-optional-fields
+   '(("keywords" "Keywords to describe the entry" "")
+     ("file" "Link to a document file." "" )))
+  (bibtex-align-at-equal-sign t))
+
+(use-package citar-embark
+  :straight t
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+
+(use-package biblio
+  :straight t)
+
+; Seems like flyspell is already installed in emacs; just set it up
+  (dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+
+;; (global-set-key (kbd "<f8>") 'ispell-word)
+;; to note vim key-binding z= also works for ispell=word checking
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word)
+  )
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+
+(use-package langtool
+  :straight t)
+(setq langtool-java-classpath
+      "/usr/share/languagetool:/usr/share/java/languagetool/*")
+
+ (use-package magit
+  :straight t
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+(use-package forge
+  :straight t
+  :after magit)
+
+(use-package ellama
+  :straight t
+  :ensure t
+  :bind ("C-c e" . ellama-transient-main-menu)
+  ;; send last message in chat buffer with C-c C-c
+  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+  :init (setopt ellama-auto-scroll t)
+  :config
+  ;; show ellama context in header line in all buffers
+  (ellama-context-header-line-global-mode +1))
+
+  (use-package markdown-mode
+  :ensure t
+  :straight t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+(use-package yaml-mode
+:ensure t
+:straight t)
+
+  (use-package emms
+    :straight t
+    :init
+    (require 'emms-setup)
+    (require 'emms-mpris)
+    (emms-all)
+    (emms-default-players)
+    (emms-mpris-enable)
+    :hook
+    (emms-browser-mode . visual-fill-column-mode)
+    :custom
+    (emms-source-file-default-directory "~/Music")
+    (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+    :bind
+    (("<f5>"   . emms-browser)
+     ("M-<f5>" . emms)
+     ("M-p" . emms-previous)
+     ("M-n" . emms-next)
+     ("M-s" . emms-pause)))
+
+(emms-all)
+(setq emms-player-list '(emms-player-mpv)
+      emms-info-functions '(emms-info-native))
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+;; (require 'eaf)
+;; (require 'eaf-browser)
+;; (require 'eaf-pdf-viewer)
+
+(use-package windresize
+  :straight t)
+
+(global-set-key (kbd "<f2>") 'windresize)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(julia-vterm ztree zmq yasnippet-snippets yasnippet-classic-snippets xml+ which-key websocket visual-fill-column visual-fill use-package treemacs-icons-dired tree-sitter-langs smtpmail-multi simple-httpd request rainbow-identifiers rainbow-delimiters pyvenv polymode ox-pandoc ox-gfm org-sidebar org-msg org-mime org-bullets ob-julia-vterm ob-ipython multiple-cursors minions lsp-ui lsp-treemacs lsp-latex lsp-intellij latex-math-preview latex-extra julia-mode ivy-rich highlight-numbers helm-bibtex gruvbox-theme gnuplot git-gutter frame-local fortpy format-all forge flycheck fira-code-mode fiplr evil-nerd-commenter evil-mc evil-god-state evil-commentary evil-collection elfeed-score elfeed-org doom-themes doom-modeline dad-joke counsel company-math company-lsp company-bibtex company-auctex cdlatex bibretrieve ayu-theme auto-complete-c-headers auto-compile anaphora academic-phrases ac-math)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+ '(TeX-view-program-selection
+   '(((output-dvi has-no-display-manager)
+      "dvi2tty")
+     ((output-dvi style-pstricks)
+      "Zathura")
+     (output-dvi "Zathura")
+     (output-pdf "Zathura")
+     (output-html "xdg-open")))
+ '(display-time-24hr-format t)
+ '(f90-comment-region "!!")
+ '(org-agenda-window-setup 'only-window)
+ '(org-highlight-latex-and-related '(native))
+ '(tex-fontify-script nil)
+'(org-startup-folded t))
